@@ -6,7 +6,7 @@
   <section class="section">
     <div class="container has-text-centered">
       {% if collections %}
-      <table class="table">
+      <table class="table screen-lg">
         <thead>
           <tr>
             <th>Collection</th>
@@ -20,8 +20,8 @@
         <tbody>
           {% for collection in collections %}
           <tr>
-            <td><a href="{{ url_for('collection.show', collection_id=collection.title) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
-            <td>{{ collection.contract_address }}</td>
+            <td><a href="{{ url_for('collection.show', collection_slug=collection.title) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
+            <td><a href="{{ collection.contract_address | show_etherscan }}" target="_blank">{{ collection.contract_address | shorten_address }}</a></td>
             <td>{{ collection.data.timeStamp | from_ts | humanize }}</td>
             <td>{{ collection.data.blockNumber }}</td>
             <td>{{ collection.total_supply }}</td>

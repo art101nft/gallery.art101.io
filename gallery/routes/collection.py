@@ -6,7 +6,7 @@ from flask_login import current_user
 from web3.auto import w3
 
 from gallery import config
-from gallery.collections import COLLECTIONS
+from gallery.collections import COLLECTIONS, Collection, all_collections
 
 
 bp = Blueprint('collection', 'collection')
@@ -17,29 +17,15 @@ def index():
     collections = [i for i in COLLECTIONS]
     return render_template('index.html', collections=collections)
 
-@bp.route('/collection/<collection_id>')
-def show(collection_id):
-    collection = Collection.query.filter(Collection.id == collection_id).first()
-    if not collection:
-        flash('That collection does not exist!', 'warning')
-        return redirect(url_for('collection.index'))
-    if current_user.is_anonymous:
-        flash('Must be authenticated.', 'warning')
-        return redirect(url_for('collection.index'))
-    if not collection.user_can_access(current_user.id):
-        flash('You are not allowed to access that collection.', 'warning')
-        return redirect(url_for('collection.index'))
-    # Determine which batch of tokens to preview
-    start = collection.start_token_id
-    _start = request.args.get('start')
-    if _start and _start.isnumeric():
-        start = _start
-    start = int(start)
+@bp.route('/collection/<collection_slug>')
+def show(collection_slug):
+    if collection_slug not in all_collections:
+        flash('That collection does not exist.')
+        return redirect('/')
+    collection = Collection(collection_slug, all_collections[collection_slug])
     return render_template(
         'collection.html',
-        collection=collection,
-        start=int(start),
-        end=int(start + 16)
+        collection=collection
     )
 
 @bp.route('/collection/<collection_id>/<token_id>')

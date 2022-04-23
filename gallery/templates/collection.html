@@ -1,4 +1,3 @@
-{% set total_tokens = collection.end_token_id + 1 - collection.start_token_id %}
 <!DOCTYPE html>
 <html>
   {% include 'includes/head.html' %}
@@ -7,35 +6,28 @@
   <section class="section">
     <div class="container has-text-centered">
       <h1 class="title">{{ collection.title }}</h1>
-      <p class="subtitle pt-2">{{ collection.metadata_uri }}</p>
+      <p class="subtitle pt-2">{{ collection.data.description }}</p>
       <nav class="level">
         <div class="level-item">
           <div>
             <p class="heading">Tokens</p>
-            <p class="title">{{ total_tokens }}</p>
-            {% if (collection.tokens | length) < total_tokens %}
-            <p>{{ collection.tokens | length }} tokens scanned</p>
-            {% endif %}
+            <p class="title">0</p>
+            <p>? tokens scanned</p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Collaborators</p>
-            <p class="title">{{ (collection.accesses | length) + 1 }}</p>
+            <p class="title">?</p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Rejected</p>
             <p class="title">
-              {% set rejected = collection.get_tokens(rejected=True) %}
-              {% if rejected.count() %}
-              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=rejected.first().token_id) }}?show=rejected" up-target=".container" up-transition="cross-fade">
-                {{ rejected.count() }}
+              <a href="#" up-target=".container" up-transition="cross-fade">
+                0
               </a>
-              {% else %}
-              0
-              {% endif %}
             </p>
           </div>
         </div>
@@ -43,14 +35,9 @@
           <div>
             <p class="heading">Approved</p>
             <p class="title">
-              {% set approved = collection.get_tokens(approved=True) %}
-              {% if approved.count() %}
-              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=approved.first().token_id) }}?show=approved" up-target=".container" up-transition="cross-fade">
-                {{ approved.count() }}
+              <a href="#" up-target=".container" up-transition="cross-fade">
+                0
               </a>
-              {% else %}
-              0
-              {% endif %}
             </p>
           </div>
         </div>
@@ -58,43 +45,26 @@
           <div>
             <p class="heading">Unreviewed</p>
             <p class="title">
-              {% set unreviewed = collection.get_tokens() %}
-              {% if unreviewed.count() %}
-              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=unreviewed.first().token_id) }}" up-target=".container" up-transition="cross-fade">
-                {{ unreviewed.count() }}
+              <a href="#" up-target=".container" up-transition="cross-fade">
+                0
               </a>
-              {% else %}
-              0
-              {% endif %}
             </p>
           </div>
         </div>
       </nav>
       <div class="columns">
         <div class="column">
-          <form method="GET" style="width:50%;margin:auto;padding-top:2em;" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.add_collaborator', collection_id=collection.id) }}">
-            <div class="field">
-              <div class="control">
-                <input class="input" type="text" placeholder="Collaborator wallet address" name="address">
-              </div>
-            </div>
-            <button class="button is-success" up-follow=".container" up-transition="cross-fade">Add Collaborator</button>
-          </form>
           <div class="pt-4">
             <p class="subtitle pt-4">Collaborators</p>
             <ul>
-              <li><strong>{{ collection.user.public_address }}</strong></li>
-            {% for access in collection.accesses %}
-              <li>{{ access.public_address }}</li>
-            {% endfor %}
+              <li><strong>?</strong></li>
             </ul>
           </div>
         </div>
       </div>
+      {#
       <div class="tokenPreviews has-text-centered">
         <p class="subtitle">Tokens</p>
-        {% set tokens = collection.get_tokens(start=start, end=end) %}
-        {% for _batch in tokens.all() | batch(4) %}
         <div class="columns">
           {% for token in _batch %}
           <div class="card column {% if token.approved %}approvedCard{% elif token.rejected %}rejectedCard{% endif %}">
@@ -118,6 +88,7 @@
         <a href="?start={{ end }}&end={{ end + 16 }}" up-push up-target=".tokenPreviews" up-preload class="button is-info is-light">Next Batch</a>
         {% endif %}
       </div>
+      #}
     </div>
   </section>
   {% include 'includes/footer.html' %}

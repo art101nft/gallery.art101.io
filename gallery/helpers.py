@@ -29,7 +29,8 @@ class Etherscan:
         self.data = self.get_contract_launch_tx()
 
     def get_contract_launch_tx(self):
-        _d = cache.get_data(self.contract_address)
+        key_name = self.contract_address
+        _d = cache.get_data(key_name)
         if _d:
             return loads(_d)
         else:
@@ -38,5 +39,5 @@ class Etherscan:
             r.raise_for_status()
             if 'result' in r.json():
                 _d = r.json()['result'][0]
-                cache.store_data(self.contract_address, 604800, dumps(_d))
+                cache.store_data(key_name, 604800, dumps(_d))
                 return _d

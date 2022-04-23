@@ -37,3 +37,7 @@ def trim_arg(all_args):
         return '?' + urlencode(d)
     else:
         return ''
+
+@bp.app_template_filter('show_etherscan')
+def show_etherscan(a):
+    return f'https://etherscan.io/address/{a}'
