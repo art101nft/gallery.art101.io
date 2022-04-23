@@ -1,0 +1,17 @@
+{# expects collection var #}
+<div class="card">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+      </div>
+      <div class="media-content">
+        <p class="title is-4"><a href="{{ url_for('collection.show', collection_id=collection.id) }}">{{ collection.title }}</a></p>
+        <p class="subtitle is-6"></p>
+      </div>
+    </div>
+
+    <div class="content">
+      <time datetime="2016-1-1">{{ collection.create_date.strftime('%H:%M UTC - %d %b %Y') }}</time>
+    </div>
+  </div>
+</div>

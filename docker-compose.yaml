@@ -1,0 +1,8 @@
+version: '3'
+services:
+  cache:
+    image: redis:latest
+    container_name: art101_gallery_cache
+    restart: always
+    ports:
+      - 127.0.0.1:6379:6379

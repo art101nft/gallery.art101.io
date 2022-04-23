@@ -1,0 +1,20 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/" up-target=".container" up-transition="cross-fade">
+      <!-- <h1 class="title"><img src="/static/img/logo_white.png" height="120"></h1> -->
+      <img src="/static/img/Art101_Logo.svg" height="120">
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="{{ url_for('meta.about') }}" up-target=".container" up-transition="cross-fade">About</a>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+            <a class="button is-link is-light" target="_blank" href="https://art101.io">Main Site</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

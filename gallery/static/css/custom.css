@@ -1,0 +1,65 @@
+.screen {
+  padding-bottom: 1em;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.screen-lg {
+  padding-bottom: 1em;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  margin: 1em;
+  padding: 1em;
+  width: 300px;
+  border-radius: 6px;
+}
+
+.image {
+  text-align: center;
+}
+
+.image img, .image video {
+  border-radius: 6px;
+}
+
+.img-fluid {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.wrap {
+  word-wrap: break-word;
+}
+
+.tokenStatus {
+  display: inline-flex;
+}
+
+.tokenStatus img {
+  margin-right: .3em;
+}
+
+#updateButtons {
+  display: none;
+}
+
+.previewPreload {
+  width: 30% !important;
+  margin: 0 auto;
+}
+
+.tokenPreview {
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.approvedCard {
+  background-color: #48c78e;
+}
+
+.rejectedCard {
+  background-color: #f14668;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  {% include 'includes/head.html' %}
+  <body>
+  {% include 'includes/navbar.html' %}
+  <section class="section">
+    <div class="container has-text-centered">
+      {% if collections %}
+      <table class="table screen-lg">
+        <thead>
+          <tr>
+            <th>Collection</th>
+            <th>Contract Address</th>
+            <th>Launch Date</th>
+            <th>Token Supply</th>
+            <th>Unique Holders</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for collection in collections %}
+          <tr>
+            <td><a href="{{ url_for('collection.show', collection_id=collection.title) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
+            <td>{{ collection.contract_address }}</td>
+            <td>{{ collection.timestamp | from_ts | humanize }}</td>
+            <td>{{ collection.total_supply }}</td>
+            <td>?</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+      {% else %}
+        <div class="notification is-secondary has-text-centered">
+          <p>You're not part of any collections yet</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+  {% include 'includes/footer.html' %}
+  </body>
+</html>

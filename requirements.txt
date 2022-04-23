@@ -1,0 +1,9 @@
+arrow
+Flask
+gunicorn
+python-dotenv
+requests
+web3
+flake8
+huey
+redis

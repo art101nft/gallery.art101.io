@@ -1,0 +1,36 @@
+{# expects token and collection vars #}
+{% set data = token.get_metadata_dict() %}
+{% set token_url = url_for('collection.show_token', collection_id=collection.id, token_id=token.token_id) %}
+<div class="card">
+  <div class="card-image">
+    <figure class="image">
+      <a href="{{ token_url }}" up-follow up-preload up-target=".container">
+        <img alt="{{ data.name }}" src="https://bulma.io/images/placeholders/128x128.png" width="200px" class="img-fluid" />
+        <!-- <img alt="{{ data.name }}" src="{{ data.image | convert_ipfs_uri }}" width="200px" class="img-fluid" /> -->
+      </a>
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-4"><a href="{{ token_url }}" up-follow up-preload up-target=".container">{{ data.name }}</a></p>
+        <div class="tags">
+        {% for attrib in data.attributes %}
+          <span class="tag is-light">{{ attrib.trait_type }}: {{ attrib.value }}</span>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+    <!-- <div class="content">
+      <time datetime="2016-1-1">{{ collection.create_date.strftime('%H:%M UTC - %d %b %Y') }}</time>
+      <div class="columns mt-2">
+        <div class="column">
+          <a class="button is-success" href="#">Approve</a>
+        </div>
+        <div class="column">
+          <a class="button is-danger" href="#">Deny</a>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

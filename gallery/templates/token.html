@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  {% include 'includes/head.html' %}
+  <body>
+  {% include 'includes/navbar.html' %}
+  <section class="section">
+    <div class="container has-text-centered">
+
+      <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
+          <li><a href="{{ url_for('collection.show', collection_id=token.collection.id) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ token.collection.title }}</a></li>
+          <li class="is-active"><a aria-current="page">#{{ token.token_id }}</a></li>
+        </ul>
+      </nav>
+      <div class="content">
+
+        <div class="columns">
+          <div class="column">
+            {% if token.token_id > token.collection.start_token_id and prev %}
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=prev.token_id) }}{{ request.args | fix_args }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ prev.token_id }}</a>
+            {% endif %}
+          </div>
+          {% set _next = token.collection.get_tokens().first() %}
+          {% if _next and token.id != _next.id %}
+          <div class="column">
+            <a class="button is-info" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=_next.token_id) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Unreviewed #{{ _next.token_id }}</a>
+          </div>
+          {% endif %}
+          <div class="column">
+            {% if token.token_id < token.collection.end_token_id and next %}
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=next.token_id) }}{{ request.args | fix_args }}" up-follow up-target=".container" up-preload up-transition="move-left">#{{ next.token_id }} -></a>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if token.approved %}
+        <div class="notification is-success">
+          <span class="tokenStatus"><img src="/static/img/approved.svg" width=20> Approved.</span>
+        </div>
+        {% elif token.rejected %}
+        <div class="notification is-danger">
+          <span class="tokenStatus"><img src="/static/img/rejected.svg" width=20> Rejected. Reason: <strong>{{ token.reject_reason }}</strong></span>
+        </div>
+        {% endif %}
+
+        <div class="columns">
+          <div class="column">
+            <h1 class="title" id="tokenTitle" up-data="{{ token.id }}"><img src="/static/img/loading.gif" width=50></h1>
+            <p class="block" id="tokenDescription"></p>
+            <div class="block"></div>
+            <ol id="tokenTraits"></ol>
+          </div>
+          <div class="column">
+            <img src="/static/img/loading.gif" id="tokenImage" />
+          </div>
+        </div>
+
+        {% if not token.approved and not token.rejected %}
+        <div class="columns" id="updateButtons">
+          <div class="column">
+            <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;" up-follow=".container" up-transition="cross-fade">Approve</a>
+          </div>
+          <div class="column">
+            <form method="GET" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='reject') }}">
+              <button class="button is-danger" style="width:100%;" up-follow=".container" up-transition="cross-fade">Reject</button>
+              <div class="field">
+                <div class="control">
+                  <input class="input" type="text" placeholder="reject reason..." name="reason">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </section>
+  {% include 'includes/footer.html' %}
+  </body>
+</html>
