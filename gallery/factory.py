@@ -7,7 +7,7 @@ from gallery import config
 
 def create_app_huey():
     _app = Flask(__name__)
-    dictConfig(config.LOGGING_CONFIG)
+    # dictConfig(config.LOGGING_CONFIG)
     return _app
 
 def create_app():

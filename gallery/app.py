@@ -6,7 +6,7 @@ from gallery import config
 
 app = create_app()
 
-dictConfig(config.LOGGING_CONFIG)
+# dictConfig(config.LOGGING_CONFIG)
 
 if __name__ == '__main__':
     app.run()

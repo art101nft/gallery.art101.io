@@ -1,13 +1,13 @@
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
-from gallery.tasks.collection import scan_tokens
 
 
 all_collections = {
     'non-fungible-soup': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
     'mondriannft': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
-    # 'bauhausblocks': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
-    # 'nftzine': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
+    'bauhausblocks': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
+    'nftzine': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
+    'basedvitalik': '0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c'
 }
 
 class Collection(object):
@@ -15,11 +15,12 @@ class Collection(object):
         self.title = title
         self.contract_address = contract_address
         self.contract = get_eth_contract(contract_address)
-        self.total_supply = self.get_total_supply()
+        if title == 'nftzine':
+            self.total_supply = 1000
+        else:
+            self.total_supply = self.get_total_supply()
         es = Etherscan(self.contract_address)
         self.data = es.data
-        # self.scan_tokens()
-        print(f'initializing {self.title}')
 
     def get_total_supply(self):
         key_name = f'{self.title}-supply'
@@ -30,17 +31,3 @@ class Collection(object):
             _d = self.contract.functions.totalSupply().call()
             cache.store_data(key_name, 604800, int(_d))
             return int(_d)
-
-    def scan_tokens(self):
-        key_name = f'{self.title}-scanning'
-        _d = cache.get_data(key_name)
-        if _d:
-            return None
-        else:
-            scan_tokens(self.contract_address, self.total_supply)
-            return None
-
-
-# COLLECTIONS = [
-#     Collection(k, v) for k, v in all_collections.items()
-# ]

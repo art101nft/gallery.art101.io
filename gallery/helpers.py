@@ -20,6 +20,12 @@ def get_eth_contract(_contract_address):
         abi=contract_abi
     )
 
+def convert_ipfs_uri(u):
+    if u.startswith('ipfs://'):
+        ipfs = u.split('ipfs://')[1]
+        return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
+    else:
+        return u
 
 class Etherscan:
     def __init__(self, contract_address):
