@@ -1,6 +1,3 @@
-from json import loads as json_loads
-from json import dumps as json_dumps
-from hexbytes import HexBytes
 from datetime import timedelta
 
 from redis import Redis
@@ -16,14 +13,15 @@ class Cache(object):
     def get_data(self, key_name):
         data = self.redis.get(key_name)
         if data:
+            current_app.logger.info(f'GET - {key_name}')
             return data
         else:
             return None
 
-    def store_data(self, item_name, expiration_minutes, data):
-        current_app.logger.info(f'SET - {item_name} - expires in {expiration_minutes} minutes')
+    def store_data(self, key_name, expiration_minutes, data):
+        current_app.logger.info(f'SET - {key_name} - expires in {expiration_minutes} minutes')
         self.redis.setex(
-            item_name,
+            key_name,
             timedelta(minutes=expiration_minutes),
             value=data
         )
