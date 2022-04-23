@@ -1,1 +1,1 @@
-from gallery.tasks.metadata import *  # noqa
+from gallery.tasks.collection import *  # noqa

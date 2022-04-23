@@ -15,7 +15,7 @@ up:
 	docker-compose up -d
 
 huey:
-	.venv/bin/huey_consumer gallery.tasks.huey -w 8
+	.venv/bin/huey_consumer gallery.tasks.huey -w 1
 
 kill:
 	pkill -e -f gallery

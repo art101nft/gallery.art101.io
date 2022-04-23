@@ -6,7 +6,7 @@ from flask_login import current_user
 from web3.auto import w3
 
 from gallery import config
-from gallery.collections import COLLECTIONS, Collection, all_collections
+from gallery.collections import Collection, all_collections
 
 
 bp = Blueprint('collection', 'collection')
@@ -14,7 +14,8 @@ bp = Blueprint('collection', 'collection')
 
 @bp.route('/')
 def index():
-    return render_template('index.html', collections=COLLECTIONS)
+    c = [Collection(k, v) for k, v in all_collections.items()]
+    return render_template('index.html', collections=c)
 
 @bp.route('/collection/<collection_slug>')
 def show(collection_slug):

@@ -1,7 +1,6 @@
-from json import dumps, loads
-
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
+from gallery.tasks.collection import scan_tokens
 
 
 all_collections = {
@@ -11,7 +10,7 @@ all_collections = {
     # 'nftzine': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
 }
 
-class Collection:
+class Collection(object):
     def __init__(self, title, contract_address):
         self.title = title
         self.contract_address = contract_address
@@ -19,6 +18,8 @@ class Collection:
         self.total_supply = self.get_total_supply()
         es = Etherscan(self.contract_address)
         self.data = es.data
+        # self.scan_tokens()
+        print(f'initializing {self.title}')
 
     def get_total_supply(self):
         key_name = f'{self.title}-supply'
@@ -30,6 +31,16 @@ class Collection:
             cache.store_data(key_name, 604800, int(_d))
             return int(_d)
 
-COLLECTIONS = [
-    Collection(k, v) for k, v in all_collections.items()
-]
+    def scan_tokens(self):
+        key_name = f'{self.title}-scanning'
+        _d = cache.get_data(key_name)
+        if _d:
+            return None
+        else:
+            scan_tokens(self.contract_address, self.total_supply)
+            return None
+
+
+# COLLECTIONS = [
+#     Collection(k, v) for k, v in all_collections.items()
+# ]
