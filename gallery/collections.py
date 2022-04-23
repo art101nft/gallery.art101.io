@@ -6,7 +6,9 @@ from gallery.library.cache import cache
 
 all_collections = {
     'non-fungible-soup': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
-    'mondriannft': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919'
+    'mondriannft': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
+    # 'bauhausblocks': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
+    # 'nftzine': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
 }
 
 class Collection:

@@ -14,8 +14,7 @@ bp = Blueprint('collection', 'collection')
 
 @bp.route('/')
 def index():
-    collections = [i for i in COLLECTIONS]
-    return render_template('index.html', collections=collections)
+    return render_template('index.html', collections=COLLECTIONS)
 
 @bp.route('/collection/<collection_slug>')
 def show(collection_slug):
