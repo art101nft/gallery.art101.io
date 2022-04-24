@@ -1,4 +1,5 @@
 from json import dumps, loads
+from os import makedirs
 
 import requests
 from web3.auto import w3
@@ -26,6 +27,13 @@ def convert_ipfs_uri(u):
         return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
     else:
         return u
+
+def store_json(contract_address: str, token_id: int, data: dict):
+    _p = f'{config.DATA_PATH}/{contract_address}'
+    p = f'{_p}/{str(token_id)}.json'
+    makedirs(_p, exist_ok=True)
+    with open(p, 'w') as f:
+        f.write(dumps(data))
 
 class Etherscan:
     def __init__(self, contract_address):

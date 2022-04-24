@@ -10,85 +10,48 @@
       <nav class="level">
         <div class="level-item">
           <div>
-            <p class="heading">Tokens</p>
-            <p class="title">0</p>
-            <p>? tokens scanned</p>
+            <p class="heading">Token Supply</p>
+            <p class="title">{{ collection.data.total_supply }}</p>
+            <!-- <p>? tokens scanned</p> -->
           </div>
         </div>
         <div class="level-item">
           <div>
-            <p class="heading">Collaborators</p>
-            <p class="title">?</p>
+            <p class="heading">Contract Address</p>
+            <p class="title"><a href="{{ collection.contract_address | show_etherscan }}" target=_blank>{{ collection.contract_address | shorten_address }}</a></p>
           </div>
         </div>
         <div class="level-item">
           <div>
-            <p class="heading">Rejected</p>
-            <p class="title">
-              <a href="#" up-target=".container" up-transition="cross-fade">
-                0
-              </a>
-            </p>
+            <p class="heading">Contract Type</p>
+            <p class="title">{{ collection.data.contract_type }}</p>
           </div>
         </div>
         <div class="level-item">
           <div>
-            <p class="heading">Approved</p>
-            <p class="title">
-              <a href="#" up-target=".container" up-transition="cross-fade">
-                0
-              </a>
-            </p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div>
-            <p class="heading">Unreviewed</p>
-            <p class="title">
-              <a href="#" up-target=".container" up-transition="cross-fade">
-                0
-              </a>
-            </p>
+            <p class="heading">Launch Date</p>
+            <p class="title">{{ collection.es_data.timeStamp | from_ts | humanize }}</p>
           </div>
         </div>
       </nav>
-      <div class="columns">
-        <div class="column">
-          <div class="pt-4">
-            <p class="subtitle pt-4">Collaborators</p>
-            <ul>
-              <li><strong>?</strong></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      {#
+      {% if collection.data.notable_tokens %}
       <div class="tokenPreviews has-text-centered">
-        <p class="subtitle">Tokens</p>
+        <p class="subtitle">Notable Tokens</p>
         <div class="columns">
-          {% for token in _batch %}
-          <div class="card column {% if token.approved %}approvedCard{% elif token.rejected %}rejectedCard{% endif %}">
+          {% for token in collection.data.notable_tokens %}
+          <div class="card column">
             <div class="card-image">
               <figure class="image">
-                <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=token.token_id) }}" up-target=".container" up-preload>
-                  <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token.id }}" up-data="{{ token.id }}">
+                <a href="#" up-target=".container" up-preload>
+                  <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data="{{ token }}">
                 </a>
               </figure>
             </div>
           </div>
           {% endfor %}
         </div>
-        {% endfor %}
-        <p>Showing token IDs #{{ start }} - #{{ end }}</p>
-        {% if end > (collection.start_token_id + 16) %}
-          <a href="?start={{ start - 16 }}&end={{ end - 16 }}" up-push up-target=".tokenPreviews" up-preload class="button is-info is-light">Previous Batch</a>
-        {% endif %}
-
-        {% if end < collection.end_token_id %}
-        <a href="?start={{ end }}&end={{ end + 16 }}" up-push up-target=".tokenPreviews" up-preload class="button is-info is-light">Next Batch</a>
-        {% endif %}
       </div>
-      #}
+      {% endif %}
     </div>
   </section>
   {% include 'includes/footer.html' %}

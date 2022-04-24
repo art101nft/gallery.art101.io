@@ -1,33 +1,57 @@
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
+from gallery.tasks.collection import scan_tokens
 
 
 all_collections = {
-    'non-fungible-soup': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
-    'mondriannft': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
-    'bauhausblocks': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
-    'nftzine': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
-    'basedvitalik': '0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c'
+    'non-fungible-soup': {
+        'title': 'Non-Fungible Soup',
+        'contract_address': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
+        'total_supply': 2048,
+        'contract_type': 'ERC-721',
+        'notable_tokens': [43, 770, 589, 1617, 1952]
+    },
+    'mondriannft': {
+        'title': 'MondrianNFT',
+        'contract_address': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
+        'total_supply': 4096,
+        'contract_type': 'ERC-721'
+    },
+    'soupxmondrian': {
+        'title': 'soupXmondrian',
+        'contract_address': '0x0dD0CFeAE058610C88a87Da2D9fDa496cFadE108',
+        'total_supply': 3,
+        'contract_type': 'ERC-1155'
+    },
+    'bauhausblocks': {
+        'title': 'Bauhaus Blocks',
+        'contract_address': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
+        'total_supply': 8192,
+        'contract_type': 'ERC-721'
+    },
+    'nftzine': {
+        'title': 'NFTZine',
+        'contract_address': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
+        'total_supply': 1000,
+        'contract_type': 'ERC-721'
+    },
+    'basedvitalik': {
+        'title': 'BASΞD VITALIK',
+        'contract_address': '0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c',
+        'total_supply': 4962,
+        'contract_type': 'ERC-721A'
+    }
 }
 
 class Collection(object):
-    def __init__(self, title, contract_address):
-        self.title = title
-        self.contract_address = contract_address
-        self.contract = get_eth_contract(contract_address)
-        if title == 'nftzine':
-            self.total_supply = 1000
-        else:
-            self.total_supply = self.get_total_supply()
+    def __init__(self, title, data):
+        self.title = data['title']
+        self.url_slug = title
+        self.contract_address = data['contract_address']
+        self.contract = get_eth_contract(self.contract_address)
         es = Etherscan(self.contract_address)
-        self.data = es.data
+        self.es_data = es.data
+        self.data = data
 
-    def get_total_supply(self):
-        key_name = f'{self.title}-supply'
-        _d = cache.get_data(key_name)
-        if _d:
-            return int(_d)
-        else:
-            _d = self.contract.functions.totalSupply().call()
-            cache.store_data(key_name, 604800, int(_d))
-            return int(_d)
+    def _scan_tokens(self):
+        scan_tokens(self.contract_address, self.data['total_supply'])

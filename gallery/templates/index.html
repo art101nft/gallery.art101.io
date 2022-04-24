@@ -11,21 +11,21 @@
           <tr>
             <th>Collection</th>
             <th>Contract Address</th>
+            <th>Contract Type</th>
             <th>Launch Date</th>
             <th>Launch Block</th>
             <th>Token Supply</th>
-            <th>Unique Holders</th>
           </tr>
         </thead>
         <tbody>
           {% for collection in collections %}
           <tr>
-            <td><a href="{{ url_for('collection.show', collection_slug=collection.title) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
-            <td><a href="{{ collection.contract_address | show_etherscan }}" target="_blank">{{ collection.contract_address | shorten_address }}</a></td>
-            <td>{{ collection.data.timeStamp | from_ts | humanize }}</td>
-            <td>{{ collection.data.blockNumber }}</td>
-            <td>{{ collection.total_supply }}</td>
-            <td>?</td>
+            <td><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
+            <td><a href="{{ collection.data.contract_address | show_etherscan }}" target="_blank">{{ collection.data.contract_address | shorten_address }}</a></td>
+            <td>{{ collection.data.contract_type }}</td>
+            <td>{{ collection.es_data.timeStamp | from_ts | humanize }}</td>
+            <td>{{ collection.es_data.blockNumber }}</td>
+            <td>{{ collection.data.total_supply }}</td>
           </tr>
           {% endfor %}
         </tbody>

@@ -17,7 +17,9 @@ def create_app():
     with app.app_context():
         from gallery import filters
         from gallery.routes import meta, collection
+        from gallery.cli import cli
         app.register_blueprint(filters.bp)
         app.register_blueprint(collection.bp)
         app.register_blueprint(meta.bp)
+        app.register_blueprint(cli.bp)
         return app

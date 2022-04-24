@@ -1,8 +1,7 @@
 import click
 from flask import Blueprint
 
-from gallery.factory import db
-from gallery.models import Collection
+from gallery.collections import all_collections, Collection
 from gallery import config
 
 
@@ -13,11 +12,9 @@ bp = Blueprint('cli', 'cli', cli_group=None)
 def init():
     db.create_all()
 
-@bp.cli.command('list')
-def list():
-    """
-    List collections
-    """
-    collections = Collection.query.filter().order_by(Collection.create_date.desc())
+@bp.cli.command('refresh')
+def refresh():
+    collections = [Collection(k, v) for k, v in all_collections.items()]
     for c in collections:
-        click.echo(f'{c.id} - {c.title} - {c.user.public_address} - {c.secret_token}')
+        click.echo(f'[+] Refreshing: {c.title} - {c.contract_address}')
+        c._scan_tokens()
