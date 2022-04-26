@@ -2,6 +2,7 @@ from flask import Blueprint
 from arrow import get as arrow_get
 from urllib.parse import urlencode
 
+from gallery.helpers import get_eth_contract
 from gallery import config
 
 
@@ -14,6 +15,9 @@ def shorten_address(a):
     _s = a[-4:]
     return f'{_p}...{_s}'
 
+# @bp.app_template_filter('get_token_metadata')
+# def get_token_metadata(contract_address: str, token_id: int):
+#
 
 @bp.app_template_filter('humanize')
 def humanize(d):

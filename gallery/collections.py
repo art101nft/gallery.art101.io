@@ -54,4 +54,7 @@ class Collection(object):
         self.data = data
 
     def _scan_tokens(self):
-        scan_tokens(self.contract_address, self.data['total_supply'])
+        sa0 = False
+        if self.url_slug == 'basedvitalik':
+            sa0 = True
+        scan_tokens(self.contract_address, self.data['total_supply'], sa0)

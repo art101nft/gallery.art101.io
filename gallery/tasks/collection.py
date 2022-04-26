@@ -34,7 +34,7 @@ def scan_tokens(contract_address: str, supply: int, start_at_0=False):
                     'metadata': token_meta
                 }
                 cache.store_data(key_name, 604800, dumps(data))
-                sleep(1)
+                # sleep(1)
 
             res = cache.get_data(key_name)
             res = loads(res)
