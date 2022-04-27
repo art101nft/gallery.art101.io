@@ -1,20 +1,22 @@
 from logging.config import dictConfig
 
-from flask import Flask
+import quart.flask_patch
+from quart import Quart
 
 from gallery import config
 
 
 def create_app_huey():
-    _app = Flask(__name__)
+    _app = Quart(__name__)
     # dictConfig(config.LOGGING_CONFIG)
     return _app
 
 def create_app():
-    app = Flask(__name__)
+    app = Quart(__name__)
     app.config.from_envvar('FLASK_SECRETS')
 
-    with app.app_context():
+    @app.before_serving
+    async def startup():
         from gallery import filters
         from gallery.routes import meta, collection, api
         from gallery.cli import cli
@@ -23,4 +25,5 @@ def create_app():
         app.register_blueprint(meta.bp)
         app.register_blueprint(api.bp)
         app.register_blueprint(cli.bp)
-        return app
+
+    return app

@@ -75,7 +75,7 @@ class Collection(object):
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:
-            key_name = f'{self.contract_address}-metadata-{token_id}-v1.1'
+            key_name = f'{self.contract_address}-metadata-{token_id}-v1.2'
             _d = cache.get_data(key_name)
             if _d:
                 return loads(_d)

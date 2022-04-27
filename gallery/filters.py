@@ -1,4 +1,4 @@
-from flask import Blueprint
+from quart import Blueprint
 from arrow import get as arrow_get
 from urllib.parse import urlencode
 

@@ -1,5 +1,5 @@
 arrow
-Flask
+quart
 gunicorn
 python-dotenv
 requests
