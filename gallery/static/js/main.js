@@ -8,15 +8,15 @@ up.compiler('#tokenTitle', function(element, data) {
 })
 
 up.compiler('.tokenPreview', function(element, data) {
-  updateTokenPreview(data)
+  updateTokenPreview(data.contractAddress, data.tokenId)
 })
 
 up.compiler('.notyBox', function(element, data) {
   notif(data)
 })
 
-async function getTokenMetadata(tokenId) {
-  let res = await fetch(`/api/v1/get_token_metadata/${tokenId}`)
+async function getTokenMetadata(contractAddress, tokenId) {
+  let res = await fetch(`/api/v1/get_token_metadata/${contractAddress}/${tokenId}`)
     .then((resp) => resp.json())
     .then(function(data) {
       return data
@@ -24,20 +24,11 @@ async function getTokenMetadata(tokenId) {
   return res
 }
 
-function loadImg(_u) {
-  if (_u.startsWith('ipfs://')) {
-    let stripped = _u.replace('ipfs://', '');
-    return `/ipfs/${stripped}`
-  } else {
-    return _u
-  }
-}
-
-async function updateTokenPreview(tokenId) {
-  let data = await getTokenMetadata(tokenId);
+async function updateTokenPreview(contractAddress, tokenId) {
+  let data = await getTokenMetadata(contractAddress, tokenId);
   if (data) {
     let i = document.getElementById('tokenPreview-' + tokenId);
-    i.src = loadImg(data.image);
+    i.src = loadImg(data.image, contractAddress);
     i.onload = function(){
       i.width = 200;
       i.classList.remove('previewPreload');

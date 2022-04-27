@@ -9,31 +9,25 @@
       <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
         <ul>
           <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
-          <li><a href="{{ url_for('collection.show', collection_id=token.collection.id) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ token.collection.title }}</a></li>
-          <li class="is-active"><a aria-current="page">#{{ token.token_id }}</a></li>
+          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ token_id }}</a></li>
+          <li class="is-active"><a aria-current="page">#{{ token_id }}</a></li>
         </ul>
       </nav>
       <div class="content">
 
         <div class="columns">
           <div class="column">
-            {% if token.token_id > token.collection.start_token_id and prev %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=prev.token_id) }}{{ request.args | fix_args }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ prev.token_id }}</a>
-            {% endif %}
+            <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=0) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #0</a>
           </div>
-          {% set _next = token.collection.get_tokens().first() %}
-          {% if _next and token.id != _next.id %}
           <div class="column">
-            <a class="button is-info" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=_next.token_id) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Unreviewed #{{ _next.token_id }}</a>
+            <a class="button is-info" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=1) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">#00</a>
           </div>
-          {% endif %}
           <div class="column">
-            {% if token.token_id < token.collection.end_token_id and next %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=next.token_id) }}{{ request.args | fix_args }}" up-follow up-target=".container" up-preload up-transition="move-left">#{{ next.token_id }} -></a>
-            {% endif %}
+            <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=0) }}" up-follow up-target=".container" up-preload up-transition="move-left">#1 -></a>
           </div>
         </div>
 
+        {#
         {% if token.approved %}
         <div class="notification is-success">
           <span class="tokenStatus"><img src="/static/img/approved.svg" width=20> Approved.</span>
@@ -43,10 +37,11 @@
           <span class="tokenStatus"><img src="/static/img/rejected.svg" width=20> Rejected. Reason: <strong>{{ token.reject_reason }}</strong></span>
         </div>
         {% endif %}
+        #}
 
         <div class="columns">
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data="{{ token.id }}"><img src="/static/img/loading.gif" width=50></h1>
+            <h1 class="title" id="tokenTitle" up-data="0"><img src="/static/img/loading.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
@@ -56,6 +51,7 @@
           </div>
         </div>
 
+        {#
         {% if not token.approved and not token.rejected %}
         <div class="columns" id="updateButtons">
           <div class="column">
@@ -73,7 +69,8 @@
           </div>
         </div>
         {% endif %}
-
+        #}
+        
       </div>
     </div>
 

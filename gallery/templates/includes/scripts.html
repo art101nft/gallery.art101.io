@@ -12,3 +12,15 @@
       {% endfor %}
   {% endif %}
 {% endwith %}
+
+<script>
+  // Put this helper function in here so we can inject global config for ASSETS_URL
+  function loadImg(_u, contract_address) {
+    if (_u.startsWith('ipfs://')) {
+      let stripped = _u.replace('ipfs://', `{{ config.ASSETS_URL }}/${contract_address}/`);
+      return stripped
+    } else {
+      return _u
+    }
+  }
+</script>

@@ -9,6 +9,7 @@ SERVER_NAME = getenv('SERVER_NAME', '127.0.0.1:5000')
 ETHERSCAN_API = getenv('ETHERSCAN_API', 'xxxxxxx')
 IPFS_SERVER = getenv('IPFS_SERVER', 'http://127.0.0.1:8080')
 DATA_PATH = getenv('DATA_PATH', '/opt/gallery.art101.io/data')
+ASSETS_URL = getenv('ASSETS_URL', 'https://art101-assets.s3.us-west-2.amazonaws.com')
 
 # Cache
 CACHE_HOST = getenv('CACHE_HOST', '127.0.0.1')

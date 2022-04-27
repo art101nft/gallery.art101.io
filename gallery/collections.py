@@ -1,6 +1,10 @@
+import requests
+from json import dumps, loads
+
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
 from gallery.tasks.collection import scan_tokens
+from gallery import config
 
 
 all_collections = {
@@ -44,17 +48,38 @@ all_collections = {
 }
 
 class Collection(object):
-    def __init__(self, title, data):
-        self.title = data['title']
+    def __init__(self, title):
+        if title not in all_collections:
+            return None
+        self.title = all_collections[title]['title']
         self.url_slug = title
-        self.contract_address = data['contract_address']
+        self.contract_address = all_collections[title]['contract_address']
         self.contract = get_eth_contract(self.contract_address)
         es = Etherscan(self.contract_address)
         self.es_data = es.data
-        self.data = data
+        self.data = all_collections[title]
 
     def _scan_tokens(self):
         sa0 = False
         if self.url_slug == 'basedvitalik':
             sa0 = True
         scan_tokens(self.contract_address, self.data['total_supply'], sa0)
+
+    def retrieve_token_metadata(self, token_id):
+        url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
+        try:
+            key_name = f'{self.contract_address}-metadata-{token_id}'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=30, headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                if 'name' in r.json():
+                    cache.store_data(key_name, 604800, dumps(r.json()))
+                    return r.json()
+                else:
+                    return {}
+        except Exception as e:
+            print(e)
+            return {}
