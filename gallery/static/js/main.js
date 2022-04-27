@@ -45,6 +45,13 @@ async function updateTokenInfo(contractAddress, tokenId) {
     return false
   }
   document.getElementById('tokenTitle').innerHTML = data.name;
+  if (data.ownerOf) {
+    if (data.ownerENS) {
+      document.getElementById('tokenOwner').innerHTML = `<strong>Owner: ${data.ownerENS}</strong></br>(${data.ownerOf})`;
+    } else {
+      document.getElementById('tokenOwner').innerHTML = `<strong>Owner:</br>${data.ownerOf}</strong>`;
+    }
+  }
   document.getElementById('tokenDescription').innerHTML = data.description;
   document.getElementById('tokenImage').src = loadImg(data.image, contractAddress);
   data.attributes.forEach(function(i){

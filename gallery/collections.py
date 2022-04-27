@@ -1,5 +1,6 @@
 import requests
 from json import dumps, loads
+from ens.auto import ns
 
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
@@ -74,7 +75,7 @@ class Collection(object):
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:
-            key_name = f'{self.contract_address}-metadata-{token_id}'
+            key_name = f'{self.contract_address}-metadata-{token_id}-v1.1'
             _d = cache.get_data(key_name)
             if _d:
                 return loads(_d)
@@ -82,8 +83,16 @@ class Collection(object):
                 r = requests.get(url, timeout=30, headers={'Content-Type': 'application/json'})
                 r.raise_for_status()
                 if 'name' in r.json():
-                    cache.store_data(key_name, 604800, dumps(r.json()))
-                    return r.json()
+                    _d = r.json()
+                    try:
+                        owner = self.contract.functions.ownerOf(int(token_id)).call()
+                        _d['ownerOf'] = owner
+                        _d['ownerENS'] = ns.name(owner)
+                    except Exception as e:
+                        print(e)
+                        pass
+                    cache.store_data(key_name, 604800, dumps(_d))
+                    return _d
                 else:
                     return {}
         except Exception as e:
