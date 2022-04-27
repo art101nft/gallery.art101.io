@@ -12,6 +12,7 @@ all_collections = {
         'title': 'Non-Fungible Soup',
         'contract_address': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
         'total_supply': 2048,
+        'start_token_id': 1,
         'contract_type': 'ERC-721',
         'notable_tokens': [43, 770, 589, 1617, 1952]
     },
@@ -19,30 +20,35 @@ all_collections = {
         'title': 'MondrianNFT',
         'contract_address': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
         'total_supply': 4096,
+        'start_token_id': 1,
         'contract_type': 'ERC-721'
     },
     'soupxmondrian': {
         'title': 'soupXmondrian',
         'contract_address': '0x0dD0CFeAE058610C88a87Da2D9fDa496cFadE108',
         'total_supply': 3,
+        'start_token_id': 1,
         'contract_type': 'ERC-1155'
     },
     'bauhausblocks': {
         'title': 'Bauhaus Blocks',
         'contract_address': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
         'total_supply': 8192,
+        'start_token_id': 1,
         'contract_type': 'ERC-721'
     },
     'nftzine': {
         'title': 'NFTZine',
         'contract_address': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
         'total_supply': 1000,
+        'start_token_id': 1,
         'contract_type': 'ERC-721'
     },
     'basedvitalik': {
         'title': 'BASΞD VITALIK',
         'contract_address': '0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c',
         'total_supply': 4962,
+        'start_token_id': 0,
         'contract_type': 'ERC-721A'
     }
 }

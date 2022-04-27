@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 up.compiler('#tokenTitle', function(element, data) {
-  updateTokenInfo(data)
+  updateTokenInfo(data.contractAddress, data.tokenId)
 })
 
 up.compiler('.tokenPreview', function(element, data) {
@@ -36,13 +36,8 @@ async function updateTokenPreview(contractAddress, tokenId) {
   }
 }
 
-async function updateTokenInfo(tokenId) {
-  let data = await getTokenMetadata(tokenId);
-  if (data.from_local) {
-    console.log(`Returned JSON payload from locally saved resources`);
-  } else {
-    console.log(`Returned JSON payload from remote metadata API`);
-  }
+async function updateTokenInfo(contractAddress, tokenId) {
+  let data = await getTokenMetadata(contractAddress, tokenId);
   if (!data) {
     document.getElementById('tokenTitle').innerHTML = 'Error';
     document.getElementById('tokenDescription').innerHTML = 'Malformed JSON payload';
@@ -51,7 +46,7 @@ async function updateTokenInfo(tokenId) {
   }
   document.getElementById('tokenTitle').innerHTML = data.name;
   document.getElementById('tokenDescription').innerHTML = data.description;
-  document.getElementById('tokenImage').src = loadImg(data.image);
+  document.getElementById('tokenImage').src = loadImg(data.image, contractAddress);
   data.attributes.forEach(function(i){
     let newChild = document.createElement('li');
     newChild.innerHTML = `<span class="tag is-light is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;

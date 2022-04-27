@@ -42,7 +42,7 @@
           <div class="card column">
             <div class="card-image">
               <figure class="image">
-                <a href="#" up-target=".container" up-preload>
+                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
                   <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
                 </a>
               </figure>

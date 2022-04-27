@@ -9,39 +9,26 @@
       <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
         <ul>
           <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
-          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ token_id }}</a></li>
+          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ collection.title }}</a></li>
           <li class="is-active"><a aria-current="page">#{{ token_id }}</a></li>
         </ul>
       </nav>
       <div class="content">
-
         <div class="columns">
           <div class="column">
-            <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=0) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #0</a>
+            {% if token_id > collection.data.start_token_id %}
+              <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ token_id - 1 }}</a>
+            {% endif %}
           </div>
           <div class="column">
-            <a class="button is-info" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=1) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">#00</a>
+            {% if token_id < collection.data.total_supply + collection.data.start_token_id - 1 %}
+              <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-target=".container" up-preload up-transition="move-left">#{{ token_id + 1 }} -></a>
+            {% endif %}
           </div>
-          <div class="column">
-            <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=0) }}" up-follow up-target=".container" up-preload up-transition="move-left">#1 -></a>
-          </div>
         </div>
-
-        {#
-        {% if token.approved %}
-        <div class="notification is-success">
-          <span class="tokenStatus"><img src="/static/img/approved.svg" width=20> Approved.</span>
-        </div>
-        {% elif token.rejected %}
-        <div class="notification is-danger">
-          <span class="tokenStatus"><img src="/static/img/rejected.svg" width=20> Rejected. Reason: <strong>{{ token.reject_reason }}</strong></span>
-        </div>
-        {% endif %}
-        #}
-
         <div class="columns">
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data="0"><img src="/static/img/loading.gif" width=50></h1>
+            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}"  }'><img src="/static/img/loading.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
@@ -50,27 +37,6 @@
             <img src="/static/img/loading.gif" id="tokenImage" />
           </div>
         </div>
-
-        {#
-        {% if not token.approved and not token.rejected %}
-        <div class="columns" id="updateButtons">
-          <div class="column">
-            <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;" up-follow=".container" up-transition="cross-fade">Approve</a>
-          </div>
-          <div class="column">
-            <form method="GET" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='reject') }}">
-              <button class="button is-danger" style="width:100%;" up-follow=".container" up-transition="cross-fade">Reject</button>
-              <div class="field">
-                <div class="control">
-                  <input class="input" type="text" placeholder="reject reason..." name="reason">
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        {% endif %}
-        #}
-        
       </div>
     </div>
 
