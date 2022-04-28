@@ -17,6 +17,10 @@ def shorten_address(a):
     _s = a[-4:]
     return f'{_p}...{_s}'
 
+@bp.app_template_filter('is_even')
+def is_even(i):
+    return (i % 2) == 0
+
 @bp.app_template_filter('get_random')
 def get_random(supply: int, start_token_id: int, amt: int):
     last_token = supply + start_token_id - 1
