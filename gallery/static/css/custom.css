@@ -1,3 +1,7 @@
+html, body, table, .navbar {
+  background-color: #F6F6F6 !important;
+}
+
 .screen {
   padding-bottom: 1em;
   max-width: 500px;
@@ -52,7 +56,7 @@
 }
 
 .tokenPreview {
-  border: 1px solid black;
+  border: 0px solid black;
   border-radius: 4px;
 }
 

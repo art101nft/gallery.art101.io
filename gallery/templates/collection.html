@@ -66,11 +66,11 @@
         {% for _token in tokens %}
         <div class="columns">
           {% for token in _token %}
-          <div class="card column">
+          <div class="cardz column">
             <div class="card-image">
               <figure class="image">
                 <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
-                  <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
                 </a>
               </figure>
             </div>

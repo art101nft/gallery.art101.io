@@ -64,7 +64,7 @@ async function updateTokenInfo(contractAddress, tokenId) {
   document.getElementById('tokenOffchainImage').innerHTML = `</br><strong>Off-chain Image:</strong></br><a href="${offchainImg}" target=_blank>${offchainImg}</a>`;
   data.attributes.forEach(function(i){
     let newChild = document.createElement('li');
-    newChild.innerHTML = `<span class="tag is-light is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;
+    newChild.innerHTML = `<span class="tag is-white is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;
     document.getElementById('tokenTraits').appendChild(newChild);
   })
   let buttons = document.getElementById('updateButtons')
