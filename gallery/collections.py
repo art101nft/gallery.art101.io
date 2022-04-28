@@ -15,7 +15,7 @@ all_collections = {
         'total_supply': 2048,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'xnotable_tokens': [43, 770, 589, 1617, 1952]
+        'xnotable_tokens': [43, 770, 589, 1617, 1952, 465]
     },
     'mondriannft': {
         'title': 'MondrianNFT',
