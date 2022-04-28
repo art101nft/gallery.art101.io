@@ -36,8 +36,9 @@
       </nav>
       {% if collection.data.notable_tokens %}
       <div class="tokenPreviews has-text-centered">
+        {% for _token in collection.data.notable_tokens | batch(4) %}
         <div class="columns">
-          {% for token in collection.data.notable_tokens %}
+          {% for token in _token %}
           <div class="card column">
             <div class="card-image">
               <figure class="image">
@@ -49,6 +50,25 @@
           </div>
           {% endfor %}
         </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="tokenPreviews has-text-centered">
+        {% for _token in collection.data.total_supply | get_random(collection.data.start_token_id, 8) | batch(4) %}
+        <div class="columns">
+          {% for token in _token %}
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
+                  <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
+                </a>
+              </figure>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
       </div>
       {% endif %}
 

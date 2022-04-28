@@ -1,6 +1,8 @@
+from urllib.parse import urlencode
+from random import sample
+
 from quart import Blueprint
 from arrow import get as arrow_get
-from urllib.parse import urlencode
 
 from gallery.helpers import get_eth_contract
 from gallery import config
@@ -15,9 +17,11 @@ def shorten_address(a):
     _s = a[-4:]
     return f'{_p}...{_s}'
 
-# @bp.app_template_filter('get_token_metadata')
-# def get_token_metadata(contract_address: str, token_id: int):
-#
+@bp.app_template_filter('get_random')
+def get_random(supply: int, start_token_id: int, amt: int):
+    last_token = supply + start_token_id - 1
+    token_range = range(start_token_id, last_token, 1)
+    return list(sample(token_range, amt))
 
 @bp.app_template_filter('humanize')
 def humanize(d):
