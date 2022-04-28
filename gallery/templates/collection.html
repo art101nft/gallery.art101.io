@@ -55,13 +55,9 @@
       {% else %}
       <div class="tokenPreviews has-text-centered">
         {% if collection.data.total_supply < 8 %}
-          {% set _max = 3 %}
-          {% set _batch = 4 %}
           {% set tokens = collection.data.total_supply | get_random(collection.data.start_token_id, 3) | batch(3) %}
         {% else %}
-          {% set _max = 8 %}
-          {% set _batch = 4 %}
-          {% set tokens = collection.data.total_supply | get_random(collection.data.start_token_id, 8) | batch(4) %}
+          {% set tokens = collection.data.total_supply | get_random(collection.data.start_token_id, 4) | batch(4) %}
         {% endif %}
         {% for _token in tokens %}
         <div class="columns">
