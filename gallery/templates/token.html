@@ -5,7 +5,6 @@
   {% include 'includes/navbar.html' %}
   <section class="section">
     <div class="container has-text-centered">
-
       <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
         <ul>
           <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
@@ -39,10 +38,25 @@
         </div>
         <div class="has-text-centered">
           <p class="subtitle" id="tokenOwner" style="margin-top: 1em;"></p>
+          <div class="columns pr-2">
+            <div class="column">
+              <p class="subtitle" id="tokenOnchainURI" style="margin-top: 1em;"></p>
+            </div>
+            <div class="column">
+              <p class="subtitle" id="tokenOnchainImage" style="margin-top: 1em;"></p>
+            </div>
+          </div>
+          <div class="columns pl-2">
+            <div class="column">
+              <p class="subtitle" id="tokenOffchainURI" style="margin-top: 1em;"></p>
+            </div>
+            <div class="column">
+              <p class="subtitle" id="tokenOffchainImage" style="margin-top: 1em;"></p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
   </section>
   {% include 'includes/footer.html' %}
   </body>

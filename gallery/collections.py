@@ -65,17 +65,24 @@ class Collection(object):
         es = Etherscan(self.contract_address)
         self.es_data = es.data
         self.data = all_collections[title]
+        if 'contract_type' in self.data:
+            if self.data['contract_type'] == 'ERC-1155':
+                self.erc1155 = True
+            else:
+                self.erc1155 = False
+        else:
+            self.erc1155 = False
 
     def _scan_tokens(self):
         sa0 = False
         if self.url_slug == 'basedvitalik':
             sa0 = True
-        scan_tokens(self.contract_address, self.data['total_supply'], sa0)
+        scan_tokens(self.contract_address, self.data['total_supply'], sa0, self.erc1155)
 
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:
-            key_name = f'{self.contract_address}-metadata-{token_id}-v1.2'
+            key_name = f'{self.contract_address}-metadata-{token_id}-v1.6'
             _d = cache.get_data(key_name)
             if _d:
                 return loads(_d)
@@ -85,7 +92,16 @@ class Collection(object):
                 if 'name' in r.json():
                     _d = r.json()
                     try:
-                        owner = self.contract.functions.ownerOf(int(token_id)).call()
+                        if self.erc1155:
+                            owner = None
+                            _tokenURI = self.contract.functions.uri(int(token_id)).call()
+                            i = hex(int(token_id)).lstrip('0x').zfill(64)
+                            tokenURI = _tokenURI.replace('{id}', i)
+                        else:
+                            owner = self.contract.functions.ownerOf(int(token_id)).call()
+                            tokenURI = self.contract.functions.tokenURI(int(token_id)).call()
+                        _d['tokenURI'] = tokenURI
+                        _d['tokenOffchainURI'] = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
                         _d['ownerOf'] = owner
                         _d['ownerENS'] = ns.name(owner)
                     except Exception as e:

@@ -467,5 +467,25 @@ erc721_abi = [
     "stateMutability": "view",
     "type": "function",
     "constant": True
-  }
+  },
+  {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "uri",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": True
+    }
 ]

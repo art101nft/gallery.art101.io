@@ -9,7 +9,7 @@ from gallery.library.cache import cache
 
 
 @huey.task()
-def scan_tokens(contract_address: str, supply: int, start_at_0=False):
+def scan_tokens(contract_address: str, supply: int, start_at_0=False, erc1155=False):
     with app.app_context():
         if start_at_0:
             r = range(supply-1, -1, -1)
@@ -20,8 +20,12 @@ def scan_tokens(contract_address: str, supply: int, start_at_0=False):
             if not cache.get_data(key_name):
                 print(f'fetching token info {key_name}')
                 c = get_eth_contract(contract_address)
-                token_uri = c.functions.tokenURI(token_id).call()
-                owner_of = c.functions.ownerOf(token_id).call()
+                if erc1155:
+                    token_uri = c.functions.uri(token_id).call()
+                    owner_of = None
+                else:
+                    token_uri = c.functions.tokenURI(token_id).call()
+                    owner_of = c.functions.ownerOf(token_id).call()
                 try:
                     token_meta = requests.get(convert_ipfs_uri(token_uri), timeout=60)
                     token_meta.raise_for_status()

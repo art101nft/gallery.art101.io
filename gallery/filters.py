@@ -21,6 +21,8 @@ def shorten_address(a):
 def get_random(supply: int, start_token_id: int, amt: int):
     last_token = supply + start_token_id - 1
     token_range = range(start_token_id, last_token, 1)
+    if supply < 8:
+        return list(range(start_token_id, last_token + 1, 1))
     return list(sample(token_range, amt))
 
 @bp.app_template_filter('humanize')
