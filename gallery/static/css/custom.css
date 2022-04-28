@@ -2,6 +2,11 @@ html, body, table, .navbar {
   background-color: #F6F6F6 !important;
 }
 
+.collectionDescription {
+  width: 60%;
+  margin: 0 auto;
+}
+
 .screen {
   padding-bottom: 1em;
   max-width: 500px;

@@ -12,21 +12,28 @@ all_collections = {
     'non-fungible-soup': {
         'title': 'Non-Fungible Soup',
         'contract_address': '0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB',
+        'description': 'Art101\'s flagship stealth drop which put us on the map. This was the first real drop as a newly established Art101 brand with an art-centric take on generative NFT and crypto art. The digital version of silk screening, Andy Warhol would have loved NFTs.',
+        'website': 'https://nonfungiblesoup.io',
         'total_supply': 2048,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'xnotable_tokens': [43, 770, 589, 1617, 1952, 465]
+        'notable_tokens': [43, 770, 1617, 1952]
     },
     'mondriannft': {
         'title': 'MondrianNFT',
         'contract_address': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
+        'description': 'Art101\'s second drop paying homage to French artist Piet Mondrian. The collection spans the entirety of Piet\'s multiple styles, phases, and formats, with rarity that reflects his real-world collection but with a humanist take on generative art. Each one has small imperfections like cracked paint and jagged lines. Token ownership of Non-Fungible Soup allowed for early minting/claiming of the MondrianNFT tokens.',
+        'website': 'https://mondriannft.io',
         'total_supply': 4096,
         'start_token_id': 1,
-        'contract_type': 'ERC-721'
+        'contract_type': 'ERC-721',
+        'notable_tokens': [400, 1226, 1089, 3363, 846, 3855, 2592, 3369]
     },
     'soupxmondrian': {
         'title': 'soupXmondrian',
         'contract_address': '0x0dD0CFeAE058610C88a87Da2D9fDa496cFadE108',
+        'description': 'The first exclusive commemorative companion drop of three multi-edition Andy Warhol and Piet Mondrian Vector Mash-Ups for owners of Non-Fungible Soup and MondrianNFT. Kicked off in the 1920s by Piet Mondrian, Abstract Expressionism rebuked the decadence of Art Deco in the post-war era. Just as Pop Art and artist\'s like Andy Warhol admonished Abstract Expressionism\'s loud strokes and lack of reference. Ironically, they work well together.',
+        'website': 'https://soup.mondriannft.io',
         'total_supply': 3,
         'start_token_id': 1,
         'contract_type': 'ERC-1155'
@@ -34,13 +41,18 @@ all_collections = {
     'bauhausblocks': {
         'title': 'Bauhaus Blocks',
         'contract_address': '0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5',
+        'description': 'Bauhaus Blocks is a generative collection of Bauhaus-inspired NFTs created from 372 unique blocks concatenated in four different formats and palettes. Bauhaus was an early 19th-century art movement, which synthesized craft, technology, and aesthetics. Seeking the creation of a "total work." Or a that is, multiple works that act as one through aesthetic unity. An idea that lends itself to simple geometric shapes cascading with cohesion, the Bauhaus "brand".',
+        'website': 'https://bauhausblocks.io',
         'total_supply': 8192,
         'start_token_id': 1,
-        'contract_type': 'ERC-721'
+        'contract_type': 'ERC-721',
+        'notable_tokens': [6851, 404, 5618, 7172, 117, 1959, 2648, 1023]
     },
     'nftzine': {
         'title': 'NFTZine',
         'contract_address': '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b',
+        'description': 'NFTZine is a crypto homage to a linchpin of the DIY art scene, the zine. They are generative, interactive and printable. A PDF copy of each NFT zine is attached to each tokens metadata. \'Art is Theft\' is issue #001.',
+        'website': 'https://nftzine.io',
         'total_supply': 1000,
         'start_token_id': 1,
         'contract_type': 'ERC-721'
@@ -48,9 +60,12 @@ all_collections = {
     'basedvitalik': {
         'title': 'BASΞD VITALIK',
         'contract_address': '0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c',
+        'description': 'BASΞD VITALIK is a hyper-fauvist take on generative PFP NFTs and authentic homage to crypto-royalty; as eccentric and unapologetic as Vitalik Buterin himself. Pamp it, money-skelly.',
+        'website': 'https://basedvitalik.io',
         'total_supply': 4962,
         'start_token_id': 0,
-        'contract_type': 'ERC-721A'
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [2717, 501, 2714, 269, 2017, 102, 3228, 1289, 655]
     }
 }
 
@@ -59,6 +74,7 @@ class Collection(object):
         if title not in all_collections:
             return None
         self.title = all_collections[title]['title']
+        self.description = all_collections[title]['description']
         self.url_slug = title
         self.contract_address = all_collections[title]['contract_address']
         self.contract = get_eth_contract(self.contract_address)

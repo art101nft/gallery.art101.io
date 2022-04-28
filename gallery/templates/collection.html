@@ -6,7 +6,8 @@
   <section class="section">
     <div class="container has-text-centered">
       <h1 class="title">{{ collection.title }}</h1>
-      <p class="subtitle pt-2">{{ collection.data.description }}</p>
+      <p class="subtitle pt-2 collectionDescription">{{ collection.data.description }}</p>
+      <p class="subtitle pt-2 collectionDescription"><a href="{{ collection.data.website }}" target=_blank>{{ collection.data.website }}</a></p>
       <nav class="level">
         <div class="level-item">
           <div>
@@ -39,11 +40,11 @@
         {% for _token in collection.data.notable_tokens | batch(4) %}
         <div class="columns">
           {% for token in _token %}
-          <div class="card column">
+          <div class="cardz column">
             <div class="card-image">
               <figure class="image">
                 <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
-                  <img src="/static/img/loading.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
                 </a>
               </figure>
             </div>
