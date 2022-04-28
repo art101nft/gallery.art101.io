@@ -36,7 +36,6 @@
       </nav>
       {% if collection.data.notable_tokens %}
       <div class="tokenPreviews has-text-centered">
-        <p class="subtitle">Notable Tokens</p>
         <div class="columns">
           {% for token in collection.data.notable_tokens %}
           <div class="card column">
@@ -52,6 +51,53 @@
         </div>
       </div>
       {% endif %}
+
+      <div class="tokenPreviews has-text-centered">
+        <div class="columns">
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://looksrare.org/collections/{{ collection.contract_address }}" target="_blank"><img src="/static/img/looksrare.png"> LooksRare</a>
+              </figure>
+            </div>
+          </div>
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://www.gem.xyz/collection/{{ collection.url_slug }}" target="_blank"><img src="/static/img/gem.png"> Gem</a>
+              </figure>
+            </div>
+          </div>
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://www.genie.xyz/collection/{{ collection.contract_address }}" target="_blank"><img src="/static/img/genie.png"> Genie</a>
+              </figure>
+            </div>
+          </div>
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://opensea.io/collection/{{ collection.url_slug }}" target="_blank"><img src="/static/img/opensea.png"> Opensea</a>
+              </figure>
+            </div>
+          </div>
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://rarible.com/{{ collection.url_slug }}" target="_blank"><img src="/static/img/rarible.jpg"> Rarible</a>
+              </figure>
+            </div>
+          </div>
+          <div class="card column">
+            <div class="card-image">
+              <figure class="image">
+                <a href="https://x2y2.io/collection/{{ collection.url_slug }}/items" target="_blank"><img src="/static/img/x2y2.png"> X2Y2</a>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   {% include 'includes/footer.html' %}
