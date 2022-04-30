@@ -9,7 +9,7 @@ export NFZ=0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b
 export BV=0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c
 
 # Ensure we have all metadata
-# 
+.venv/bin/python3 download_metadata.py
 
 # Recurse into each data directory containing metadata and fetch images from IPFS
 # Assumes metadata is already fetched from huey tasks
