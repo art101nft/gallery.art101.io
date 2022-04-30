@@ -1,9 +1,7 @@
 arrow
 quart
-gunicorn
 python-dotenv
 requests
 web3
 flake8
-huey
 redis

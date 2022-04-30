@@ -4,7 +4,6 @@ from ens.auto import ns
 
 from gallery.helpers import get_eth_contract, Etherscan
 from gallery.library.cache import cache
-from gallery.tasks.collection import scan_tokens
 from gallery import config
 
 
@@ -88,12 +87,6 @@ class Collection(object):
                 self.erc1155 = False
         else:
             self.erc1155 = False
-
-    def _scan_tokens(self):
-        sa0 = False
-        if self.url_slug == 'basedvitalik':
-            sa0 = True
-        scan_tokens(self.contract_address, self.data['total_supply'], sa0, self.erc1155)
 
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
