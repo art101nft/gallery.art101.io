@@ -1,7 +1,6 @@
 from logging.config import dictConfig
 
-import quart.flask_patch
-from quart import Quart
+from quart import Quart, flask_patch
 
 from gallery import config
 

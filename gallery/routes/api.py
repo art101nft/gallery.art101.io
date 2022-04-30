@@ -21,3 +21,13 @@ async def get_token_metadata(contract_address, token_id):
         return jsonify(collection.retrieve_token_metadata(token_id))
     except Exception as e:
         return jsonify({'error': True, 'reason': e})
+
+@bp.route('/show_collection/<collection_slug>')
+async def show_collection(collection_slug):
+    collection = Collection(collection_slug)
+    if not collection:
+        return jsonify({'error': True, 'reason': 'Collection does not exist'})
+    try:
+        return jsonify(all_collections[collection_slug])
+    except Exception as e:
+        return jsonify({'error': True, 'reason': e})

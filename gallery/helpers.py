@@ -25,7 +25,8 @@ def get_eth_contract(_contract_address):
 def convert_ipfs_uri(u):
     if u.startswith('ipfs://'):
         ipfs = u.split('ipfs://')[1]
-        return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
+        # return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
+        return f'https://gateway.pinata.cloud/ipfs/{ipfs}'
     else:
         return u
 

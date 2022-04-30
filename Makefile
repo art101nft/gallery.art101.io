@@ -6,10 +6,10 @@ shell:
 	bash manage.sh shell
 
 dev:
-	bash manage.sh run
+	python3 run.py
 
 prod:
-	bash manage.sh prod
+	.venv/bin/hypercorn run
 
 up:
 	docker-compose up -d
