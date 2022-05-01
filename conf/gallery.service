@@ -1,0 +1,25 @@
+[Unit]
+Description=gallery.art101.io meme service
+Documentation=https://gallery.art101.io
+After=network.target
+
+[Service]
+PermissionsStartOnly = true
+PIDFile = /opt/gallery.art101.io/data/gunicorn/gallery.art101.io.pid
+User = gallery.art101.io
+Group = gallery.art101.io
+WorkingDirectory = /opt/gallery.art101.io
+ExecStartPre = /bin/mkdir -p /opt/gallery.art101.io/data/gunicorn
+ExecStartPre = /bin/chown -R gallery.art101.io:gallery.art101.io /opt/gallery.art101.io/data/gunicorn
+Environment = FLASK_APP=gallery.art101.io/app.py
+Environment = FLASK_SECRETS=config.py
+Environment = FLASK_ENV=production
+Environment = FLASK_DEBUG=0
+ExecStart = /opt/gallery.art101.io/.venv/bin/gunicorn --bind 127.0.0.1:4000 "gallery.art101.io.app:app" --log-file /opt/gallery.art101.io/data/gunicorn/gunicorn.log --pid /opt/gallery.art101.io/data/gunicorn/gallery.art101.io.pid --reload
+ExecReload = /bin/kill -s HUP /opt/gallery.art101.io/data/gunicorn/gallery.art101.io.pid
+ExecStop = /bin/kill -s TERM /opt/gallery.art101.io/data/gunicorn/gallery.art101.io.pid
+ExecStopPost = /bin/rm -rf /opt/gallery.art101.io/data/gunicorn/gallery.art101.io.pid
+PrivateTmp = true
+
+[Install]
+WantedBy=default.target
