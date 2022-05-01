@@ -12,7 +12,6 @@ export BV=0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c
 .venv/bin/python3 download_metadata.py
 
 # Recurse into each data directory containing metadata and fetch images from IPFS
-# Assumes metadata is already fetched from huey tasks
 for i in data/0x*; do
   echo "moving into ${i}";
   pushd "${i}";
@@ -34,22 +33,22 @@ for i in data/0x*; do
 done
 
 # sync metadata and images
-
+echo "[+] Syncing NFS assets to S3"; sleep 3;
 aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
-
+echo "[+] Syncing MND assets to S3"; sleep 3;
 aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
-
+echo "[+] Syncing SXM assets to S3"; sleep 3;
 aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
-
+echo "[+] Syncing BB assets to S3"; sleep 3;
 aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "image/png" --exclude "*.json" --include "*"
-
+echo "[+] Syncing NFZ assets to S3"; sleep 3;
 aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "image/png" --exclude "*.json" --include "*"
-
+# echo "[+] Syncing BV assets to S3"; sleep 3;
 aws s3 sync data/${BV}/ s3://art101-assets/${BV}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${BV}/ s3://art101-assets/${BV}/ --content-type "image/png" --exclude "*.json" --include "*"
 
