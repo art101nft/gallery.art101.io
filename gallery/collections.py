@@ -80,6 +80,7 @@ class Collection(object):
         es = Etherscan(self.contract_address)
         self.es_data = es.data
         self.data = all_collections[title]
+        self.stats = self.retrieve_collection_stats()
         if 'contract_type' in self.data:
             if self.data['contract_type'] == 'ERC-1155':
                 self.erc1155 = True
@@ -87,6 +88,24 @@ class Collection(object):
                 self.erc1155 = False
         else:
             self.erc1155 = False
+
+    def retrieve_collection_stats(self):
+        key_name = f'opensea-stats-{self.url_slug}'
+        _d = cache.get_data(key_name)
+        if _d:
+            return loads(_d)
+        else:
+            try:
+                url = f'https://api.opensea.io/api/v1/collection/{self.url_slug}/stats'
+                r = requests.get(url, headers={"Accept": "application/json"}, timeout=10)
+                r.raise_for_status()
+                if 'stats' in r.json():
+                    _d = r.json()['stats']
+                    cache.store_data(key_name, 604800, dumps(_d))
+                    return _d
+            except Exception as e:
+                print(e)
+                return {}
 
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'

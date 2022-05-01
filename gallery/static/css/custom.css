@@ -15,7 +15,7 @@ html, body, table, .navbar {
 
 .screen-lg {
   padding-bottom: 1em;
-  max-width: 800px;
+  width: 80%;
   margin: 0 auto;
 }
 
