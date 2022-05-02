@@ -23,7 +23,7 @@ for i in data/0x*; do
     FULLPATH="https://gateway.pinata.cloud/ipfs/${IMG}";
     if [[ ! -f $IMG ]]; then
       echo "${NAME} - ${IMG} does not exist, fetching from ${FULLPATH}";
-      wget "${FULLPATH}";
+      wget "${FULLPATH}" -O "${IMG}";
       sleep 1;
     else
       echo "${NAME} - ${IMG} does exist, skipping";
