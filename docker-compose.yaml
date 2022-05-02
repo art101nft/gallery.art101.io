@@ -6,14 +6,3 @@ services:
     restart: always
     ports:
       - 127.0.0.1:6379:6379
-  ipfs:
-    image: ipfs/go-ipfs:v0.7.0
-    container_name: art101_gallery_ipfs
-    restart: always
-    ports:
-      - 0.0.0.0:4001:4001
-      - 127.0.0.1:5001:5001
-      - 0.0.0.0:8080:8080
-    volumes:
-      - ./data/ipfs/export:/export
-      - ./data/ipfs/data:/data/ipfs
