@@ -72,15 +72,17 @@ class Collection(object):
     def __init__(self, title):
         if title not in all_collections:
             return None
-        self.title = all_collections[title]['title']
-        self.description = all_collections[title]['description']
+        self.data = all_collections[title]
+        self.title = self.data['title']
+        self.description = self.data['description']
+        self.contract_address = self.data['contract_address']
         self.url_slug = title
-        self.contract_address = all_collections[title]['contract_address']
         self.contract = get_eth_contract(self.contract_address)
         es = Etherscan(self.contract_address)
         self.es_data = es.data
-        self.data = all_collections[title]
         self.stats = self.retrieve_collection_stats()
+        self.token_start = self.data['start_token_id']
+        self.token_end = self.data['total_supply'] - 1 + self.token_start
         if 'contract_type' in self.data:
             if self.data['contract_type'] == 'ERC-1155':
                 self.erc1155 = True
@@ -88,6 +90,14 @@ class Collection(object):
                 self.erc1155 = False
         else:
             self.erc1155 = False
+
+    def token_id_is_allowed(self, token_id):
+        if not token_id.isnumeric():
+            return False
+        _token_id = int(token_id)
+        if _token_id < self.token_start or _token_id > (self.token_end):
+            return False
+        return True
 
     def retrieve_collection_stats(self):
         key_name = f'opensea-stats-{self.url_slug}'

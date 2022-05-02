@@ -56,7 +56,42 @@
           </div>
         </div>
       </nav>
+      <nav class="content">
+        <h1 class="title pt-4">Navigate</h1>
+        <div class="columns">
+          <div class="column">
+            <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
+              <div class="field is-grouped">
+                <p class="control is-expanded">
+                  <input class="input" type="text" placeholder="Enter token Id" name="tokenId">
+                </p>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" up-follow=".container">Jump</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="column">
+            <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
+              <div class="field is-grouped">
+                <p class="control is-expanded">
+                  <input class="input" type="text" placeholder="Enter wallet or ENS address" name="wallet">
+                </p>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <button class="button is-light is-link" up-follow=".container">Search</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </nav>
+
       {% if collection.data.notable_tokens %}
+      <h1 class="title">Notable Tokens</h1>
       <div class="tokenPreviews has-text-centered">
         {% for _token in collection.data.notable_tokens | batch(4) %}
         <div class="columns">
