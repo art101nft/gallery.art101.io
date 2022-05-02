@@ -1,3 +1,4 @@
+from json import dumps, loads
 from urllib.parse import urlencode
 from random import sample
 

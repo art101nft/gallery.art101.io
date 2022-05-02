@@ -7,6 +7,14 @@ up.compiler('#tokenTitle', function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId)
 })
 
+up.compiler('#ownerTokens', function(element, data) {
+  fetchOwnerTokens(data.contractAddress, data.walletAddress, data.urlSlug)
+})
+
+up.compiler('#connectWallet', function(element) {
+  armConnectButton();
+})
+
 up.compiler('.tokenPreview', function(element, data) {
   updateTokenPreview(data.contractAddress, data.tokenId)
 })
@@ -14,6 +22,81 @@ up.compiler('.tokenPreview', function(element, data) {
 up.compiler('.notyBox', function(element, data) {
   notif(data)
 })
+
+async function getMetamaskAccount() {
+  const accounts = await window.ethereum.request({
+    method: 'eth_requestAccounts',
+  });
+  const account = accounts[0];
+  return account
+}
+
+async function armConnectButton(){
+  const onboarding = new MetaMaskOnboarding();
+  const onboardButton = document.getElementById('connectWallet');
+  let accounts;
+
+  if (!onboardButton) {
+    return false;
+  }
+
+  onboardButton.onclick = async () => {
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+      onboardButton.onclick = () => {
+        onboardButton.classList.add('is-loading');
+        onboardButton.disabled = true;
+        onboarding.startOnboarding();
+      };
+    } else if (accounts && accounts.length > 0) {
+      onboardButton.classList.remove('is-loading');
+      onboardButton.disabled = false;
+      onboarding.stopOnboarding();
+    } else {
+      try {
+        onboardButton.classList.add('is-loading');
+        onboardButton.disabled = true;
+        let acc = await getMetamaskAccount();
+        window.location.href = ('?wallet=' + acc);
+      } catch(e) {
+        console.log(e);
+        onboardButton.classList.remove('is-loading');
+      }
+    }
+  };
+
+};
+
+async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
+  let newColumn;
+  let parent = document.getElementById('ownerTokens');
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  // const walletAddress = await getMMAccount();
+  const walletShort = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
+  const contract = new w3.eth.Contract(erc721Abi, contractAddress);
+  const balance = await contract.methods.balanceOf(walletAddress).call();
+  for (i=0; i<balance; i++) {
+    if (i % 4 == 0) {
+      newColumn = document.createElement('div');
+      newColumn.classList.add('columns');
+      parent.appendChild(newColumn);
+      console.log(`Creating new child for index ${i}`)
+    }
+    let ti = await contract.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+    console.log(`Found token #${ti} for wallet ${walletAddress} in contract ${contractAddress}`)
+    let newItem = document.createElement('div');
+    newItem.classList.add('column');
+    newColumn.appendChild(newItem);
+    newItem.innerHTML = `<div class="card-image">
+              <figure class="image">
+                <a href="${urlSlug}" up-target=".container" up-transition="cross-fade" up-preload>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${ti}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${ti}" }'>
+                </a>
+              </figure>
+            </div>`;
+    await updateTokenPreview(contractAddress, ti);
+  };
+
+}
 
 async function getTokenMetadata(contractAddress, tokenId) {
   let res = await fetch(`/api/v1/get_token_metadata/${contractAddress}/${tokenId}`)

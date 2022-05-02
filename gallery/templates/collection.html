@@ -57,40 +57,53 @@
         </div>
       </nav>
       <nav class="content">
+        {% if owner %}
+        <div class="column has-text-centered m-0">
+          <div class="field">
+            <div class="control">
+              <a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
+                <button class="button" up-follow=".container" up-transition="cross-fade" up-preload>x Clear</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% else %}
         <h1 class="title pt-4">Navigate</h1>
         <div class="columns">
           <div class="column">
             <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
               <div class="field is-grouped">
-                <p class="control is-expanded">
+                <p class="control is-grouped-right">
                   <input class="input" type="text" placeholder="Enter token Id" name="tokenId">
                 </p>
               </div>
               <div class="field">
                 <div class="control">
-                  <button class="button is-primary" up-follow=".container">Jump</button>
+                  <button class="button is-primary" up-follow=".container" up-transition="cross-fade" up-preload>Jump</button>
                 </div>
               </div>
             </form>
           </div>
           <div class="column">
             <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
-              <div class="field is-grouped">
-                <p class="control is-expanded">
+              <div class="field is-grouped is-grouped-centered">
+                <p class="control is-grouped-right">
                   <input class="input" type="text" placeholder="Enter wallet or ENS address" name="wallet">
                 </p>
               </div>
               <div class="field">
                 <div class="control">
-                  <button class="button is-light is-link" up-follow=".container">Search</button>
+                  <button class="button is-primary" up-follow=".container" up-transition="cross-fade" up-preload>Search</button>
+                  <a class="button is-link" id="connectWallet">Connect</a>
                 </div>
               </div>
             </form>
           </div>
         </div>
+        {% endif %}
       </nav>
 
-      {% if collection.data.notable_tokens %}
+      {% if collection.data.notable_tokens and not owner %}
       <h1 class="title">Notable Tokens</h1>
       <div class="tokenPreviews has-text-centered">
         {% for _token in collection.data.notable_tokens | batch(4) %}
@@ -99,8 +112,8 @@
           <div class="cardz column">
             <div class="card-image">
               <figure class="image">
-                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
-                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
+                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-transition="cross-fade" up-preload>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}", "urlSlug": "{{ collection.url_slug }}" }'>
                 </a>
               </figure>
             </div>
@@ -109,6 +122,9 @@
         </div>
         {% endfor %}
       </div>
+      {% elif owner %}
+      <h1 class="title">{{ owner.ens }} Tokens</h1>
+      <div id="ownerTokens" up-data='{ "contractAddress": "{{ collection.contract_address }}", "walletAddress": "{{ owner.address }}" }'></div>
       {% else %}
       <div class="tokenPreviews has-text-centered">
         {% if collection.data.total_supply < 8 %}
@@ -122,7 +138,7 @@
           <div class="cardz column">
             <div class="card-image">
               <figure class="image">
-                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-preload>
+                <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-transition="cross-fade" up-preload>
                   <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
                 </a>
               </figure>

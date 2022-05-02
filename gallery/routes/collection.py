@@ -42,6 +42,13 @@ async def show(collection_slug):
         except Exception as e:
             print(e)
             await flash(e, 'error')
+    elif request.method == 'POST':
+        await request.get_data()
+        a = request.data
+        i = a.get('tokenId')
+        if i and collection.token_id_is_allowed(i):
+            return redirect(url_for('collection.show_token', collection_slug=collection.url_slug, token_id=i))
+        await flash(f'Token provided is not allowed ({collection.token_start} - {collection.token_end})', 'warning')
     return await render_template(
         'collection.html',
         collection=collection,
