@@ -31,7 +31,7 @@ async def show(collection_slug):
             a = request.args
             if a.get('wallet'):
                 try:
-                    owner = Owner(a.get('wallet'))
+                    owner = Owner(str(a.get('wallet')))
                 except:
                     await flash('Address provided is not allowed', 'warning')
             elif a.get('tokenId'):

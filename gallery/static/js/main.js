@@ -41,6 +41,7 @@ async function armConnectButton(){
   }
 
   onboardButton.onclick = async () => {
+    await switchNetwork();
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
       onboardButton.onclick = () => {
         onboardButton.classList.add('is-loading');
@@ -66,6 +67,34 @@ async function armConnectButton(){
 
 };
 
+async function getMetamaskAccount() {
+  const accounts = await window.ethereum.request({
+    method: 'eth_requestAccounts',
+  });
+  const account = accounts[0];
+  return account
+}
+
+async function getSignedData(publicAddress, jsonData) {
+  const signedData = await window.ethereum.request({
+    method: 'eth_signTypedData_v3',
+    params: [publicAddress, JSON.stringify(jsonData)]
+  });
+  console.log(signedData);
+  return signedData
+}
+
+async function switchNetwork(){
+  // don't do this if no metamask (errors on coinbase wallet)
+  if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+    return false;
+  }
+  await ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0x1' }],
+  });
+}
+
 async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
   let newColumn;
   let parent = document.getElementById('ownerTokens');
@@ -74,6 +103,10 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
   const walletShort = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
   const contract = new w3.eth.Contract(erc721Abi, contractAddress);
   const balance = await contract.methods.balanceOf(walletAddress).call();
+  if (balance == 0) {
+    parent.innerHTML = 'No tokens found for this address.';
+    return
+  }
   for (i=0; i<balance; i++) {
     if (i % 4 == 0) {
       newColumn = document.createElement('div');
@@ -81,19 +114,19 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
       parent.appendChild(newColumn);
       console.log(`Creating new child for index ${i}`)
     }
-    let ti = await contract.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-    console.log(`Found token #${ti} for wallet ${walletAddress} in contract ${contractAddress}`)
+    let tokenIndex = await contract.methods.tokenOfOwnerByIndex(walletAddress, i).call();
+    console.log(`Found token #${tokenIndex} for wallet ${walletAddress} in contract ${contractAddress}`)
     let newItem = document.createElement('div');
     newItem.classList.add('column');
     newColumn.appendChild(newItem);
     newItem.innerHTML = `<div class="card-image">
               <figure class="image">
-                <a href="${urlSlug}" up-target=".container" up-transition="cross-fade" up-preload>
-                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${ti}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${ti}" }'>
+                <a href="/collection/${urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>
                 </a>
               </figure>
             </div>`;
-    await updateTokenPreview(contractAddress, ti);
+    await updateTokenPreview(contractAddress, tokenIndex);
   };
 
 }
