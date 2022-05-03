@@ -23,8 +23,9 @@ class Owner(object):
                     self.ens = _d.decode()
                 else:
                     _d = ns.name(self.address)
-                    cache.store_data(key_name, 604800, _d)
-                    self.ens = _d
+                    if _d:
+                        cache.store_data(key_name, 604800, _d)
+                        self.ens = _d
         except Exception as e:
             print(e)
             raise('Invalid address')
