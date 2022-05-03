@@ -20,7 +20,7 @@ class Owner(object):
             else:
                 self.address = w3.toChecksumAddress(address)
                 if _d:
-                    self.ens = _d
+                    self.ens = _d.decode()
                 else:
                     _d = ns.name(self.address)
                     cache.store_data(key_name, 604800, _d)
