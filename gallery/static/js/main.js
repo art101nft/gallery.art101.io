@@ -15,6 +15,15 @@ up.compiler('#connectWallet', function(element) {
   armConnectButton();
 })
 
+up.compiler('#tokenImage', function(element) {
+  new Viewer(document.getElementById('tokenImage'), {
+    inline: false,
+    navbar: 0,
+    toolbar: 0,
+    transition: 0,
+  });
+})
+
 up.compiler('.tokenPreview', function(element, data) {
   updateTokenPreview(data.contractAddress, data.tokenId)
 })
