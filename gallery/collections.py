@@ -64,7 +64,7 @@ all_collections = {
         'total_supply': 4962,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [2717, 501, 2714, 269, 2017, 102, 3228, 1289, 655]
+        'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262]
     }
 }
 
