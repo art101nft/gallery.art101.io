@@ -5,3 +5,4 @@ requests
 web3
 flake8
 redis
+huey

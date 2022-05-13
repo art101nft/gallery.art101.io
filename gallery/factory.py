@@ -1,8 +1,11 @@
-from logging.config import dictConfig
-
 from quart import Quart, flask_patch
 
 from gallery import config
+
+
+def create_app_huey():
+    _app = Quart(__name__)
+    return _app
 
 
 def create_app():

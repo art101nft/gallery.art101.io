@@ -8,6 +8,9 @@ shell:
 dev:
 	python3 run.py
 
+huey:
+	.venv/bin/huey_consumer gallery.tasks.huey -w 1
+
 prod:
 	.venv/bin/hypercorn run
 
