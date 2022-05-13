@@ -1,6 +1,13 @@
 window.addEventListener('DOMContentLoaded', () => {
   // unpoly config adjustments
   up.fragment.config.mainTargets.push('.container');
+
+  // Reload page if Metamask account changes
+  if (ethereum) {
+    ethereum.on('accountsChanged', function (accounts) {
+      window.location.href = '';
+    });
+  }
 });
 
 up.compiler('#withdrawFunds', function(element) {
@@ -185,11 +192,6 @@ async function _updateTokenSales(contractAddress, tokenId) {
   const tokenPurchase = document.getElementById('tokenPurchase');
   const tokenSell = document.getElementById('tokenSell');
   const collectionRoyalty = document.getElementById('collectionRoyalty');
-
-  // Reload page if Metamask account changes
-  ethereum.on('accountsChanged', function (accounts) {
-    window.location.href = '';
-  })
 
   const userIsOwner = w3.utils.toChecksumAddress(owner) == w3.utils.toChecksumAddress(mm);
   collectionRoyalty.innerHTML = `This collection has a royalty of ${collection.royaltyPercent}%`
