@@ -2,7 +2,7 @@ import json
 from os import getenv
 from dotenv import load_dotenv
 
-from gallery.constants import erc721_abi
+from gallery.constants import erc721_abi, marketplace_abi
 
 
 load_dotenv()
@@ -15,7 +15,8 @@ IPFS_SERVER = getenv('IPFS_SERVER', 'http://127.0.0.1:8080')
 DATA_PATH = getenv('DATA_PATH', '/opt/gallery.art101.io/data')
 ASSETS_URL = getenv('ASSETS_URL', 'https://art101-assets.s3.us-west-2.amazonaws.com')
 ERC721_ABI = erc721_abi
-ERC721_ABI_STR = json.dumps(ERC721_ABI)
+MARKETPLACE_ABI = marketplace_abi
+MARKETPLACE_ADDRESS = '0x594CDa36362037C4bC3068aDD61f780bD0870Dfc' # rinkeby
 
 # Cache
 CACHE_HOST = getenv('CACHE_HOST', '127.0.0.1')

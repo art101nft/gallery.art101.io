@@ -16,7 +16,9 @@
 
 <script>
   // Put this var here to inject global config for ERC721 ABI
-  erc721Abi = {{ config.ERC721_ABI | tojson }}
+  erc721Abi = {{ config.ERC721_ABI | tojson }};
+  marketplaceAbi = {{ config.MARKETPLACE_ABI | tojson }};
+  marketplaceContract = "{{ config.MARKETPLACE_ADDRESS }}";
 
   // Put this helper function in here so we can inject global config for ASSETS_URL
   function loadImg(_u, contract_address, use_external) {

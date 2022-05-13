@@ -3,12 +3,17 @@ window.addEventListener('DOMContentLoaded', () => {
   up.fragment.config.mainTargets.push('.container');
 });
 
+up.compiler('#withdrawFunds', function(element) {
+  withdrawFunds();
+})
+
 up.compiler('#tokenTitle', function(element, data) {
-  updateTokenInfo(data.contractAddress, data.tokenId)
+  updateTokenInfo(data.contractAddress, data.tokenId);
+  updateTokenSales(data.contractAddress, data.tokenId);
 })
 
 up.compiler('#ownerTokens', function(element, data) {
-  fetchOwnerTokens(data.contractAddress, data.walletAddress, data.urlSlug)
+  fetchOwnerTokens(data.contractAddress, data.walletAddress, data.urlSlug);
 })
 
 up.compiler('#connectWallet', function(element) {
@@ -100,8 +105,289 @@ async function switchNetwork(){
   }
   await ethereum.request({
     method: 'wallet_switchEthereumChain',
-    params: [{ chainId: '0x1' }],
+    params: [{ chainId: '0x4' }],
   });
+}
+
+function shortenAddress(a) {
+  return a.slice(0, 6) + '...' + a.slice(-4)
+}
+
+async function _withdrawFunds() {
+  let gasLimit;
+  await switchNetwork();
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  const marketplace = new w3.eth.Contract(marketplaceAbi, marketplaceContract);
+  const mm = await getMetamaskAccount();
+  const gasPrice = await w3.eth.getGasPrice();
+  const balance = await marketplace.methods.pendingBalance(mm).call();
+  const withdrawButton = document.getElementById('withdrawFunds');
+  if (balance > 0) {
+    withdrawButton.classList.remove('hidden');
+    withdrawButton.innerHTML = `Withdraw  (<strong>+${await w3.utils.fromWei(balance, 'ether')}Ξ</strong>)`;
+    withdrawButton.onclick = async function () {
+      withdrawButton.classList.add('is-loading');
+      try {
+        await marketplace.methods.withdraw().estimateGas({from: mm}, function(err, gas){
+          gasLimit = gas;
+        });
+        await marketplace.methods.withdraw().send({
+          from: mm,
+          gasPrice: gasPrice,
+          gas: gasLimit
+        });
+        withdrawButton.classList.remove('is-loading');
+        withdrawButton.classList.add('hidden');
+      } catch(e) {
+        withdrawButton.classList.remove('is-loading');
+      }
+    }
+  } else {
+    withdrawButton.classList.add('hidden');
+  }
+}
+
+async function withdrawFunds() {
+  await _withdrawFunds();
+  setInterval(async function () {
+    await _withdrawFunds();
+  }, 8000);
+}
+
+async function updateTokenSales(contractAddress, tokenId) {
+  await _updateTokenSales(contractAddress, tokenId)
+  setInterval(async function () {
+    await _updateTokenSales(contractAddress, tokenId);
+  }, 6000);
+}
+
+async function _updateTokenSales(contractAddress, tokenId) {
+  let gasLimit;
+  await switchNetwork();
+  const testAddress = '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09'; // fixme
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  const marketplace = new w3.eth.Contract(marketplaceAbi, marketplaceContract);
+  const contract = new w3.eth.Contract(erc721Abi, testAddress);
+  const offer = await marketplace.methods.tokenOffers(testAddress, tokenId).call();
+  const bid = await marketplace.methods.tokenBids(testAddress, tokenId).call();
+  const collection = await marketplace.methods.collectionState(testAddress).call();
+  const mm = await getMetamaskAccount();
+  const gasPrice = await w3.eth.getGasPrice();
+  const owner = await contract.methods.ownerOf(tokenId).call();
+  const tokenSaleStatus = document.getElementById('tokenSaleStatus');
+  const tokenBidStatus = document.getElementById('tokenBidStatus');
+  const bidAmountEther = document.getElementById('bidAmountEther');
+  const sellAmountEther = document.getElementById('sellAmountEther');
+  const tokenPlaceBid = document.getElementById('tokenPlaceBid');
+  const tokenAcceptBid = document.getElementById('tokenAcceptBid');
+  const tokenWithdrawSale = document.getElementById('tokenWithdrawSale');
+  const tokenWithdrawBid = document.getElementById('tokenWithdrawBid');
+  const tokenPurchase = document.getElementById('tokenPurchase');
+  const tokenSell = document.getElementById('tokenSell');
+  const collectionRoyalty = document.getElementById('collectionRoyalty');
+
+  // Reload page if Metamask account changes
+  ethereum.on('accountsChanged', function (accounts) {
+    window.location.href = '';
+  })
+
+  const userIsOwner = w3.utils.toChecksumAddress(owner) == w3.utils.toChecksumAddress(mm);
+  collectionRoyalty.innerHTML = `This collection has a royalty of ${collection.royaltyPercent}%`
+
+  // Check if current user owns the token
+  if (userIsOwner) {
+    // if current user owns the token...
+    let approved = await contract.methods.getApproved(tokenId).call();
+    sellAmountEther.classList.remove('hidden');
+    tokenSell.classList.remove('hidden');
+    // Wire up sell button
+    tokenSell.onclick = async function () {
+      if (sellAmountEther.value <= 0 || isNaN(sellAmountEther.value)) {
+        notif({'message': 'Must provide a number greater than 0.', 'category': 'warning'});
+        return
+      }
+      let amt = await w3.utils.toWei(sellAmountEther.value);
+      tokenSell.classList.add('is-loading');
+      try {
+        if (approved != marketplaceContract) {
+          await contract.methods.approve(marketplaceContract, tokenId).estimateGas({from: mm}, function(err, gas){
+            gasLimit = gas;
+          });
+          await contract.methods.approve(marketplaceContract, tokenId).send({
+            from: mm,
+            gasLimit: gasLimit,
+            gasPrice: gasPrice
+          });
+        }
+        await marketplace.methods.offerTokenForSale(testAddress, tokenId, amt).estimateGas({from: mm}, function(err, gas){
+          gasLimit = gas;
+        });
+        await marketplace.methods.offerTokenForSale(testAddress, tokenId, amt).send({
+          from: mm,
+          gasPrice: gasPrice,
+          gas: gasLimit
+        });
+      } catch(e) {
+        console.log(e);
+      }
+      tokenSell.classList.remove('is-loading')
+    }
+  } else {
+    // otherwise, show bid form
+    bidAmountEther.classList.remove('hidden');
+    tokenPlaceBid.classList.remove('hidden');
+    // Setup click event for bid button
+    tokenPlaceBid.onclick = async function () {
+      if (bidAmountEther.value <= 0 || isNaN(bidAmountEther.value)) {
+        notif({'message': 'Must provide a number greater than 0.', 'category': 'warning'});
+        return
+      }
+      let amt = await w3.utils.toWei(bidAmountEther.value);
+      if((amt - bid.value) > 0) {
+        tokenPlaceBid.classList.add('is-loading');
+        try {
+          await marketplace.methods.enterBidForToken(testAddress, tokenId).estimateGas({from: mm, value: amt}, function(err, gas){
+            gasLimit = gas;
+          });
+          await marketplace.methods.enterBidForToken(testAddress, tokenId).send({
+            from: mm,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            value: amt
+          });
+        } catch(e) {
+          console.log(e);
+        }
+        tokenPlaceBid.classList.remove('is-loading');
+      } else {
+        notif({'message': 'Bid must be larger than the previous.', 'category': 'warning'});
+      }
+    };
+  }
+
+  if (offer.isForSale) {
+    let saleAmountEther = await w3.utils.fromWei(offer.minValue);
+    tokenSaleStatus.innerHTML = `Token is currently for sale for <strong>${saleAmountEther}Ξ</strong> by <a href="https://etherscan.io/address/${offer.seller}" target=_blank>${shortenAddress(offer.seller)}</a>.`;
+    if (!userIsOwner) {
+      tokenPurchase.classList.remove('hidden');
+      tokenPurchase.innerHTML = `Purchase (<strong>-${saleAmountEther}Ξ</strong>)`;
+      // Setup click event for purchase button
+      tokenPurchase.onclick = async function () {
+        tokenPurchase.classList.add('is-loading');
+        try {
+          await marketplace.methods.acceptOfferForToken(testAddress, tokenId).estimateGas({from: mm, value: offer.minValue}, function(err, gas){
+            gasLimit = gas;
+          });
+          await marketplace.methods.acceptOfferForToken(testAddress, tokenId).send({
+            from: mm,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            value: offer.minValue
+          });
+          tokenPurchase.classList.add('hidden');
+          bidAmountEther.classList.add('hidden');
+          tokenPlaceBid.classList.add('hidden');
+        } catch(e) {
+          console.log(e);
+        }
+        tokenPurchase.classList.remove('is-loading');
+      };
+    } else {
+      tokenWithdrawSale.classList.remove('hidden');
+      tokenWithdrawSale.onclick = async function () {
+        tokenWithdrawSale.classList.add('is-loading');
+        try {
+          await marketplace.methods.tokenNoLongerForSale(testAddress, tokenId).estimateGas({from: mm}, function(err, gas){
+            gasLimit = gas;
+          });
+          await marketplace.methods.tokenNoLongerForSale(testAddress, tokenId).send({
+            from: mm,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+          tokenWithdrawSale.classList.add('hidden');
+        } catch(e) {
+          console.log(e);
+        }
+        tokenWithdrawSale.classList.remove('is-loading');
+      }
+    }
+    // if (offer.onlySellTo == '0x0000000000000000000000000000000000000000') {}
+  } else {
+    tokenSaleStatus.innerHTML = 'Token is not currently for sale.';
+  }
+
+  if (bid.hasBid) {
+    let bidAmount = await w3.utils.fromWei(bid.value, 'ether');
+    tokenBidStatus.innerHTML = `Token currently has a bid of <strong>${bidAmount}Ξ</strong> from <a href="https://etherscan.io/address/${bid.bidder}" target=_blank>${shortenAddress(bid.bidder)}</a>`;
+    if (userIsOwner) {
+      tokenAcceptBid.classList.remove('hidden');
+      tokenAcceptBid.innerHTML = `Accept Bid (<strong>+${bidAmount}Ξ</strong>)`
+      tokenAcceptBid.onclick = async function () {
+        tokenAcceptBid.classList.add('is-loading');
+        let approved = await contract.methods.getApproved(tokenId).call();
+        if (approved != marketplaceContract) {
+          try {
+            await contract.methods.approve(marketplaceContract, tokenId).estimateGas({from: mm}, function(err, gas){
+              gasLimit = gas;
+            });
+            await contract.methods.approve(marketplaceContract, tokenId).send({
+              from: mm,
+              gasLimit: gasLimit,
+              gasPrice: gasPrice
+            });
+          } catch(e) {
+            console.log(e);
+            tokenAcceptBid.classList.remove('is-loading');
+            return
+          }
+        }
+        try {
+          await marketplace.methods.acceptBidForToken(testAddress, tokenId, bid.value).estimateGas({from: mm}, function(err, gas){
+            gasLimit = gas;
+          });
+          await marketplace.methods.acceptBidForToken(testAddress, tokenId, bid.value).send({
+            from: mm,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+          tokenAcceptBid.classList.add('hidden');
+          tokenWithdrawSale.classList.add('hidden');
+          sellAmountEther.classList.add('hidden');
+          tokenSell.classList.add('hidden');
+        } catch(e) {
+          console.log(e);
+        }
+        tokenAcceptBid.classList.remove('is-loading');
+      }
+    }
+
+    if (w3.utils.toChecksumAddress(bid.bidder) == w3.utils.toChecksumAddress(mm)) {
+      tokenWithdrawBid.classList.remove('hidden');
+      tokenWithdrawBid.innerHTML = `Withdraw Bid (<strong>+${bidAmount}Ξ</strong>)`
+      tokenWithdrawBid.onclick = async function () {
+        tokenWithdrawBid.classList.add('is-loading');
+        try {
+          await marketplace.methods.withdrawBidForToken(testAddress, tokenId).estimateGas({from: mm}, function(err, gas){
+            gasLimit = gas;
+          });
+          await marketplace.methods.withdrawBidForToken(testAddress, tokenId).send({
+            from: mm,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+          tokenWithdrawBid.classList.add('hidden');
+        } catch(e) {
+          console.log(e);
+        }
+        tokenWithdrawBid.classList.remove('is-loading');
+      }
+    }
+  } else {
+    tokenBidStatus.innerHTML = 'Token currently has no bids.';
+  }
+
+
 }
 
 async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
