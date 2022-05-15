@@ -17,6 +17,7 @@ ASSETS_URL = getenv('ASSETS_URL', 'https://art101-assets.s3.us-west-2.amazonaws.
 ERC721_ABI = erc721_abi
 MARKETPLACE_ABI = marketplace_abi
 MARKETPLACE_ADDRESS = '0x594CDa36362037C4bC3068aDD61f780bD0870Dfc' # rinkeby
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Cache
 CACHE_HOST = getenv('CACHE_HOST', '127.0.0.1')

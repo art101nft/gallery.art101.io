@@ -3,13 +3,10 @@ setup:
 	.venv/bin/pip install -r requirements.txt
 
 shell:
-	bash manage.sh shell
+	FLASK_SECRETS=config.py QUART_APP="gallery:create_app()" .venv/bin/quart shell
 
 dev:
 	python3 run.py
-
-huey:
-	.venv/bin/huey_consumer gallery.tasks.huey -w 1
 
 prod:
 	.venv/bin/hypercorn run
