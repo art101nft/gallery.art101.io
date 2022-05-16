@@ -27,7 +27,7 @@ up.compiler('#connectWallet', function(element) {
   armConnectButton();
 })
 
-up.compiler('#tokenImage', function(element) {
+up.compiler('.tokenZoom', function(element) {
   new Viewer(document.getElementById('tokenImage'), {
     inline: false,
     navbar: 0,
