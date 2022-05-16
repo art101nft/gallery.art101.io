@@ -6,6 +6,8 @@ Written with [Quart](https://pgjones.gitlab.io/quart/index.html) (async Flask).
 
 It currently provides current market status and ownership info. In the future we will implement background chain scanning for the purposes of showing historical activity of each token for each collection, regardless of which method of purchase/sale (Opensea, LooksRare, Gem.xyz, etc).
 
+Additionally, rarity will be implemented within the gallery to provide users with the ability to filter and sort based upon trait rarity and groupings.
+
 ## Development
 
 Required software:
