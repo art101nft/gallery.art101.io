@@ -15,8 +15,9 @@
 {% endwith %}
 
 <script>
-  // Put this var here to inject global config for ERC721 ABI
+  // Put this var here to inject global config for ERC-721 and ERC-1155 ABI
   erc721Abi = {{ config.ERC721_ABI | tojson }};
+  erc1155Abi = {{ config.ERC1155_ABI | tojson }};
   marketplaceAbi = {{ config.MARKETPLACE_ABI | tojson }};
   marketplaceContract = "{{ config.MARKETPLACE_ADDRESS }}";
 

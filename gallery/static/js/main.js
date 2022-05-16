@@ -16,7 +16,7 @@ up.compiler('#withdrawFunds', function(element) {
 
 up.compiler('#tokenTitle', function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId);
-  updateTokenSales(data.contractAddress, data.tokenId);
+  updateTokenSales(data.testnetAddress, data.tokenId, data.erc1155);
 })
 
 up.compiler('#ownerTokens', function(element, data) {
@@ -131,7 +131,7 @@ async function _withdrawFunds() {
   const withdrawButton = document.getElementById('withdrawFunds');
   if (balance > 0) {
     withdrawButton.classList.remove('hidden');
-    withdrawButton.innerHTML = `Withdraw  (<strong>+${await w3.utils.fromWei(balance, 'ether')}Ξ</strong>)`;
+    withdrawButton.innerHTML = `Withdraw  (<strong>+${await w3.utils.fromWei(balance, 'ether')} Ξ</strong>)`;
     withdrawButton.onclick = async function () {
       withdrawButton.classList.add('is-loading');
       try {
@@ -161,26 +161,31 @@ async function withdrawFunds() {
   }, 8000);
 }
 
-async function updateTokenSales(contractAddress, tokenId) {
-  await _updateTokenSales(contractAddress, tokenId)
+async function updateTokenSales(contractAddress, tokenId, erc1155) {
+  await _updateTokenSales(contractAddress, tokenId, erc1155);
   setInterval(async function () {
-    await _updateTokenSales(contractAddress, tokenId);
+    await _updateTokenSales(contractAddress, tokenId, erc1155);
   }, 6000);
 }
 
-async function _updateTokenSales(contractAddress, tokenId) {
+async function _updateTokenSales(contractAddress, tokenId, erc1155) {
   let gasLimit;
+  let contract;
+  let userIsOwner;
+  let approved;
+  let setApproval;
   await switchNetwork();
-  const testAddress = '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09'; // fixme
   const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-  const marketplace = new w3.eth.Contract(marketplaceAbi, marketplaceContract);
-  const contract = new w3.eth.Contract(erc721Abi, testAddress);
-  const offer = await marketplace.methods.tokenOffers(testAddress, tokenId).call();
-  const bid = await marketplace.methods.tokenBids(testAddress, tokenId).call();
-  const collection = await marketplace.methods.collectionState(testAddress).call();
-  const mm = await getMetamaskAccount();
   const gasPrice = await w3.eth.getGasPrice();
-  const owner = await contract.methods.ownerOf(tokenId).call();
+  const mm = await getMetamaskAccount();
+  const marketplace = new w3.eth.Contract(marketplaceAbi, marketplaceContract);
+  const offer = await marketplace.methods.tokenOffers(contractAddress, tokenId).call();
+  const bid = await marketplace.methods.tokenBids(contractAddress, tokenId).call();
+  const collection = await marketplace.methods.collectionState(contractAddress).call();
+  if (!collection.status) {
+    console.log('This collection is not yet active on the marketplace.');
+    return
+  }
   const tokenSaleStatus = document.getElementById('tokenSaleStatus');
   const tokenBidStatus = document.getElementById('tokenBidStatus');
   const bidAmountEther = document.getElementById('bidAmountEther');
@@ -192,14 +197,23 @@ async function _updateTokenSales(contractAddress, tokenId) {
   const tokenPurchase = document.getElementById('tokenPurchase');
   const tokenSell = document.getElementById('tokenSell');
   const collectionRoyalty = document.getElementById('collectionRoyalty');
-
-  const userIsOwner = w3.utils.toChecksumAddress(owner) == w3.utils.toChecksumAddress(mm);
-  collectionRoyalty.innerHTML = `This collection has a royalty of ${collection.royaltyPercent}%`
+  collectionRoyalty.innerHTML = `This collection has a royalty of ${collection.royaltyPercent}%`;
+  if (erc1155 == "true") {
+    contract = new w3.eth.Contract(erc1155Abi, contractAddress);
+    userIsOwner = (await contract.methods.balanceOf(mm, tokenId).call()) > 0;
+    approved = await contract.methods.isApprovedForAll(mm, marketplaceContract).call();
+    setApproval = contract.methods.setApprovalForAll(marketplaceContract, true);
+  } else {
+    contract = new w3.eth.Contract(erc721Abi, contractAddress);
+    const owner = await contract.methods.ownerOf(tokenId).call();
+    userIsOwner = w3.utils.toChecksumAddress(owner) == w3.utils.toChecksumAddress(mm);
+    approved = (await contract.methods.getApproved(tokenId).call()) == marketplaceContract;
+    setApproval = contract.methods.approve(marketplaceContract, tokenId);
+  }
 
   // Check if current user owns the token
   if (userIsOwner) {
     // if current user owns the token...
-    let approved = await contract.methods.getApproved(tokenId).call();
     sellAmountEther.classList.remove('hidden');
     tokenSell.classList.remove('hidden');
     // Wire up sell button
@@ -211,20 +225,20 @@ async function _updateTokenSales(contractAddress, tokenId) {
       let amt = await w3.utils.toWei(sellAmountEther.value);
       tokenSell.classList.add('is-loading');
       try {
-        if (approved != marketplaceContract) {
-          await contract.methods.approve(marketplaceContract, tokenId).estimateGas({from: mm}, function(err, gas){
+        if (!approved) {
+          await setApproval.estimateGas({from: mm}, function(err, gas){
             gasLimit = gas;
           });
-          await contract.methods.approve(marketplaceContract, tokenId).send({
+          await setApproval.send({
             from: mm,
             gasLimit: gasLimit,
             gasPrice: gasPrice
           });
         }
-        await marketplace.methods.offerTokenForSale(testAddress, tokenId, amt).estimateGas({from: mm}, function(err, gas){
+        await marketplace.methods.offerTokenForSale(contractAddress, tokenId, amt).estimateGas({from: mm}, function(err, gas){
           gasLimit = gas;
         });
-        await marketplace.methods.offerTokenForSale(testAddress, tokenId, amt).send({
+        await marketplace.methods.offerTokenForSale(contractAddress, tokenId, amt).send({
           from: mm,
           gasPrice: gasPrice,
           gas: gasLimit
@@ -232,7 +246,8 @@ async function _updateTokenSales(contractAddress, tokenId) {
       } catch(e) {
         console.log(e);
       }
-      tokenSell.classList.remove('is-loading')
+      tokenSell.classList.remove('is-loading');
+      sellAmountEther.value = "";
     }
   } else {
     // otherwise, show bid form
@@ -248,10 +263,10 @@ async function _updateTokenSales(contractAddress, tokenId) {
       if((amt - bid.value) > 0) {
         tokenPlaceBid.classList.add('is-loading');
         try {
-          await marketplace.methods.enterBidForToken(testAddress, tokenId).estimateGas({from: mm, value: amt}, function(err, gas){
+          await marketplace.methods.enterBidForToken(contractAddress, tokenId).estimateGas({from: mm, value: amt}, function(err, gas){
             gasLimit = gas;
           });
-          await marketplace.methods.enterBidForToken(testAddress, tokenId).send({
+          await marketplace.methods.enterBidForToken(contractAddress, tokenId).send({
             from: mm,
             gasPrice: gasPrice,
             gas: gasLimit,
@@ -261,6 +276,7 @@ async function _updateTokenSales(contractAddress, tokenId) {
           console.log(e);
         }
         tokenPlaceBid.classList.remove('is-loading');
+        bidAmountEther.value = "";
       } else {
         notif({'message': 'Bid must be larger than the previous.', 'category': 'warning'});
       }
@@ -269,18 +285,18 @@ async function _updateTokenSales(contractAddress, tokenId) {
 
   if (offer.isForSale) {
     let saleAmountEther = await w3.utils.fromWei(offer.minValue);
-    tokenSaleStatus.innerHTML = `Token is currently for sale for <strong>${saleAmountEther}Ξ</strong> by <a href="https://etherscan.io/address/${offer.seller}" target=_blank>${shortenAddress(offer.seller)}</a>.`;
+    tokenSaleStatus.innerHTML = `Token is currently for sale for <strong>${saleAmountEther} Ξ</strong> by <a href="https://etherscan.io/address/${offer.seller}" target=_blank>${shortenAddress(offer.seller)}</a>.`;
     if (!userIsOwner) {
       tokenPurchase.classList.remove('hidden');
-      tokenPurchase.innerHTML = `Purchase (<strong>-${saleAmountEther}Ξ</strong>)`;
+      tokenPurchase.innerHTML = `Purchase (<strong>-${saleAmountEther} Ξ</strong>)`;
       // Setup click event for purchase button
       tokenPurchase.onclick = async function () {
         tokenPurchase.classList.add('is-loading');
         try {
-          await marketplace.methods.acceptOfferForToken(testAddress, tokenId).estimateGas({from: mm, value: offer.minValue}, function(err, gas){
+          await marketplace.methods.acceptOfferForToken(contractAddress, tokenId).estimateGas({from: mm, value: offer.minValue}, function(err, gas){
             gasLimit = gas;
           });
-          await marketplace.methods.acceptOfferForToken(testAddress, tokenId).send({
+          await marketplace.methods.acceptOfferForToken(contractAddress, tokenId).send({
             from: mm,
             gasPrice: gasPrice,
             gas: gasLimit,
@@ -289,6 +305,7 @@ async function _updateTokenSales(contractAddress, tokenId) {
           tokenPurchase.classList.add('hidden');
           bidAmountEther.classList.add('hidden');
           tokenPlaceBid.classList.add('hidden');
+          tokenWithdrawBid.classList.add('hidden');
         } catch(e) {
           console.log(e);
         }
@@ -299,10 +316,10 @@ async function _updateTokenSales(contractAddress, tokenId) {
       tokenWithdrawSale.onclick = async function () {
         tokenWithdrawSale.classList.add('is-loading');
         try {
-          await marketplace.methods.tokenNoLongerForSale(testAddress, tokenId).estimateGas({from: mm}, function(err, gas){
+          await marketplace.methods.tokenNoLongerForSale(contractAddress, tokenId).estimateGas({from: mm}, function(err, gas){
             gasLimit = gas;
           });
-          await marketplace.methods.tokenNoLongerForSale(testAddress, tokenId).send({
+          await marketplace.methods.tokenNoLongerForSale(contractAddress, tokenId).send({
             from: mm,
             gasPrice: gasPrice,
             gas: gasLimit
@@ -321,19 +338,18 @@ async function _updateTokenSales(contractAddress, tokenId) {
 
   if (bid.hasBid) {
     let bidAmount = await w3.utils.fromWei(bid.value, 'ether');
-    tokenBidStatus.innerHTML = `Token currently has a bid of <strong>${bidAmount}Ξ</strong> from <a href="https://etherscan.io/address/${bid.bidder}" target=_blank>${shortenAddress(bid.bidder)}</a>`;
+    tokenBidStatus.innerHTML = `Token currently has a bid of <strong>${bidAmount} Ξ</strong> from <a href="https://etherscan.io/address/${bid.bidder}" target=_blank>${shortenAddress(bid.bidder)}</a>`;
     if (userIsOwner) {
       tokenAcceptBid.classList.remove('hidden');
-      tokenAcceptBid.innerHTML = `Accept Bid (<strong>+${bidAmount}Ξ</strong>)`
+      tokenAcceptBid.innerHTML = `Accept Bid (<strong>+${bidAmount} Ξ</strong>)`
       tokenAcceptBid.onclick = async function () {
         tokenAcceptBid.classList.add('is-loading');
-        let approved = await contract.methods.getApproved(tokenId).call();
-        if (approved != marketplaceContract) {
+        if (!approved) {
           try {
-            await contract.methods.approve(marketplaceContract, tokenId).estimateGas({from: mm}, function(err, gas){
+            await setApproval.estimateGas({from: mm}, function(err, gas){
               gasLimit = gas;
             });
-            await contract.methods.approve(marketplaceContract, tokenId).send({
+            await setApproval.send({
               from: mm,
               gasLimit: gasLimit,
               gasPrice: gasPrice
@@ -345,10 +361,10 @@ async function _updateTokenSales(contractAddress, tokenId) {
           }
         }
         try {
-          await marketplace.methods.acceptBidForToken(testAddress, tokenId, bid.value).estimateGas({from: mm}, function(err, gas){
+          await marketplace.methods.acceptBidForToken(contractAddress, tokenId, bid.value).estimateGas({from: mm}, function(err, gas){
             gasLimit = gas;
           });
-          await marketplace.methods.acceptBidForToken(testAddress, tokenId, bid.value).send({
+          await marketplace.methods.acceptBidForToken(contractAddress, tokenId, bid.value).send({
             from: mm,
             gasPrice: gasPrice,
             gas: gasLimit
@@ -366,14 +382,14 @@ async function _updateTokenSales(contractAddress, tokenId) {
 
     if (w3.utils.toChecksumAddress(bid.bidder) == w3.utils.toChecksumAddress(mm)) {
       tokenWithdrawBid.classList.remove('hidden');
-      tokenWithdrawBid.innerHTML = `Withdraw Bid (<strong>+${bidAmount}Ξ</strong>)`
+      tokenWithdrawBid.innerHTML = `Withdraw Bid (<strong>+${bidAmount} Ξ</strong>)`
       tokenWithdrawBid.onclick = async function () {
         tokenWithdrawBid.classList.add('is-loading');
         try {
-          await marketplace.methods.withdrawBidForToken(testAddress, tokenId).estimateGas({from: mm}, function(err, gas){
+          await marketplace.methods.withdrawBidForToken(contractAddress, tokenId).estimateGas({from: mm}, function(err, gas){
             gasLimit = gas;
           });
-          await marketplace.methods.withdrawBidForToken(testAddress, tokenId).send({
+          await marketplace.methods.withdrawBidForToken(contractAddress, tokenId).send({
             from: mm,
             gasPrice: gasPrice,
             gas: gasLimit
@@ -388,8 +404,6 @@ async function _updateTokenSales(contractAddress, tokenId) {
   } else {
     tokenBidStatus.innerHTML = 'Token currently has no bids.';
   }
-
-
 }
 
 async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
@@ -451,7 +465,6 @@ async function updateTokenPreview(contractAddress, tokenId) {
 
 async function updateTokenInfo(contractAddress, tokenId) {
   let data = await getTokenMetadata(contractAddress, tokenId);
-  console.log(data);
   if (!data) {
     document.getElementById('tokenTitle').innerHTML = 'Error';
     document.getElementById('tokenDescription').innerHTML = 'Malformed JSON payload';

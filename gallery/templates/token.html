@@ -31,14 +31,15 @@
             <img src="/static/img/loading2.gif" id="tokenImage" />
           </div>
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
+            {{ collection.testnet_address }}
+            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
           </div>
           {% else %}
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
+            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
