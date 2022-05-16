@@ -51,7 +51,7 @@ html, body, table, .navbar {
   margin-right: .3em;
 }
 
-#updateButtons {
+#updateButtons, .hidden {
   display: none;
 }
 

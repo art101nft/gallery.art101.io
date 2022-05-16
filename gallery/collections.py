@@ -16,7 +16,8 @@ all_collections = {
         'total_supply': 2048,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'notable_tokens': [43, 770, 1952, 1617, 1876, 1162, 454, 2033]
+        'notable_tokens': [43, 770, 1952, 1617, 1876, 1162, 454, 2033],
+        'testnet_address': '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09'
     },
     'mondriannft': {
         'title': 'MondrianNFT',
@@ -26,7 +27,8 @@ all_collections = {
         'total_supply': 4096,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'notable_tokens': [400, 1226, 1089, 3363, 846, 3855, 2592, 3369]
+        'notable_tokens': [400, 1226, 1089, 3363, 846, 3855, 2592, 3369],
+        'testnet_address': '0xBFC0a6468b8F462a6F6AE619Ff49bA05C99029f5'
     },
     'soupxmondrian': {
         'title': 'soupXmondrian',
@@ -35,7 +37,8 @@ all_collections = {
         'website': 'https://soup.mondriannft.io',
         'total_supply': 3,
         'start_token_id': 1,
-        'contract_type': 'ERC-1155'
+        'contract_type': 'ERC-1155',
+        'testnet_address': '0xc2ccb2fd465c6c008b18ae1c26960dfd30bf2378'
     },
     'bauhausblocks': {
         'title': 'Bauhaus Blocks',
@@ -45,7 +48,8 @@ all_collections = {
         'total_supply': 8192,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'notable_tokens': [6851, 404, 5618, 7172, 117, 1959, 2648, 1023]
+        'notable_tokens': [6851, 404, 5618, 7172, 117, 1959, 2648, 1023],
+        'testnet_address': '0xC6597f7609b3dDF95a86e4B1291eFC9E03C786A4'
     },
     'nftzine': {
         'title': 'NFTZine',
@@ -83,6 +87,7 @@ class Collection(object):
         self.stats = self.retrieve_collection_stats()
         self.token_start = self.data['start_token_id']
         self.token_end = self.data['total_supply'] - 1 + self.token_start
+        self.testnet_address = self.data.get('testnet_address', None)
         if 'contract_type' in self.data:
             if self.data['contract_type'] == 'ERC-1155':
                 self.erc1155 = True

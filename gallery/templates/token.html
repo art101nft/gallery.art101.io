@@ -28,27 +28,51 @@
         <div class="columns">
           {% if token_id | is_even %}
           <div class="column">
-            <img src="/static/img/loading2.gif" id="tokenImage" />
+            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
+            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
           </div>
           {% else %}
           <div class="column">
-            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
+            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
             <ol id="tokenTraits"></ol>
           </div>
           <div class="column">
-            <img src="/static/img/loading2.gif" id="tokenImage" />
+            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           {% endif %}
         </div>
-        <div class="has-text-centered">
+        <div id="tokenSales" class="has-text-centered pt-4 mt-4">
+          <div class="m-4">
+            <p id="collectionRoyalty"></p>
+          </div>
+
+          <div class="m-4">
+            <p id="tokenSaleStatus"></p>
+            <button class="button hidden" id="tokenPurchase">Purchase</button>
+          </div>
+          <div class="m-4">
+            <p id="tokenBidStatus"></p>
+            <button class="button hidden" id="tokenAcceptBid">Accept Bid</button>
+          </div>
+
+          <input id="sellAmountEther" style="max-width:33%;" class="input button hidden" type="text" placeholder="Amout of Ether" name="sellAmountEther">
+          <button class="button hidden" id="tokenSell">Sell</button>
+
+          <button class="button hidden" id="tokenWithdrawSale">Withdraw Sale</button>
+
+          <input id="bidAmountEther" style="max-width:33%;" class="input button hidden" type="text" placeholder="Amout of Ether" name="bidAmountEther">
+          <button class="button hidden" id="tokenPlaceBid">Place Bid</button>
+          <button class="button hidden" id="tokenWithdrawBid">Withdraw Bid</button>
+
+        </div>
+        <div class="has-text-centered pt-4 mt-4">
           <p class="subtitle" id="tokenOwner" style="margin-top: 1em;"></p>
           <div class="columns pr-2">
             <div class="column">
