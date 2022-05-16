@@ -16,7 +16,7 @@ up.compiler('#withdrawFunds', function(element) {
 
 up.compiler('#tokenTitle', function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId);
-  updateTokenSales(data.testnetAddress, data.tokenId, data.erc1155);
+  updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
 })
 
 up.compiler('#ownerTokens', function(element, data) {
@@ -112,7 +112,7 @@ async function switchNetwork(){
   }
   await ethereum.request({
     method: 'wallet_switchEthereumChain',
-    params: [{ chainId: '0x4' }],
+    params: [{ chainId: '0x1' }],
   });
 }
 
