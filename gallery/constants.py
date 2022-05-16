@@ -1,7 +1,7 @@
 mint_topic = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 opensea_sale_topic = '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925'
 looksrare_sale_topic = '0x95fb6205e23ff6bda16a2d1dba56b9ad7c783f67c96fa149785052f47696f2be'
-
+marketplace_contract = '0x8a683dDeBD6311786D4f2827249f094F9D7A8f3b'
 erc1155_abi = [
   {
     "inputs": [],
@@ -373,7 +373,6 @@ erc1155_abi = [
     "type": "function"
   }
 ]
-
 erc721_abi = [
   {
     "inputs": [],
@@ -865,7 +864,6 @@ erc721_abi = [
       "constant": True
     }
 ]
-
 marketplace_abi = [
   {
     "inputs": [],
