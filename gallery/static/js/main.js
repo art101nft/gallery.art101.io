@@ -10,13 +10,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-up.compiler('#withdrawFunds', function(element) {
-  withdrawFunds();
+up.compiler('#withdrawFunds', async function(element) {
+  let withdrawFunds = async () => await _withdrawFunds();
+  await withdrawFunds();
+  let withdraw = setInterval(withdrawFunds, 10000);
+  up.destructor(element, () => clearInterval(withdraw));
 })
 
-up.compiler('#tokenTitle', function(element, data) {
+up.compiler('#tokenTitle', async function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId);
-  updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
+  let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
+  await updateTokenSales();
+  let update = setInterval(updateTokenSales, 6000);
+  up.destructor(element, () => clearInterval(update));
 })
 
 up.compiler('#ownerTokens', function(element, data) {
@@ -152,20 +158,6 @@ async function _withdrawFunds() {
   } else {
     withdrawButton.classList.add('hidden');
   }
-}
-
-async function withdrawFunds() {
-  await _withdrawFunds();
-  setInterval(async function () {
-    await _withdrawFunds();
-  }, 8000);
-}
-
-async function updateTokenSales(contractAddress, tokenId, erc1155) {
-  await _updateTokenSales(contractAddress, tokenId, erc1155);
-  setInterval(async function () {
-    await _updateTokenSales(contractAddress, tokenId, erc1155);
-  }, 6000);
 }
 
 async function _updateTokenSales(contractAddress, tokenId, erc1155) {
