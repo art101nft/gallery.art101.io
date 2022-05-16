@@ -865,6 +865,7 @@ erc721_abi = [
       "constant": True
     }
 ]
+
 marketplace_abi = [
   {
     "inputs": [],
@@ -1112,6 +1113,11 @@ marketplace_abi = [
         "type": "bool"
       },
       {
+        "internalType": "bool",
+        "name": "erc1155",
+        "type": "bool"
+      },
+      {
         "internalType": "uint256",
         "name": "royaltyPercent",
         "type": "uint256"
@@ -1123,8 +1129,7 @@ marketplace_abi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": True
+    "type": "function"
   },
   {
     "inputs": [],
@@ -1137,8 +1142,7 @@ marketplace_abi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1157,8 +1161,7 @@ marketplace_abi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": True
+    "type": "function"
   },
   {
     "inputs": [],
@@ -1204,8 +1207,7 @@ marketplace_abi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1249,8 +1251,7 @@ marketplace_abi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1271,6 +1272,11 @@ marketplace_abi = [
         "internalType": "address",
         "name": "contractAddress",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "erc1155",
+        "type": "bool"
       },
       {
         "internalType": "uint256",
@@ -1386,8 +1392,7 @@ marketplace_abi = [
     "name": "enterBidForToken",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1405,8 +1410,7 @@ marketplace_abi = [
     "name": "withdrawBidForToken",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1424,8 +1428,7 @@ marketplace_abi = [
     "name": "acceptOfferForToken",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": True
+    "type": "function"
   },
   {
     "inputs": [
@@ -1448,8 +1451,7 @@ marketplace_abi = [
     "name": "acceptBidForToken",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": True
+    "type": "function"
   },
   {
     "inputs": [],
