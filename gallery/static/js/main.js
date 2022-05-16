@@ -484,6 +484,12 @@ async function updateTokenInfo(contractAddress, tokenId) {
   }
   document.getElementById('tokenDescription').innerHTML = data.description;
   document.getElementById('tokenImage').src = offchainImg;
+  // If nftzine, link out to IPFS to view clickable zine
+  if (document.getElementById('tokenImage').classList.contains('zineLink')) {
+    document.getElementById('tokenImage').onclick = function() {
+      window.location.href = `https://gateway.pinata.cloud/ipfs/${data.animation_url}`;
+    }
+  }
   document.getElementById('tokenOnchainURI').innerHTML = `</br><strong>On-chain Metadata:</strong></br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
   document.getElementById('tokenOffchainURI').innerHTML = `</br><strong>Off-chain Metadata:</strong></br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
   document.getElementById('tokenOnchainImage').innerHTML = `</br><strong>On-chain Image:</strong></br><a href="${onchainImg}" target=_blank>${data.image}</a>`;

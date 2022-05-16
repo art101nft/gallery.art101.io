@@ -28,10 +28,9 @@
         <div class="columns">
           {% if token_id | is_even %}
           <div class="column">
-            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug != 'nftzine' %}tokenZoom{% endif %}" />
+            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           <div class="column">
-            {{ collection.testnet_address }}
             <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
@@ -45,7 +44,7 @@
             <ol id="tokenTraits"></ol>
           </div>
           <div class="column">
-            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug != 'nftzine' %}tokenZoom{% endif %}" />
+            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           {% endif %}
         </div>
