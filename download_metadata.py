@@ -2,6 +2,7 @@
 
 import requests, json
 from os.path import exists
+from os import stat
 from time import sleep
 
 from gallery.collections import all_collections, Collection
@@ -15,7 +16,7 @@ for c in collections:
     _p = f'{config.DATA_PATH}/{c.contract_address}'
     for token_id in range(c.data['start_token_id'], c.data['total_supply'] - 1 + c.data['start_token_id']):
         p = f'{_p}/{str(token_id)}.json'
-        if not exists(p):
+        if not exists(p) or stat(p).st_size == 0:
             print(f'{p} does not exist - fetching')
             sleep(1)
             token_uri = c.contract.functions.tokenURI(token_id).call()
