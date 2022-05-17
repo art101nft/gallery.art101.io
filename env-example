@@ -1,4 +1,7 @@
 SECRET_KEY=topsecret1@
-SERVER_NAME=myservername.com
-WEB3_PROVIDER_URI=https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
-ETHERSCAN_API=xxxxxx
+WEB3_PROVIDER_URI=wss://xxxxx.infura.io/ws/v3/xxxxxx
+WEB3_INFURA_PROJECT_ID=xxxxx
+WEB3_INFURA_API_SECRET=xxxxx
+ETHERSCAN_API=xxxxx
+DATA_PATH=/home/you/git/github.com/art101nft/gallery.art101.io/data
+SERVER_NAME=127.0.0.1:5000
