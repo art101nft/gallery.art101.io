@@ -69,7 +69,7 @@ for collection in [LocalCollection(k) for k in all_collections]:
         # Loop over categories and calculate frequency and rarity score
         for v in rarity_collection.categories.values():
             for t in v.traits:
-                v.trait_freq[t] = v.trait_count[t]/rarity_collection.item_count
+                v.trait_freq[t] = v.trait_count[t]/rarity_collection.item_count()
                 v.trait_rarity[t] = 1/v.trait_freq[t]
                 v.trait_rarity_normed[t] = v.trait_rarity[t]*(rarity_collection.get_avg_gm_hm()/len(v.traits))
 

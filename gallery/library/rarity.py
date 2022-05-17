@@ -52,7 +52,6 @@ class Collection:
         self.trait_count = {}           # Mapping of number of traits to count
         self.categories = {}            # Dict of all categories in collection with counts and stuff
 
-    @staticmethod
     def item_count(self):
         return len(self.tokens)
 
