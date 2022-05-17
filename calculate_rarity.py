@@ -12,76 +12,77 @@ from gallery import config
 
 
 for collection in [LocalCollection(k) for k in all_collections]:
+    # Define new collection
     rarity_collection = Collection()
     if collection.url_slug != 'non-fungible-soup':
         continue
     print(f'[+] Reading metadata for {collection.title} - {collection.contract_address}')
     _p = f'{config.DATA_PATH}/{collection.contract_address}'
+    # Loop over each token in the collection to grab the JSON metadata
     for token_id in range(collection.token_start, collection.token_end + 1):
         data = None
         p = f'{_p}/{str(token_id)}.json'
 
+        # If file does not exist locally or is empty, stop processing collection
         if not exists(p) or stat(p).st_size == 0:
-            print(f'{p} does not exist or is empty. Rarity rankings will be incomplete. Skipping collection.')
-            sleep(3)
-            continue
+            print(f'[!] {p} does not exist or is empty. Rarity rankings will be incomplete. Skipping collection.')
+            exit(1)
 
+        # Read the JSON file, stopping if unable to read it
         with open(p, 'r') as f:
             try:
                 data = json.loads(f.read())
             except:
-                print(f'Unable to load JSON data from {p}. Rarity rankings will be incomplete. Skipping collection.')
-                sleep(3)
-                continue
+                print(f'[!] Unable to load JSON data from {p}. Rarity rankings will be incomplete. Skipping collection.')
+                exit(1)
 
-        # Loop over all token metadata and add tokens to collection and count them
+        # Add token metadata to collection
         new_item = Item(token_id, data)
         rarity_collection.tokens.append(new_item)
 
-        # Loop over tokens in collection to get list of all category/trait tuples
-        for i in rarity_collection.tokens:
-            for k, v in i.traits.items():
-                if (k, v) not in rarity_collection.traits:
-                    rarity_collection.traits.append((k, v))
-                else:
-                    pass
+    print('[+] Looping over tokens to get list of all category and trait tuples')
+    for token in rarity_collection.tokens:
+        for k, v in token.traits.items():
+            if (k, v) not in rarity_collection.traits:
+                rarity_collection.traits.append((k, v))
 
-        # Loop over tokens in collection to add None type to tokens and sort and create category objects
-        for i in rarity_collection.tokens:
-            for t in rarity_collection.traits:
-                # If item has empty attributes/traits in categories make them explicity None
-                if t[0] not in i.traits.keys():
-                    i.traits[t[0]] = None
-                # Set up category objects in collection
-                if t[1] not in rarity_collection.categories.keys():
-                    rarity_collection.categories[t[0]] = Category(t[0])
+    print('[+] Looping over tokens in collection to add `None` type to tokens and sort and create category objects')
+    for token in rarity_collection.tokens:
+        for trait in rarity_collection.traits:
+            # If item has empty attributes/traits in categories make them explicity None
+            if trait[0] not in token.traits.keys():
+                token.traits[trait[0]] = None
+            # Set up category objects in collection
+            if trait[1] not in rarity_collection.categories.keys():
+                rarity_collection.categories[trait[0]] = Category(trait[0])
 
-        # Loop over tokens in collection and count trait occurrences into category objects
-        for i in rarity_collection.tokens:
-            for k, v in i.traits.items():
-                #print(i.ID, t, v)
-                if t in rarity_collection.categories[k].traits:
-                    rarity_collection.categories[k].trait_count[v] += 1
-                else:
-                    rarity_collection.categories[k].traits.append(v)
-                    rarity_collection.categories[k].trait_count[v] = 1
+    print('[+] Looping over tokens in collection to count trait occurrences into category objects')
+    for token in rarity_collection.tokens:
+        for k, v in token.traits.items():
+            if v in rarity_collection.categories[k].traits:
+                rarity_collection.categories[k].trait_count[v] += 1
+            else:
+                rarity_collection.categories[k].traits.append(v)
+                rarity_collection.categories[k].trait_count[v] = 1
 
-        # Loop over categories and calculate frequency and rarity score
-        for v in rarity_collection.categories.values():
-            for t in v.traits:
-                v.trait_freq[t] = v.trait_count[t]/rarity_collection.item_count()
-                v.trait_rarity[t] = 1/v.trait_freq[t]
-                v.trait_rarity_normed[t] = v.trait_rarity[t]*(rarity_collection.get_avg_gm_hm()/len(v.traits))
+    print('[+] Looping over categories to calculate frequency and rarity score')
+    for cat in rarity_collection.categories.values():
+        for trait in cat.traits:
+            cat.trait_freq[trait] = cat.trait_count[trait] / len(rarity_collection.tokens)
+            cat.trait_rarity[trait] = 1 / cat.trait_freq[trait]
+            cat.trait_rarity_normed[trait] = cat.trait_rarity[trait] * (rarity_collection.get_avg_gm_hm() / len(cat.traits))
 
-        # Loop over tokens and calculate statistical rarity and rarity score
-        for i in rarity_collection.tokens:
-            for k, v in i.traits.items():
-                i.stat_rarity = i.stat_rarity * rarity_collection.categories[k].trait_freq[v]
-                i.rarity_score = i.rarity_score + rarity_collection.categories[k].trait_rarity[v]
-                i.rarity_score_normed = i.rarity_score_normed + rarity_collection.categories[k].trait_rarity_normed[v]
+    print('[+] Looping over tokens to calculate statistical rarity and rarity score')
+    for token in rarity_collection.tokens:
+        for k, v in token.traits.items():
+            token.stat_rarity = token.stat_rarity * rarity_collection.categories[k].trait_freq[v]
+            token.rarity_score = token.rarity_score + rarity_collection.categories[k].trait_rarity[v]
+            token.rarity_score_normed = token.rarity_score_normed + rarity_collection.categories[k].trait_rarity_normed[v]
 
-    for i in rarity_collection.tokens:
-        print(i.traits)
-        print(i.stat_rarity)
-        print(i.rarity_score)
-        print(i.rarity_score_normed)
+    with open('output.csv', 'w') as f:
+        f.write('token_id,stat_rarity,rarity_score,rarity_score_normed\n')
+
+    for token in rarity_collection.tokens:
+        res = f'{token.id},{token.stat_rarity},{token.rarity_score},{token.rarity_score_normed}\n'
+        with open('output.csv', 'a') as f:
+            f.write(res)
