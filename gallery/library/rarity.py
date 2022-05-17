@@ -5,9 +5,9 @@ from statistics import geometric_mean
 from statistics import harmonic_mean
 
 
-class Item:
+class Token:
     """
-    Representation of a single item/token in a collection
+    Representation of a single token in a collection
     """
     def __init__(self, token_id, data):
         self.id = token_id
@@ -17,10 +17,8 @@ class Item:
         self.rarity_score = 0
         self.rarity_score_normed = 0
         for a in data['attributes']:
-            if a["trait_type"] == "Generation":
-                self.ID = a["value"]
-            elif a["trait_type"] == "birthday":
-                self.birthday = a["value"]
+            if a["trait_type"] == "Generation" or a["trait_type"] == "birthday":
+                pass
             else:
                 self.traits[a["trait_type"]] = a["value"]
                 self.traits["trait_count"] += 1

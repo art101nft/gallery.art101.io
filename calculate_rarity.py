@@ -7,15 +7,13 @@ from time import sleep
 
 from gallery.collections import all_collections
 from gallery.collections import Collection as LocalCollection
-from gallery.library.rarity import Item, Category, Collection
+from gallery.library.rarity import Token, Category, Collection
 from gallery import config
 
 
 for collection in [LocalCollection(k) for k in all_collections]:
     # Define new collection
     rarity_collection = Collection()
-    if collection.url_slug != 'non-fungible-soup':
-        continue
     print(f'[+] Reading metadata for {collection.title} - {collection.contract_address}')
     _p = f'{config.DATA_PATH}/{collection.contract_address}'
     # Loop over each token in the collection to grab the JSON metadata
@@ -37,7 +35,7 @@ for collection in [LocalCollection(k) for k in all_collections]:
                 exit(1)
 
         # Add token metadata to collection
-        new_item = Item(token_id, data)
+        new_item = Token(token_id, data)
         rarity_collection.tokens.append(new_item)
 
     print('[+] Looping over tokens to get list of all category and trait tuples')
@@ -79,10 +77,14 @@ for collection in [LocalCollection(k) for k in all_collections]:
             token.rarity_score = token.rarity_score + rarity_collection.categories[k].trait_rarity[v]
             token.rarity_score_normed = token.rarity_score_normed + rarity_collection.categories[k].trait_rarity_normed[v]
 
-    with open('output.csv', 'w') as f:
-        f.write('token_id,stat_rarity,rarity_score,rarity_score_normed\n')
-
+    res = {}
     for token in rarity_collection.tokens:
-        res = f'{token.id},{token.stat_rarity},{token.rarity_score},{token.rarity_score_normed}\n'
-        with open('output.csv', 'a') as f:
-            f.write(res)
+        res[token.id] = {
+            'stat_rarity': token.stat_rarity,
+            'rarity_score': token.rarity_score,
+            'rarity_score_normed': token.rarity_score_normed,
+            'traits': token.traits
+        }
+
+    with open(f'{collection.url_slug}.json', 'w') as f:
+        f.write(json.dumps(res))
