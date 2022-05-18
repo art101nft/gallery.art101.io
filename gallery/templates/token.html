@@ -32,7 +32,7 @@
           <div class="column">
             {% if rarity['rank'] < collection.token_end %}
               {# retrieve_token_id_by_rank #}
-              <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-target=".container" up-preload up-transition="move-right">Rank #{{ rarity['rank'] + 1 }} -></a>
+              <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-target=".container" up-preload up-transition="move-left">Rank #{{ rarity['rank'] + 1 }} -></a>
             {% endif %}
           </div>
           <div class="column">

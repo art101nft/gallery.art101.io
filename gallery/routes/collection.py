@@ -34,6 +34,11 @@ async def show(collection_slug):
                     owner = Owner(str(a.get('wallet')))
                 except:
                     await flash('Address provided is not allowed', 'warning')
+            elif a.get('rankId'):
+                i = a.get('rankId')
+                if collection.token_id_is_allowed(i):
+                    return redirect(url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(i)))
+                await flash(f'Token provided is not allowed ({collection.token_start} - {collection.token_end})', 'warning')
             elif a.get('tokenId'):
                 i = a.get('tokenId')
                 if collection.token_id_is_allowed(i):
