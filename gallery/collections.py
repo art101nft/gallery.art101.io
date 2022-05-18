@@ -122,6 +122,16 @@ class Collection(object):
                 print(e)
                 return {}
 
+    def retrieve_token_id_by_rank(self, rank_number):
+        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+            data = loads(f.read())
+            return data['ranks'][str(rank_number)]
+
+    def retrieve_token_by_id(self, token_id):
+        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+            data = loads(f.read())
+            return data[str(token_id)]
+
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:
