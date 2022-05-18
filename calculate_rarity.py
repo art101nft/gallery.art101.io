@@ -78,13 +78,23 @@ for collection in [LocalCollection(k) for k in all_collections]:
             token.rarity_score_normed = token.rarity_score_normed + rarity_collection.categories[k].trait_rarity_normed[v]
 
     res = {}
+    ranked_by = 'rarity_score_normed'
     for token in rarity_collection.tokens:
         res[token.id] = {
             'stat_rarity': token.stat_rarity,
             'rarity_score': token.rarity_score,
-            'rarity_score_normed': token.rarity_score_normed,
-            'traits': token.traits
+            'rarity_score_normed': token.rarity_score_normed
         }
 
-    with open(f'{collection.url_slug}.json', 'w') as f:
+    ranked = sorted(res, key=lambda x: res[x][ranked_by], reverse=True)
+    res['ranks'] = {}
+    for count, value in enumerate(ranked):
+        rank = count + 1
+        res[value]['rank'] = rank
+        res[value]['ranked_by'] = ranked_by
+        res['ranks'][rank] = value
+
+    score_path = f'gallery/library/rarityscores/{collection.url_slug}.json'
+    print(f'[+] Saving rarity score to {score_path}')
+    with open(score_path, 'w') as f:
         f.write(json.dumps(res))
