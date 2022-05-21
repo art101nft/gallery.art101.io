@@ -36,6 +36,7 @@
         </div>
       </nav>
       <nav class="level">
+        {% if collection.stats %}
         <div class="level-item">
           <div>
             <p class="heading">Volume</p>
@@ -48,6 +49,7 @@
             <p class="title">{{ collection.stats.total_sales }}</p>
           </div>
         </div>
+        {% endif %}
         <div class="level-item">
           <div>
             <p class="heading">Launch Block</p>
