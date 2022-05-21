@@ -21,6 +21,7 @@ up.compiler('#tokenTitle', async function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId);
   let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
   await updateTokenSales();
+  updateTokenHistory(data.contractAddress, data.tokenId);
   let update = setInterval(updateTokenSales, 6000);
   up.destructor(element, () => clearInterval(update));
 })
@@ -160,6 +161,48 @@ async function _withdrawFunds() {
   }
 }
 
+async function updateTokenHistory(contractAddress, tokenId) {
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  const tokenHistory = document.getElementById('tokenHistory');
+  const tokenSales = await getTokenSales(contractAddress, tokenId);
+  if (tokenSales.length > 0) {
+    tokenSales.forEach(function(sale) {
+      let msgColor;
+      let msgText;
+      const msInDay = 24 * 60 * 60 * 1000;
+      const now = new Date();
+      const txDate = new Date(sale.tx_date);
+      let diff = ((now - txDate) / msInDay).toFixed(2);
+      if (sale.event_type == 'sale') {
+        msgColor = 'is-success';
+        msgText = `Sold for <strong>${w3.utils.fromWei(sale.amount.toString())} Ξ</strong> by <a href="https://etherscan.io/address/${sale.from_wallet}" target="_blank">${shortenAddress(sale.from_wallet)}</a> to <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a> via ${sale.platform.toUpperCase()}`;
+      } else if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
+        msgColor = 'is-info';
+        msgText = `Minted by <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
+      } else {
+        console.log(`Unreferenced sale:`);
+        console.log(sale);
+        return
+      }
+      const article = document.createElement('article');
+      const msgBody = document.createElement('div');
+      article.classList.add('message', msgColor)
+      msgBody.classList.add('message-body');
+      msgBody.innerHTML = msgText;
+      article.appendChild(msgBody);
+      tokenHistory.appendChild(article);
+    })
+  } else {
+    const article = document.createElement('article');
+    const msgBody = document.createElement('div');
+    article.classList.add('message', 'is-danger')
+    msgBody.classList.add('message-body');
+    msgBody.innerHTML = 'Unable to load token history at this time. Check again later.';
+    article.appendChild(msgBody);
+    tokenHistory.appendChild(article);
+  }
+}
+
 async function _updateTokenSales(contractAddress, tokenId, erc1155) {
   let gasLimit;
   let contract;
@@ -189,6 +232,7 @@ async function _updateTokenSales(contractAddress, tokenId, erc1155) {
   const tokenPurchase = document.getElementById('tokenPurchase');
   const tokenSell = document.getElementById('tokenSell');
   const collectionRoyalty = document.getElementById('collectionRoyalty');
+
   collectionRoyalty.innerHTML = `This collection has a royalty of ${collection.royaltyPercent}%`;
   if (erc1155 == "true") {
     contract = new w3.eth.Contract(erc1155Abi, contractAddress);
@@ -432,6 +476,15 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
     await updateTokenPreview(contractAddress, tokenIndex);
   };
 
+}
+
+async function getTokenSales(contractAddress, tokenId) {
+  let res = await fetch(`/api/v1/get_token_sales/${contractAddress}/${tokenId}`)
+    .then((resp) => resp.json())
+    .then(function(data) {
+      return data
+    })
+  return res
 }
 
 async function getTokenMetadata(contractAddress, tokenId) {

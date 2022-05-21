@@ -15,6 +15,7 @@ ETHERSCAN_API = getenv('ETHERSCAN_API', 'xxxxxxx')
 IPFS_SERVER = getenv('IPFS_SERVER', 'http://127.0.0.1:8080')
 DATA_PATH = getenv('DATA_PATH', '/opt/gallery.art101.io/data')
 ASSETS_URL = getenv('ASSETS_URL', 'https://art101-assets.s3.us-west-2.amazonaws.com')
+SCRAPER_API_URL = getenv('SCRAPER_API_URL', 'http://127.0.0.1:3000')
 ERC721_ABI = erc721_abi
 ERC1155_ABI = erc1155_abi
 MARKETPLACE_ABI = marketplace_abi

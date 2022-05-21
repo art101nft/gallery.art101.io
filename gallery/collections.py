@@ -132,6 +132,26 @@ class Collection(object):
             data = loads(f.read())
             return data[str(token_id)]
 
+    def retrieve_token_sales(self, token_id):
+        url = f'{config.SCRAPER_API_URL}/api/token/{self.contract_address}/{token_id}/history'
+        try:
+            key_name = f'{self.contract_address}-sales-{token_id}'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                if isinstance(r.json(), list):
+                    _d = r.json()
+                    cache.store_data(key_name, 14400, dumps(_d))
+                    return _d
+                else:
+                    return {}
+        except Exception as e:
+            print(e)
+            return {}
+
     def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:

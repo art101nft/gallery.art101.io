@@ -72,3 +72,8 @@ html, body, table, .navbar {
 .rejectedCard {
   background-color: #f14668;
 }
+
+.message {
+  max-width: 750px;
+  margin: auto;
+}
