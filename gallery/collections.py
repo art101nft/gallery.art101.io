@@ -131,22 +131,6 @@ class Collection(object):
         except Exception as e:
             print(e)
             return {}
-        # key_name = f'opensea-stats-{self.url_slug}'
-        # _d = cache.get_data(key_name)
-        # if _d:
-        #     return loads(_d)
-        # else:
-        #     try:
-        #         url = f'https://api.opensea.io/api/v1/collection/{self.url_slug}/stats'
-        #         r = requests.get(url, headers={"Accept": "application/json"}, timeout=10)
-        #         r.raise_for_status()
-        #         if 'stats' in r.json():
-        #             _d = r.json()['stats']
-        #             cache.store_data(key_name, 604800, dumps(_d))
-        #             return _d
-        #     except Exception as e:
-        #         print(e)
-        #         return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
         with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
