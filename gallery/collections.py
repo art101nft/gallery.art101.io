@@ -105,22 +105,48 @@ class Collection(object):
         return True
 
     def retrieve_collection_stats(self):
-        key_name = f'opensea-stats-{self.url_slug}'
-        _d = cache.get_data(key_name)
-        if _d:
-            return loads(_d)
-        else:
-            try:
-                url = f'https://api.opensea.io/api/v1/collection/{self.url_slug}/stats'
-                r = requests.get(url, headers={"Accept": "application/json"}, timeout=10)
+        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/platforms'
+        try:
+            key_name = f'{self.contract_address}-sales-data-v1.7'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
                 r.raise_for_status()
-                if 'stats' in r.json():
-                    _d = r.json()['stats']
-                    cache.store_data(key_name, 604800, dumps(_d))
+                if isinstance(r.json(), list):
+                    platforms = r.json()
+                    _d = {
+                        'total_volume': 0,
+                        'total_sales': 0,
+                        'platforms': platforms
+                    }
+                    for platform in platforms:
+                        _d['total_volume'] += float(platform['volume'])
+                        _d['total_sales'] += int(platform['sales'])
+                    cache.store_data(key_name, 14400, dumps(_d))
                     return _d
-            except Exception as e:
-                print(e)
-                return {}
+                else:
+                    return {}
+        except Exception as e:
+            print(e)
+            return {}
+        # key_name = f'opensea-stats-{self.url_slug}'
+        # _d = cache.get_data(key_name)
+        # if _d:
+        #     return loads(_d)
+        # else:
+        #     try:
+        #         url = f'https://api.opensea.io/api/v1/collection/{self.url_slug}/stats'
+        #         r = requests.get(url, headers={"Accept": "application/json"}, timeout=10)
+        #         r.raise_for_status()
+        #         if 'stats' in r.json():
+        #             _d = r.json()['stats']
+        #             cache.store_data(key_name, 604800, dumps(_d))
+        #             return _d
+        #     except Exception as e:
+        #         print(e)
+        #         return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
         with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
