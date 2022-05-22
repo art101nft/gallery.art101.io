@@ -12,19 +12,30 @@ export BV=0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c
 .venv/bin/python3 download_metadata.py
 
 # Recurse into each data directory containing metadata and fetch images from IPFS
-for i in data/0x*; do
-  echo "moving into ${i}";
-  pushd "${i}";
-  sleep 5;
+for contract_dir in data/0x*; do
+  echo "moving into ${contract_dir}";
+  pushd "${contract_dir}";
+  CONTRACT="$(echo $contract_dir | sed s_data/__)";
   for i in *.json; do
     IMG="$(cat $i | jq -r .image | sed s_ipfs://__)";
     NAME="$(cat $i | jq -r .name)";
-    FULLPATHZ="http://127.0.0.1:8080/ipfs/${IMG}";
     FULLPATH="https://gateway.pinata.cloud/ipfs/${IMG}";
+    if [[ $CONTRACT -eq $NFZ ]]; then
+      ANIMATION="$(cat $i | jq -r .animation_url)";
+      ANIMATIONINDEX="${ANIMATION}/index.html";
+      ANIMATIONPATH="https://gateway.pinata.cloud/ipfs/${ANIMATION}";
+      if [[ -f "${ANIMATION}" ]]; then
+        rm "${ANIMATION}";
+      fi
+      mkdir -p "${ANIMATION}";
+      if [[ ! -f "${ANIMATIONINDEX}" ]]; then
+        wget -c -t 3 "${ANIMATIONPATH}" -O "${ANIMATIONINDEX}";
+      fi
+      egrep -o "\w*.png" "${ANIMATIONINDEX}" | xargs -I % bash -c "if [[ ! -f ${ANIMATION}/% ]]; then wget -c -t 3 ${ANIMATIONPATH}/% -O ${ANIMATION}/%; else echo ${ANIMATION}/% does exist. Skipping.; fi"
+    fi
     if [[ ! -f $IMG ]]; then
       echo "${NAME} - ${IMG} does not exist, fetching from ${FULLPATH}";
       wget "${FULLPATH}" -O "${IMG}";
-      sleep 1;
     else
       echo "${NAME} - ${IMG} does exist, skipping";
     fi
@@ -47,7 +58,8 @@ aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "application/js
 aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "image/png" --exclude "*.json" --include "*"
 echo "[+] Syncing NFZ assets to S3"; sleep 3;
 aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "application/json" --exclude "*" --include "*.json"
-aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "image/png" --exclude "*.json" --include "*"
+aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "image/png" --exclude "*" --include "*.png"
+aws s3 sync data/${NFZ}/ s3://art101-assets/${NFZ}/ --content-type "text/html" --exclude "*" --include "*.html"
 # echo "[+] Syncing BV assets to S3"; sleep 3;
 aws s3 sync data/${BV}/ s3://art101-assets/${BV}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${BV}/ s3://art101-assets/${BV}/ --content-type "image/png" --exclude "*.json" --include "*"
