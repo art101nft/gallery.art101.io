@@ -17,6 +17,10 @@ up.compiler('#withdrawFunds', async function(element) {
   up.destructor(element, () => clearInterval(withdraw));
 })
 
+up.compiler('#fullscreen_btn', async function(element) {
+  fullscreenZine();
+})
+
 up.compiler('#tokenTitle', async function(element, data) {
   updateTokenInfo(data.contractAddress, data.tokenId);
   let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
@@ -370,7 +374,6 @@ async function _updateTokenSales(contractAddress, tokenId, erc1155) {
         tokenWithdrawSale.classList.remove('is-loading');
       }
     }
-    // if (offer.onlySellTo == '0x0000000000000000000000000000000000000000') {}
   } else {
     tokenSaleStatus.innerHTML = 'Token is not currently for sale.';
   }
@@ -449,7 +452,6 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
   let newColumn;
   let parent = document.getElementById('ownerTokens');
   const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-  // const walletAddress = await getMMAccount();
   const walletShort = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
   const contract = new w3.eth.Contract(erc721Abi, contractAddress);
   const balance = await contract.methods.balanceOf(walletAddress).call();
@@ -532,11 +534,16 @@ async function updateTokenInfo(contractAddress, tokenId) {
   }
   document.getElementById('tokenDescription').innerHTML = data.description;
   document.getElementById('tokenImage').src = offchainImg;
-  // If nftzine, link out to IPFS to view clickable zine
+  // If nftzine, load iframe for clickable zine
   if (document.getElementById('tokenImage').classList.contains('zineLink')) {
-    document.getElementById('tokenImage').onclick = function() {
-      window.location.href = `https://gateway.pinata.cloud/ipfs/${data.animation_url}`;
-    }
+    let animationURL = loadAssets(contractAddress) + `/${data.animation_url}/index.html`;
+    let ifrm = document.createElement('iframe');
+    ifrm.setAttribute('src', animationURL);
+    ifrm.setAttribute('allowfullscreen', true);
+    ifrm.style.width = "640px";
+    ifrm.style.height = "480px";
+    document.getElementById('tokenImage').remove();
+    document.getElementById('tokenImageHolder').appendChild(ifrm);
   }
   document.getElementById('tokenOnchainURI').innerHTML = `</br><strong>On-chain Metadata:</strong></br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
   document.getElementById('tokenOffchainURI').innerHTML = `</br><strong>Off-chain Metadata:</strong></br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
@@ -551,6 +558,23 @@ async function updateTokenInfo(contractAddress, tokenId) {
   if (buttons) {
     buttons.style.display = 'flex';
   }
+}
+
+function fullscreenZine() {
+  document.querySelector('#fullscreen_btn').addEventListener('click', () => {
+    if (document.fullscreen) {
+        for (let name of ['exitFullscreen','mozExitFullscreen','webkitExitFullscreen']) {
+            let fn = document[name];
+            if (fn) return fn.call(document);
+        }
+    } else {
+        let bg = document.querySelector('#bg');
+        for (let name of ['requestFullscreen','mozRequestFullscreen','webkitRequestFullscreen']) {
+            let fn = bg[name];
+            if (typeof fn === 'function') return fn.call(bg);
+        }
+    }
+  });
 }
 
 async function notif(data) {

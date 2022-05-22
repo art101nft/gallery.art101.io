@@ -22,6 +22,11 @@
   marketplaceContract = "{{ config.MARKETPLACE_ADDRESS }}";
 
   // Put this helper function in here so we can inject global config for ASSETS_URL
+
+  function loadAssets(contract_address) {
+    return `{{ config.ASSETS_URL }}/${contract_address}`;
+  }
+
   function loadImg(_u, contract_address, use_external) {
     if (_u.startsWith('ipfs://')) {
       if (use_external) {

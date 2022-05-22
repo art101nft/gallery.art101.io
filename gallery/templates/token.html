@@ -43,7 +43,7 @@
         </div>
         <div class="columns">
           {% if token_id | is_even %}
-          <div class="column">
+          <div class="column" id="tokenImageHolder">
             <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           <div class="column">
@@ -67,7 +67,7 @@
             <p><strong>Rarity Score (normed)</strong>: {{ rarity['rarity_score_normed'] }}</p>
             <p><strong>Ranked By</strong>: {{ rarity['ranked_by'] }}</p>
           </div>
-          <div class="column">
+          <div class="column" id="tokenImageHolder">
             <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% else %}tokenZoom{% endif %}" />
           </div>
           {% endif %}
