@@ -1,28 +1,46 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   // unpoly config adjustments
   up.fragment.config.mainTargets.push('.container');
 
   // Reload page if Metamask account changes
   if (ethereum) {
-    ethereum.on('accountsChanged', function (accounts) {
-      window.location.href = '';
+    ethereum.on('accountsChanged', function () {
+      window.location.reload();
     });
   }
-});
 
-up.compiler('#withdrawFunds', async function(element) {
-  let withdrawFunds = async () => await _withdrawFunds();
-  await withdrawFunds();
-  let withdraw = setInterval(withdrawFunds, 10000);
-  up.destructor(element, () => clearInterval(withdraw));
-})
+  if (await isConnected()) {
+    // If MetaMask is connected, check for withdrawals
+    let withdrawFunds = async () => await _withdrawFunds();
+    await withdrawFunds();
+    let withdraw = setInterval(withdrawFunds, 15000);
+  } else {
+    // Otherwise, present connect button before prompting
+    const btn = document.getElementById('connectButton');
+    btn.classList.remove('hidden');
+    btn.onclick = connect;
+  }
+
+});
 
 up.compiler('#fullscreen_btn', async function(element) {
   fullscreenZine();
 })
 
 up.compiler('#tokenTitle', async function(element, data) {
-  updateTokenInfo(data.contractAddress, data.tokenId);
+  await updateTokenInfo(data.contractAddress, data.tokenId);
+  const c = await isConnected();
+  if (!c) {
+    const tokenHistory = document.getElementById('tokenHistory');
+    const article = document.createElement('article');
+    const msgBody = document.createElement('div');
+    article.classList.add('message', 'is-warning')
+    msgBody.classList.add('message-body');
+    msgBody.innerHTML = 'Please connect your wallet in order to retrieve token history and sales.';
+    article.appendChild(msgBody);
+    tokenHistory.appendChild(article);
+    return false;
+  }
   let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
   await updateTokenSales();
   updateTokenHistory(data.contractAddress, data.tokenId);
@@ -54,6 +72,36 @@ up.compiler('.tokenPreview', function(element, data) {
 up.compiler('.notyBox', function(element, data) {
   notif(data)
 })
+
+async function isConnected() {
+  const accts = await window.ethereum.request({method: 'eth_accounts'});
+  if (accts.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function connect() {
+  switchNetwork();
+  const btn = document.getElementById('connectButton');
+  btn.classList.add('is-loading');
+  btn.disabled = true;
+  window.ethereum
+    .request({ method: 'eth_requestAccounts' })
+    .then(function() {
+      window.location.reload();
+    })
+    .catch((err) => {
+      btn.classList.remove('is-loading');
+      btn.disabled = false;
+      if (err.code === 4001) {
+        console.log('Please connect to MetaMask.');
+      } else {
+        console.error(err);
+      }
+    });
+}
 
 async function getMetamaskAccount() {
   const accounts = await window.ethereum.request({
@@ -105,15 +153,6 @@ async function getMetamaskAccount() {
   });
   const account = accounts[0];
   return account
-}
-
-async function getSignedData(publicAddress, jsonData) {
-  const signedData = await window.ethereum.request({
-    method: 'eth_signTypedData_v3',
-    params: [publicAddress, JSON.stringify(jsonData)]
-  });
-  console.log(signedData);
-  return signedData
 }
 
 async function switchNetwork(){
