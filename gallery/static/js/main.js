@@ -29,6 +29,7 @@ up.compiler('#fullscreen_btn', async function(element) {
 
 up.compiler('#tokenTitle', async function(element, data) {
   await updateTokenInfo(data.contractAddress, data.tokenId);
+  await updateTokenHistory(data.contractAddress, data.tokenId);
   const c = await isConnected();
   if (!c) {
     const tokenHistory = document.getElementById('tokenHistory');
@@ -36,16 +37,16 @@ up.compiler('#tokenTitle', async function(element, data) {
     const msgBody = document.createElement('div');
     article.classList.add('message', 'is-warning')
     msgBody.classList.add('message-body');
-    msgBody.innerHTML = 'Please connect your wallet in order to retrieve token history and sales.';
+    msgBody.innerHTML = 'Please connect your wallet in order to bid/offer tokens.';
     article.appendChild(msgBody);
     tokenHistory.appendChild(article);
     return false;
+  } else {
+    let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
+    await updateTokenSales();
+    let update = setInterval(updateTokenSales, 8000);
+    up.destructor(element, () => clearInterval(update));
   }
-  let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
-  await updateTokenSales();
-  updateTokenHistory(data.contractAddress, data.tokenId);
-  let update = setInterval(updateTokenSales, 6000);
-  up.destructor(element, () => clearInterval(update));
 })
 
 up.compiler('#ownerTokens', function(element, data) {
