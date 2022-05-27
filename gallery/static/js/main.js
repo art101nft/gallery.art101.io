@@ -543,7 +543,7 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
     let newItem = document.createElement('div');
     newItem.classList.add('column');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<div class="card-image">
+    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: auto;">
               <figure class="image">
                 <a href="/collection/${urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
                   <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>
