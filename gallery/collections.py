@@ -104,6 +104,23 @@ class Collection(object):
             return False
         return True
 
+    def retrieve_collection_events(self):
+        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/events'
+        try:
+            key_name = f'{self.contract_address}-collection-events-data-v1.0.2'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                events = r.json()
+                cache.store_data(key_name, 14400, dumps(events))
+                return events
+        except Exception as e:
+            print(e)
+            return {}
+
     def retrieve_collection_stats(self):
         url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/platforms'
         try:
