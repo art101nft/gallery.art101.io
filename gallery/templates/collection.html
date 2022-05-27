@@ -57,6 +57,16 @@
         </div>
       </nav>
       <nav class="content">
+        <div class="columns" style="width: 400px; margin: auto;">
+          {% set bids = collection.retrieve_collection_active_bids() %}
+          {% set offers = collection.retrieve_collection_active_offers() %}
+          <div class="column">
+            <a {% if not offers %}disabled{% endif %} href="{{ url_for('collection.show_offers', collection_slug=collection.url_slug) }}" class="button is-large">For Sale ({{ offers | length }})</a>
+          </div>
+          <div class="column">
+            <a {% if not bids %}disabled{% endif %} href="{{ url_for('collection.show_bids', collection_slug=collection.url_slug) }}" class="button is-large">Bids ({{ bids | length }})</a>
+          </div>
+        </div>
         {% if owner %}
         <div class="column has-text-centered m-0">
           <div class="field">

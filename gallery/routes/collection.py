@@ -23,7 +23,7 @@ async def show(collection_slug):
     collection = Collection(collection_slug)
     owner = None
     if not collection:
-        flash('That collection does not exist.', 'warning')
+        await flash('That collection does not exist.', 'warning')
         return redirect('/')
     if request.method == 'GET':
         try:
@@ -60,14 +60,42 @@ async def show(collection_slug):
         owner=owner
     )
 
+@bp.route('/collection/<collection_slug>/offers')
+async def show_offers(collection_slug):
+    collection = Collection(collection_slug)
+    if not collection:
+        await flash('That collection does not exist.', 'warning')
+        return redirect('/')
+    if not collection.retrieve_collection_active_offers():
+        await flash('No active offers at this time.', 'warning')
+        return redirect(url_for('collection.show', collection_slug=collection.url_slug))
+    return await render_template(
+        'offers.html',
+        collection=collection
+    )
+
+@bp.route('/collection/<collection_slug>/bids')
+async def show_bids(collection_slug):
+    collection = Collection(collection_slug)
+    if not collection:
+        await flash('That collection does not exist.', 'warning')
+        return redirect('/')
+    if not collection.retrieve_collection_active_bids():
+        await flash('No active bids at this time.', 'warning')
+        return redirect(url_for('collection.show', collection_slug=collection.url_slug))
+    return await render_template(
+        'bids.html',
+        collection=collection
+    )
+
 @bp.route('/collection/<collection_slug>/<int:token_id>')
 async def show_token(collection_slug, token_id):
     collection = Collection(collection_slug)
     if not collection:
-        flash('That collection does not exist.', 'warning')
+        await flash('That collection does not exist.', 'warning')
         return redirect('/')
     if token_id > collection.data['total_supply'] + collection.data['start_token_id'] - 1:
-        flash('That token does not exist for that collection!', 'warning')
+        await flash('That token does not exist for that collection!', 'warning')
         return redirect(url_for('collection.show', collection_slug=collection_slug))
     return await render_template(
         'token.html',

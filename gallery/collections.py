@@ -104,10 +104,10 @@ class Collection(object):
             return False
         return True
 
-    def retrieve_collection_events(self):
-        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/events'
+    def retrieve_collection_active_bids(self):
+        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/bids'
         try:
-            key_name = f'{self.contract_address}-collection-events-data-v1.0.2'
+            key_name = f'{self.contract_address}-collection-bids-v1'
             _d = cache.get_data(key_name)
             if _d:
                 return loads(_d)
@@ -115,7 +115,47 @@ class Collection(object):
                 r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
                 r.raise_for_status()
                 events = r.json()
-                cache.store_data(key_name, 14400, dumps(events))
+                if not events:
+                    return {}
+                cache.store_data(key_name, 1200, dumps(events))
+                return events
+        except Exception as e:
+            print(e)
+            return {}
+
+    def retrieve_collection_active_offers(self):
+        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/offers'
+        try:
+            key_name = f'{self.contract_address}-collection-offers-v1'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                events = r.json()
+                if not events:
+                    return {}
+                cache.store_data(key_name, 1200, dumps(events))
+                return events
+        except Exception as e:
+            print(e)
+            return {}
+
+    def retrieve_collection_events(self):
+        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/events'
+        try:
+            key_name = f'{self.contract_address}-collection-events-data-v1'
+            _d = cache.get_data(key_name)
+            if _d:
+                return loads(_d)
+            else:
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                events = r.json()
+                if not events:
+                    return {}
+                cache.store_data(key_name, 1200, dumps(events))
                 return events
         except Exception as e:
             print(e)

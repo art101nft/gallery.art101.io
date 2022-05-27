@@ -8,6 +8,34 @@ from gallery.collections import Collection, all_collections
 bp = Blueprint('api', 'api', url_prefix='/api/v1')
 
 
+@bp.route('/get_collection_active_bids/<contract_address>')
+async def get_collection_active_bids(contract_address):
+    collection_slug = None
+    for slug in all_collections:
+        if contract_address == all_collections[slug]['contract_address']:
+            collection_slug = slug
+    collection = Collection(collection_slug)
+    if not collection:
+        return jsonify({'error': True, 'reason': 'Collection does not exist'})
+    try:
+        return jsonify(collection.retrieve_collection_active_bids())
+    except Exception as e:
+        return jsonify({'error': True, 'reason': e})
+
+@bp.route('/get_collection_active_offers/<contract_address>')
+async def get_collection_active_offers(contract_address):
+    collection_slug = None
+    for slug in all_collections:
+        if contract_address == all_collections[slug]['contract_address']:
+            collection_slug = slug
+    collection = Collection(collection_slug)
+    if not collection:
+        return jsonify({'error': True, 'reason': 'Collection does not exist'})
+    try:
+        return jsonify(collection.retrieve_collection_active_offers())
+    except Exception as e:
+        return jsonify({'error': True, 'reason': e})
+
 @bp.route('/get_collection_events/<contract_address>')
 async def get_collection_events(contract_address):
     collection_slug = None

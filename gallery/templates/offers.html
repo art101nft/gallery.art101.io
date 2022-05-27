@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  {% include 'includes/head.html' %}
+  <body>
+  {% include 'includes/navbar.html' %}
+  <div class="container">
+    <section class="section">
+      <div class="">
+        <h1 class="title">{{ collection.title }}</h1>
+        <h2 class="subtitle">For Sale</h2>
+        <div id="activeBidsOffers" up-data='{ "type": "offers", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+      </div>
+    </section>
+  </div>
+  {% include 'includes/footer.html' %}
+  </body>
+</html>

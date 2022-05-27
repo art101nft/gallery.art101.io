@@ -27,6 +27,38 @@ up.compiler('#fullscreen_btn', async function(element) {
   fullscreenZine();
 })
 
+up.compiler('#activeBidsOffers', async function(element, data) {
+  let events;
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  if (data.type == 'offers') {
+    events = await getCollectionActiveOffers(data.contractAddress, data.urlSlug);
+  } else {
+    events = await getCollectionActiveBids(data.contractAddress, data.urlSlug);
+  }
+  for (i = 0; i < events.length; i++) {
+    if (i % 4 == 0) {
+      newColumn = document.createElement('div');
+      newColumn.classList.add('columns');
+      element.appendChild(newColumn);
+      console.log(`Creating new child for index ${i}`)
+    }
+    let tokenIndex = events[i].token_id;
+    console.log(`Found token #${tokenIndex} for sale in contract ${data.contractAddress}`)
+    let newItem = document.createElement('div');
+    newItem.classList.add('column');
+    newColumn.appendChild(newItem);
+    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: auto;">
+              <figure class="image">
+                <a href="/collection/${data.urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
+                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${data.contractAddress}", "tokenId": "${tokenIndex}" }'>
+                </a>
+                <p class="subtext">${w3.utils.fromWei((events[i].amount).toString())} Ξ</p>
+              </figure>
+            </div>`;
+    await updateTokenPreview(data.contractAddress, tokenIndex);
+  }
+})
+
 up.compiler('#tokenTitle', async function(element, data) {
   await updateTokenInfo(data.contractAddress, data.tokenId);
   await updateTokenHistory(data.contractAddress, data.tokenId);
@@ -525,6 +557,33 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
 
 async function getTokenSales(contractAddress, tokenId) {
   let res = await fetch(`/api/v1/get_token_sales/${contractAddress}/${tokenId}`)
+    .then((resp) => resp.json())
+    .then(function(data) {
+      return data
+    })
+  return res
+}
+
+async function getCollectionActiveBids(contractAddress) {
+  let res = await fetch(`/api/v1/get_collection_active_bids/${contractAddress}`)
+    .then((resp) => resp.json())
+    .then(function(data) {
+      return data
+    })
+  return res
+}
+
+async function getCollectionActiveOffers(contractAddress) {
+  let res = await fetch(`/api/v1/get_collection_active_offers/${contractAddress}`)
+    .then((resp) => resp.json())
+    .then(function(data) {
+      return data
+    })
+  return res
+}
+
+async function getCollectionEvents(contractAddress) {
+  let res = await fetch(`/api/v1/get_collection_events/${contractAddress}`)
     .then((resp) => resp.json())
     .then(function(data) {
       return data
