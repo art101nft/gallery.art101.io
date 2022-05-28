@@ -97,8 +97,8 @@ up.compiler('#tokenTitle', async function(element, data) {
     tokenHistory.appendChild(article);
     return false;
   } else {
-    let updateTokenSales = async () => await _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
-    await updateTokenSales();
+    let updateTokenSales = async () => _updateTokenSales(data.contractAddress, data.tokenId, data.erc1155);
+    updateTokenSales();
     let update = setInterval(updateTokenSales, 8000);
     up.destructor(element, () => clearInterval(update));
   }
@@ -573,7 +573,7 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
                 </a>
               </figure>
             </div>`;
-    await updateTokenPreview(contractAddress, tokenIndex);
+    updateTokenPreview(contractAddress, tokenIndex);
   };
 
 }

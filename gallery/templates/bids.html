@@ -5,6 +5,13 @@
   {% include 'includes/navbar.html' %}
   <div class="container">
     <section class="section">
+      <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
+          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ collection.title }}</a></li>
+          <li class="is-active"><a aria-current="page">Bids</a></li>
+        </ul>
+      </nav>
       <div id="saleDetails">
         <h1 class="title">{{ collection.title }}</h1>
         <h2 class="subtitle">Bids</h2>
