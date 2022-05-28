@@ -29,13 +29,23 @@ up.compiler('#fullscreen_btn', async function(element) {
 
 up.compiler('#activeBidsOffers', async function(element, data) {
   let events;
+  let lowestOffer;
+  let msg;
+  let bidAmounts = 0;
+  let bidCount = 0;
   const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
   if (data.type == 'offers') {
     events = await getCollectionActiveOffers(data.contractAddress, data.urlSlug);
   } else {
     events = await getCollectionActiveBids(data.contractAddress, data.urlSlug);
   }
+  lowestOffer = events[0].amount;
   for (i = 0; i < events.length; i++) {
+    bidAmounts += events[i].amount;
+    bidCount += 1;
+    if (events[i].amount < lowestOffer) {
+      lowestOffer = events[i].amount;
+    }
     if (i % 4 == 0) {
       newColumn = document.createElement('div');
       newColumn.classList.add('columns');
@@ -43,11 +53,11 @@ up.compiler('#activeBidsOffers', async function(element, data) {
       console.log(`Creating new child for index ${i}`)
     }
     let tokenIndex = events[i].token_id;
-    console.log(`Found token #${tokenIndex} for sale in contract ${data.contractAddress}`)
+    console.log(`Found token #${tokenIndex} for sale in contract ${data.contractAddress}`);
     let newItem = document.createElement('div');
     newItem.classList.add('column');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: auto;">
+    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: left;">
               <figure class="image">
                 <a href="/collection/${data.urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
                   <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${data.contractAddress}", "tokenId": "${tokenIndex}" }'>
@@ -55,8 +65,21 @@ up.compiler('#activeBidsOffers', async function(element, data) {
                 <p class="subtext">${w3.utils.fromWei((events[i].amount).toString())} Ξ</p>
               </figure>
             </div>`;
-    await updateTokenPreview(data.contractAddress, tokenIndex);
+
+    updateTokenPreview(data.contractAddress, tokenIndex);
   }
+  if (data.type == 'offers') {
+    msg = `The lowest price currently for sale is ${w3.utils.fromWei(lowestOffer.toString())} Ξ.
+    `;
+  } else {
+    msg = `The average currently open bid is ${w3.utils.fromWei(bidAmounts.toString()) / bidCount} Ξ.<br/>
+    Total value of all current bids is ${w3.utils.fromWei(bidAmounts.toString())} Ξ.
+    `;
+  }
+  let sd = document.createElement('p');
+  sd.innerHTML = msg;
+  sd.classList.add('pb-4');
+  document.getElementById('saleDetails').appendChild(sd);
 })
 
 up.compiler('#tokenTitle', async function(element, data) {

@@ -5,11 +5,11 @@
   {% include 'includes/navbar.html' %}
   <div class="container">
     <section class="section">
-      <div class="">
+      <div id="saleDetails">
         <h1 class="title">{{ collection.title }}</h1>
         <h2 class="subtitle">Bids</h2>
-        <div id="activeBidsOffers" up-data='{ "type": "bids", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
       </div>
+      <div id="activeBidsOffers" up-data='{ "type": "bids", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
     </section>
   </div>
   {% include 'includes/footer.html' %}
