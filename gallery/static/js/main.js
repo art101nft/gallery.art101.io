@@ -71,7 +71,7 @@ up.compiler('#activeBidsOffers', async function(element, data) {
     let newItem = document.createElement('div');
     newItem.classList.add('column');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<div class="card-image" style="max-width: 60px; margin: left;">
+    newItem.innerHTML = `<div class="card-image" style="max-width: 180px; margin: left;">
               <figure class="image">
                 <a href="/collection/${data.urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
                   <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${data.contractAddress}", "tokenId": "${tokenIndex}" }'>
