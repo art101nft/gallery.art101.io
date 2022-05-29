@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Poll for available funds if connected
   if (await isConnected()) {
     // If MetaMask is connected, check for withdrawals
     let withdrawFunds = async () => await _withdrawFunds();
@@ -19,6 +20,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     const btn = document.getElementById('connectButton');
     btn.classList.remove('hidden');
     btn.onclick = connect;
+  }
+
+  // Menu clickable on small screens
+  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+  if ($navbarBurgers.length > 0) {
+    $navbarBurgers.forEach( el => {
+      el.addEventListener('click', () => {
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+      });
+    });
   }
 
 });
@@ -57,7 +71,7 @@ up.compiler('#activeBidsOffers', async function(element, data) {
     let newItem = document.createElement('div');
     newItem.classList.add('column');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: left;">
+    newItem.innerHTML = `<div class="card-image" style="max-width: 60px; margin: left;">
               <figure class="image">
                 <a href="/collection/${data.urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
                   <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${data.contractAddress}", "tokenId": "${tokenIndex}" }'>

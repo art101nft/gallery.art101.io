@@ -13,34 +13,52 @@
           <li class="is-active"><a aria-current="page">#{{ token_id }}</a></li>
         </ul>
       </nav>
-      <div class="content">
-        <div class="columns">
-          <div class="column">
-            {% if token_id > collection.data.start_token_id %}
-              <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- Token #{{ token_id - 1 }}</a>
-            {% endif %}
+      <div class="">
+        <nav class="level is-mobile">
+          {% if token_id > collection.data.start_token_id %}
+          <div class="level-item has-text-centered">
+            <div>
+              <p class="heading">Previous <br/>Token</p>
+              <p class="title">
+                <a class="button is-light" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ token_id - 1 }}</a>
+              </p>
+            </div>
           </div>
-          <div class="column">
-            {% if rarity['rank'] > 1 %}
-              {# retrieve_token_id_by_rank #}
-              <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] - 1)) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- Rank #{{ rarity['rank'] - 1 }}</a>
-            {% endif %}
+          {% endif %}
+          {% if rarity['rank'] > 1 %}
+          <div class="level-item has-text-centered">
+            <div>
+              <p class="heading">Previous <br/>Rarity</p>
+              <p class="title">
+                <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] - 1)) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ rarity['rank'] - 1 }}</a>
+              </p>
+            </div>
           </div>
-          <div class="column">
-            <button class="button is-link">Rank #{{ rarity['rank'] }} / {{ collection.data.total_supply }}</button>
+          {% endif %}
+        </nav>
+        <nav class="level is-mobile">
+          {% if rarity %}
+          <hr>
+          <div class="level-item has-text-centered">
+            <div>
+              <p class="heading">Next <br/>Rarity</p>
+              <p class="title">
+                <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-target=".container" up-preload up-transition="move-left">#{{ rarity['rank'] + 1 }} -></a>
+              </p>
+            </div>
           </div>
-          <div class="column">
-            {% if rarity['rank'] < collection.token_end %}
-              {# retrieve_token_id_by_rank #}
-              <a class="button is-primary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-target=".container" up-preload up-transition="move-left">Rank #{{ rarity['rank'] + 1 }} -></a>
-            {% endif %}
+          {% endif %}
+          {% if rarity['rank'] < collection.token_end %}
+          <div class="level-item has-text-centered">
+            <div>
+              <p class="heading">Next <br/>Token</p>
+              <p class="title">
+                <a class="button is-light" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-target=".container" up-preload up-transition="move-left">Token #{{ token_id + 1 }} -></a>
+              </p>
+            </div>
           </div>
-          <div class="column">
-            {% if token_id < collection.data.total_supply + collection.data.start_token_id - 1 %}
-              <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-target=".container" up-preload up-transition="move-left">Token #{{ token_id + 1 }} -></a>
-            {% endif %}
-          </div>
-        </div>
+          {% endif %}
+        </nav>
         <div class="columns">
           {% if token_id | is_even %}
           <div class="column" id="tokenImageHolder">
@@ -55,6 +73,12 @@
             <p><strong>Rarity Score</strong>: {{ rarity['rarity_score'] }}</p>
             <p><strong>Rarity Score (normed)</strong>: {{ rarity['rarity_score_normed'] }}</p>
             <p><strong>Ranked By</strong>: {{ rarity['ranked_by'] }}</p>
+            {% if 'rank' in rarity %}
+              <div>
+                <br/>
+                <p class="title"><strong>Rarity:</strong> #{{ rarity['rank'] }}/{{ collection.data.total_supply }}</p>
+              </div>
+            {% endif %}
           </div>
           {% else %}
           <div class="column">
