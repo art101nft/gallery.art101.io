@@ -295,11 +295,26 @@ async function updateTokenHistory(contractAddress, tokenId) {
       } else if (sale.event_type == 'transfer') {
         msgColor = 'is-dark';
         msgText = `Transferred from <a href="https://etherscan.io/address/${sale.from_wallet}" target="_blank">${shortenAddress(sale.from_wallet)}</a> to <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
+      } else if (sale.event_type == 'tokenoffered') {
+        msgColor = 'is-warning';
+        msgText = `Offered by owner <strong>${diff} days ago</strong> for ${w3.utils.fromWei(sale.amount.toString())} Ξ in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
+      } else if (sale.event_type == 'tokennolongerforsale') {
+        msgColor = 'is-danger';
+        msgText = `Offer revoked <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
+      } else if (sale.event_type == 'tokenbidentered') {
+        msgColor = 'is-warning';
+        msgText = `Bid entered <strong>${diff} days ago</strong> for ${w3.utils.fromWei(sale.amount.toString())} Ξ in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
       } else {
         console.log(`Unreferenced sale:`);
         console.log(sale);
         return
       }
+      // TokenTransfer
+      // TokenOffered
+      // TokenBidEntered
+      // TokenBidWithdrawn
+      // TokenBought
+      // TokenNoLongerForSale
       const article = document.createElement('article');
       const msgBody = document.createElement('div');
       article.classList.add('message', msgColor)
