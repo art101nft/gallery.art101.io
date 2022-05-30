@@ -35,7 +35,7 @@
             </div>
           </div>
           {% endif %}
-          {% if rarity %}
+          {% if rarity['rank'] < collection.token_end %}
           <div class="level-item has-text-centered">
             <div>
               <p class="heading">Next <br/>Rarity</p>
