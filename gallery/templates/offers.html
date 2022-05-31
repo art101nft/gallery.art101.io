@@ -12,11 +12,11 @@
           <li class="is-active"><a aria-current="page">Offers</a></li>
         </ul>
       </nav>
-      <div id="saleDetails">
+      <div class="saleDetails">
         <h1 class="title">{{ collection.title }}</h1>
         <h2 class="subtitle">For Sale</h2>
       </div>
-      <div id="activeBidsOffers" up-data='{ "type": "offers", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+      <div class="activeBidsOffers" up-data='{ "type": "offers", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
     </section>
   </div>
   {% include 'includes/footer.html' %}

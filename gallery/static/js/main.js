@@ -41,7 +41,7 @@ up.compiler('#fullscreen_btn', async function(element) {
   fullscreenZine();
 })
 
-up.compiler('#activeBidsOffers', async function(element, data) {
+up.compiler('.activeBidsOffers', async function(element, data) {
   let events;
   let lowestOffer;
   let msg;
@@ -93,7 +93,7 @@ up.compiler('#activeBidsOffers', async function(element, data) {
   let sd = document.createElement('p');
   sd.innerHTML = msg;
   sd.classList.add('pb-4');
-  document.getElementById('saleDetails').appendChild(sd);
+  element.insertBefore(sd, element.firstChild);
 })
 
 up.compiler('#tokenTitle', async function(element, data) {

@@ -107,12 +107,9 @@ async def show_token(collection_slug, token_id):
 async def activity():
     c = [Collection(k) for k in all_collections]
     for collection in c:
-        if not collection:
-            await flash('That collection does not exist.', 'warning')
-            return redirect('/')
         collection.retrieve_collection_active_bids()
         collection.retrieve_collection_active_offers()
     return await render_template(
         'activity.html',
-        collection=collection
+        collections=c
     )

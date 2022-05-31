@@ -8,15 +8,26 @@
       <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
         <ul>
           <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
-          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ collection.title }}</a></li>
-          <li class="is-active"><a aria-current="page">Activity</a></li>
+          <li class="is-active"><a aria-current="page">All Activity</a></li>
         </ul>
       </nav>
-      <div id="saleDetails">
-        <h1 class="title">{{ collection.title }}</h1>
-        <h2 class="subtitle"> Bids</h2>
+      {% for collection in collections %}
+      {% set bids = collection.retrieve_collection_active_bids() %}
+      {% set offers = collection.retrieve_collection_active_offers() %}
+      <div class="saleDetails">
+        {% if bids or offers %}
+          <h1 class="title"><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">{{ collection.title }}</a></h1>
+        {% endif %}
+        {% if collection.retrieve_collection_active_bids() %}
+        <h2 class="subtitle pt-4"> Bids</h2>
+        <div class="activeBidsOffers" up-data='{ "type": "bids", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+        {% endif %}
+        {% if collection.retrieve_collection_active_offers() %}
+        <h2 class="subtitle pt-4"> Offers</h2>
+        <div class="activeBidsOffers" up-data='{ "type": "offers", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+        {% endif %}
       </div>
-      <div id="activeBidsOffers" up-data='{ "type": "bids", "contractAddress": "{{ collection.contract_address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+      {% endfor %}
     </section>
   </div>
   {% include 'includes/footer.html' %}
