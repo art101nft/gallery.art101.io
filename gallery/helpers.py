@@ -4,11 +4,20 @@ from os.path import exists
 
 import requests
 from web3.auto import w3
+from eth_account.messages import encode_defunct
 
 from gallery.library.cache import cache
 from gallery.constants import erc721_abi
 from gallery import config
 
+
+def verify_signature(message, signature, public_address):
+    msg = encode_defunct(text=message)
+    recovered = w3.eth.account.recover_message(msg, signature=signature)
+    if recovered.lower() == public_address.lower():
+        return True
+    else:
+        return False
 
 def get_eth_contract(_contract_address):
     """
