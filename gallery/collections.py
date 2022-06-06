@@ -22,7 +22,7 @@ all_collections = {
     'mondriannft': {
         'title': 'MondrianNFT',
         'contract_address': '0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919',
-        'description': 'Art101\'s second drop paying homage to French artist Piet Mondrian. The collection spans the entirety of Piet\'s multiple styles, phases, and formats, with rarity that reflects his real-world collection but with a humanist take on generative art. Each one has small imperfections like cracked paint and jagged lines. Token ownership of Non-Fungible Soup allowed for early minting/claiming of the MondrianNFT tokens.',
+        'description': 'Art101\'s second drop paying homage to Dutch artist Piet Mondrian. The collection spans the entirety of Piet\'s multiple styles, phases, and formats, with rarity that reflects his real-world collection but with a humanist take on generative art. Each one has small imperfections like cracked paint and jagged lines. Token ownership of Non-Fungible Soup allowed for early minting/claiming of the MondrianNFT tokens.',
         'website': 'https://mondriannft.io',
         'total_supply': 4096,
         'start_token_id': 1,
