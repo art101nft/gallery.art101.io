@@ -1,7 +1,6 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/" up-target=".container" up-transition="cross-fade">
-      <!-- <h1 class="title"><img src="/static/img/logo_white.png" height="120"></h1> -->
       <img src="/static/img/Art101_Logo.svg" height="120">
     </a>
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
@@ -19,6 +18,7 @@
         <div class="buttons">
             <button class="button hidden is-warning" id="connectButton">Connect</button>
             <button class="button hidden is-success" id="withdrawFunds">Withdraw</button>
+            <button class="button hidden js-modal-trigger" id="yourProfile" data-target="profileModal">Your Profile</button>
             <a class="button" href="/activity" up-target=".container" up-transition="cross-fade">Activity</a>
             <a class="button is-info" target="_blank" href="https://sales.art101.io">Sales</a>
             <a class="button is-black" target="_blank" href="https://art101.io">Main Site</a>
@@ -27,3 +27,60 @@
     </div>
   </div>
 </nav>
+
+<div class="modal" id="profileModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Update Your Profile</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <div class="profileSocial">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fa-brands fa-twitter pt-2"></i>
+            </span>
+            <span>
+              Twitter
+            </span>
+            <span>
+              <input class="input" type="text" id="twitterHandle" placeholder="@handle"></input>
+            </span>
+          </span>
+        </div>
+        <div class="profileSocial">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fa-brands fa-discord pt-2"></i>
+            </span>
+            <span>
+              Discord
+            </span>
+            <span>
+              <input class="input" type="text" id="discordHandle" placeholder="@handle"></input>
+            </span>
+          </span>
+        </div>
+        <div class="profileSocial">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fa-solid fa-envelope pt-2"></i>
+            </span>
+            <span>
+              Email
+            </span>
+            <span>
+              <input class="input" type="text" id="emailAddress" placeholder="user@domain.tld"></input>
+            </span>
+          </span>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" id="saveProfile">Save</button>
+      <button class="button">Cancel</button>
+    </footer>
+  </div>
+</div>

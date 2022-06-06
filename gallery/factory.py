@@ -13,7 +13,6 @@ async def setup_db(app: Quart):
 def create_app():
     app = Quart(__name__)
     app.config.from_envvar('FLASK_SECRETS')
-    setup_db(app)
 
     @app.before_serving
     async def startup():

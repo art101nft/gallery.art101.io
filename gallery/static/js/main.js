@@ -9,19 +9,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Poll for available funds if connected
-  if (await isConnected()) {
-    // If MetaMask is connected, check for withdrawals
-    let withdrawFunds = async () => await _withdrawFunds();
-    await withdrawFunds();
-    let withdraw = setInterval(withdrawFunds, 15000);
-  } else {
-    // Otherwise, present connect button before prompting
-    const btn = document.getElementById('connectButton');
-    btn.classList.remove('hidden');
-    btn.onclick = connect;
-  }
-
   // Menu clickable on small screens
   const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
   if ($navbarBurgers.length > 0) {
@@ -33,6 +20,49 @@ window.addEventListener('DOMContentLoaded', async () => {
         $target.classList.toggle('is-active');
       });
     });
+  };
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+
+  // Poll for available funds if connected
+  if (await isConnected()) {
+    const btn = document.getElementById('yourProfile');
+    btn.classList.remove('hidden');
+    // If MetaMask is connected, check for withdrawals
+    let withdrawFunds = async () => await _withdrawFunds();
+    await withdrawFunds();
+    let withdraw = setInterval(withdrawFunds, 15000);
+  } else {
+    // Otherwise, present connect button before prompting
+    const btn = document.getElementById('connectButton');
+    btn.classList.remove('hidden');
+    btn.onclick = connect;
   }
 
 });
@@ -737,4 +767,18 @@ async function notif(data) {
     timeout: 4500
   }).show();
   return
+}
+
+function openModal($el) {
+  $el.classList.add('is-active');
+}
+
+function closeModal($el) {
+  $el.classList.remove('is-active');
+}
+
+function closeAllModals() {
+  (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+    closeModal($modal);
+  });
 }
