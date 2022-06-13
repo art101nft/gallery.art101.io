@@ -69,6 +69,16 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262]
+    },
+    'rmutt': {
+        'title': 'R. Mutt',
+        'contract_address': '0x6c61fB2400Bf55624ce15104e00F269102dC2Af4',
+        'description': '',
+        'website': 'https://rmutt.io',
+        'total_supply': 2048,
+        'start_token_id': 0,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [165, 575, 342, 555, 2011, 967, 2, 1234, 11]
     }
 }
 
@@ -190,14 +200,26 @@ class Collection(object):
             return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
-        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
-            data = loads(f.read())
-            return data['ranks'][str(rank_number)]
+        try:
+            with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+                data = loads(f.read())
+                return data['ranks'][str(rank_number)]
+        except:
+            return 0
 
     def retrieve_token_by_id(self, token_id):
-        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
-            data = loads(f.read())
-            return data[str(token_id)]
+        try:
+            with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+                data = loads(f.read())
+                return data[str(token_id)]
+        except:
+            return {
+                "stat_rarity": 0,
+                "rarity_score": 0,
+                "rarity_score_normed": 0,
+                "rank": 0,
+                "ranked_by": "none"
+            }
 
     def retrieve_token_sales(self, token_id):
         url = f'{config.SCRAPER_API_URL}/api/token/{self.contract_address}/{token_id}/history'
