@@ -1,3 +1,6 @@
+from datetime import datetime
+from uuid import uuid4
+
 import peewee as pw
 from peewee import SqliteDatabase, SQL, ForeignKeyField
 
@@ -6,22 +9,37 @@ from gallery import config
 
 db = SqliteDatabase(f"{config.DATA_PATH}/db.sqlite")
 
+def rand_id():
+    return uuid4().hex
 
-class Events(pw.Model):
+
+class Profile(pw.Model):
+    __table__ = 'profiles'
+
     id = pw.AutoField()
-    event_type = pw.CharField()
-    source_owner = pw.CharField()
-    target_owner = pw.CharField()
-    token_id = pw.IntegerField()
-    amount = pw.IntegerField()
-    date = pw.DateTimeField()
-    tx_hash = pw.CharField()
-    log_index = pw.IntegerField()
-    platform = pw.CharField()
-    block_number = pw.IntegerField()
+    address = pw.CharField()
+    date = pw.DateTimeField(default=datetime.utcnow)
+    discord = pw.CharField(null=True)
+    twitter = pw.CharField(null=True)
+    email = pw.CharField(null=True)
+    nonce = pw.CharField(null=True)
+    nonce_date = pw.DateTimeField(null=True)
 
-    def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    def generate_nonce(self):
+        return rand_id()[0:12]
+
+    def change_nonce(self):
+        self.nonce = self.generate_nonce()
+        self.nonce_date = datetime.utcnow()
+        self.save()
+
+    def show(self):
+        return {
+            'address': self.address,
+            'discord': self.discord,
+            'twitter': self.twitter,
+            'email': self.email
+        }
 
     class Meta:
         database = db

@@ -1,7 +1,10 @@
+import re
 import requests
-from quart import Blueprint, jsonify
+from quart import Blueprint, jsonify, request
 
 from gallery import config
+from gallery.models import Profile
+from gallery.helpers import verify_signature
 from gallery.collections import Collection, all_collections
 
 
@@ -87,3 +90,76 @@ async def show_collection(collection_slug):
         return jsonify(all_collections[collection_slug])
     except Exception as e:
         return jsonify({'error': True, 'reason': e})
+
+@bp.route('/check_address_exists')
+async def check_address_exists():
+    """
+    Check to see if a given address exists in the database to save profile info.
+    This logic will help the login/connect workflow.
+    """
+    if 'address' not in request.args:
+        return jsonify({'success': False})
+
+    p = Profile.select().where(Profile.address == request.args['address'].lower()).first()
+    if p:
+        nonce = p.nonce
+    else:
+        nonce = Profile().generate_nonce()
+    return jsonify({
+        'user_exists': p is not None,
+        'nonce': nonce,
+        'success': True,
+        'socials': {
+            'discord': p is not None and len(p.discord) > 0,
+            'twitter': p is not None and len(p.twitter) > 0,
+            'email': p is not None and len(p.email) > 0
+        }
+    })
+
+
+@bp.route('/save_profile', methods=['POST'])
+async def save_profile():
+    """
+    This route stores profile info after successfully verifying a signature
+    provided by the user. They POST a `signedData` blob; a message signed by
+    the user with MetaMask (`personal_sign` method).
+    """
+    data = await request.get_json()
+
+    prof = Profile.select().where(
+        Profile.address == data['address'].strip().lower()
+    ).first()
+
+    # Check signature of provided payload
+    signature_good = verify_signature(
+        data['message'],
+        data['signed_data'],
+        data['address']
+    )
+
+    # Error if invalid signature
+    if not signature_good:
+        return jsonify({'success': False, 'message': 'Invalid signature'})
+
+    if prof:
+        # Error if current nonce does not match stored nonce
+        if not data['message'].endswith(prof.nonce):
+            return jsonify({'success': False, 'message': 'Invalid nonce'})
+    else:
+        # Create profile if it doesn't exist
+        prof = Profile(address=data['address'].strip().lower())
+        prof.change_nonce()
+
+    # Save info
+    for svc in ['discord', 'twitter', 'email']:
+        # If provided data is not the same as stored and not all asterisks, save it
+        if data[svc] != getattr(prof, svc) and not re.match(r'^[*]+$', data[svc]):
+            setattr(prof, svc, data[svc].strip())
+
+    prof.save()
+
+    return jsonify({
+        'success': True,
+        'message': 'Updated user profile',
+        'profile': prof.show()
+    })

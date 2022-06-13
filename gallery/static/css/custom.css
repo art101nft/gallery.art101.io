@@ -77,3 +77,9 @@ html, body, table, .navbar {
   max-width: 750px;
   margin: auto;
 }
+
+.profileSocial * {
+  line-height: 2em;
+  vertical-align: middle;
+  margin: 4px;
+}

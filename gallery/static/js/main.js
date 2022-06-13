@@ -9,19 +9,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Poll for available funds if connected
-  if (await isConnected()) {
-    // If MetaMask is connected, check for withdrawals
-    let withdrawFunds = async () => await _withdrawFunds();
-    await withdrawFunds();
-    let withdraw = setInterval(withdrawFunds, 15000);
-  } else {
-    // Otherwise, present connect button before prompting
-    const btn = document.getElementById('connectButton');
-    btn.classList.remove('hidden');
-    btn.onclick = connect;
-  }
-
   // Menu clickable on small screens
   const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
   if ($navbarBurgers.length > 0) {
@@ -33,6 +20,66 @@ window.addEventListener('DOMContentLoaded', async () => {
         $target.classList.toggle('is-active');
       });
     });
+  };
+
+  // Click triggers to save the profile/socials in database
+  const saveProfile = document.getElementById('saveProfile');
+  saveProfile.onclick = async () => {
+    saveProfile.classList.add('is-loading')
+    let res = await updateProfile();
+    if (res == true) {
+      saveProfile.classList.add('is-info');
+      await notif({'message': 'Your social media info has been saved.', 'category': 'success'});
+      closeModal(document.getElementById('profileModal'));
+    } else {
+      saveProfile.classList.add('is-error')
+      await notif({'message': 'Unable to save; something went wrong.', 'category': 'danger'});
+    }
+    saveProfile.classList.remove('is-loading');
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .closeModal') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+
+  // Poll for available funds if connected
+  if (await isConnected()) {
+    await getProfile();
+    const btn = document.getElementById('yourProfile');
+    btn.classList.remove('hidden');
+    // If MetaMask is connected, check for withdrawals
+    let withdrawFunds = async () => await _withdrawFunds();
+    await withdrawFunds();
+    let withdraw = setInterval(withdrawFunds, 15000);
+  } else {
+    // Otherwise, present connect button before prompting
+    const btn = document.getElementById('connectButton');
+    btn.classList.remove('hidden');
+    btn.onclick = connect;
   }
 
 });
@@ -737,4 +784,79 @@ async function notif(data) {
     timeout: 4500
   }).show();
   return
+}
+
+function openModal($el) {
+  $el.classList.add('is-active');
+}
+
+function closeModal($el) {
+  $el.classList.remove('is-active');
+}
+
+function closeAllModals() {
+  (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+    closeModal($modal);
+  });
+}
+
+async function getProfile() {
+  let acct = await getMetamaskAccount();
+  await fetch(`/api/v1/check_address_exists?address=${acct}`)
+    .then((resp) => resp.json())
+    .then(async function(data) {
+        if (!data['success']) {
+          return
+        }
+        if (data['socials']['discord']) document.getElementById('discordHandle').value = '******';
+        if (data['socials']['twitter']) document.getElementById('twitterHandle').value = '******';
+        if (data['socials']['email']) document.getElementById('emailAddress').value = '******';
+      });
+}
+
+async function updateProfile() {
+  const acct = await getMetamaskAccount();
+  let res1 = await fetch(`/api/v1/check_address_exists?address=${acct}`)
+    .then((resp) => resp.json())
+    .then(async function(data) {
+        if (!data['success']) {
+          console.log('error checking if address exists!')
+          return
+        }
+        nonce = data['nonce'];
+        const msg = `Authentication request from Art101 Gallery app!
+        This will not cost any gas, it is simply a check to confirm you
+        own this address so that we can store some social media info to
+        notify you of marketplace events. Verifying message with nonce ${nonce}`;
+        const signedData = await window.ethereum.request({
+          method: 'personal_sign',
+          params: [msg, acct]
+        });
+
+        let res2 = await fetch('/api/v1/save_profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+            'signed_data': signedData,
+            'address': acct,
+            'nonce': nonce,
+            'message': msg,
+            'twitter': document.getElementById('twitterHandle').value,
+            'discord': document.getElementById('discordHandle').value,
+            'email': document.getElementById('emailAddress').value
+          })
+        })
+          .then((resp) => resp.json())
+          .then(function(data) {
+              if (data['success']) {
+                return true
+              } else {
+                return false
+              }
+          });
+        return res2;
+    });
+    return res1;
 }
