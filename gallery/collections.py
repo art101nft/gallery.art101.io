@@ -69,6 +69,16 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262]
+    },
+    'rmutt': {
+        'title': 'R. Mutt',
+        'contract_address': '0x6c61fB2400Bf55624ce15104e00F269102dC2Af4',
+        'description': 'R. Mutt is a free-to-mint generative collection of 2,048 unique, meme-able, 3-D, and fully-interactive, NFT parodies of Marcel Duchamp\'s famous work, Fountain.<br/><br/> In a prank gone awry, Marcel Duchamp took the Society of Independent Artists\' up on an offer to display any work, so long as a fee was paid, at their first \'unjuried\' 1917 exhibition in Midtown Manhattan. He submitted Fountain. An upturned urinal, he bought down the street, and signed \'R. Mutt\'. The board, of which Duchamp was a member, refused to display the piece citing vulgarity and plagiarism. He resigned in protest, denouncing Parisian gatekeepers, while exclaiming, "Art is anything the artist says it is!" Duchamp\'s Fountain subsequently became one of the most influential works of the 21st century.<br/><br/>Like NFTs, Marcel Duchamp\'s Fountain forever changed the publics perception of art. A proto-meme, it\'s popularity upended traditionalism, subverted censorship, and birthed conceptual art. Without it, there would be no Warhol, no Hirst, no Goblintown.wtf. So, while collections like rektguy take the piss out of NFTs, let\'s memorialize the pisser that started it all.',
+        'website': 'https://rmutt.io',
+        'total_supply': 2048,
+        'start_token_id': 0,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [164, 574, 554, 2010, 966, 1, 1233, 10]
     }
 }
 
@@ -190,14 +200,26 @@ class Collection(object):
             return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
-        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
-            data = loads(f.read())
-            return data['ranks'][str(rank_number)]
+        try:
+            with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+                data = loads(f.read())
+                return data['ranks'][str(rank_number)]
+        except:
+            return 0
 
     def retrieve_token_by_id(self, token_id):
-        with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
-            data = loads(f.read())
-            return data[str(token_id)]
+        try:
+            with open(f'gallery/library/rarityscores/{self.url_slug}.json', 'r') as f:
+                data = loads(f.read())
+                return data[str(token_id)]
+        except:
+            return {
+                "stat_rarity": 0,
+                "rarity_score": 0,
+                "rarity_score_normed": 0,
+                "rank": 0,
+                "ranked_by": "none"
+            }
 
     def retrieve_token_sales(self, token_id):
         url = f'{config.SCRAPER_API_URL}/api/token/{self.contract_address}/{token_id}/history'

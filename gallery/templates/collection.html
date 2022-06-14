@@ -6,7 +6,7 @@
   <section class="section">
     <div class="container has-text-centered">
       <h1 class="title">{{ collection.title }}</h1>
-      <p class="subtitle pt-2 collectionDescription">{{ collection.data.description }}</p>
+      <p class="subtitle pt-2 collectionDescription">{{ collection.data.description | safe }}</p>
       <p class="subtitle pt-2 collectionDescription"><a href="{{ collection.data.website }}" target=_blank>{{ collection.data.website }}</a></p>
       <nav class="level">
         <div class="level-item">

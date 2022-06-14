@@ -743,6 +743,62 @@ async function updateTokenInfo(contractAddress, tokenId) {
     document.getElementById('tokenImage').remove();
     document.getElementById('tokenImageHolder').appendChild(ifrm);
   }
+  // If rmutt, load model viewer for 3d interactive
+  if (document.getElementById('tokenImage').classList.contains('glbLink')) {
+    let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '');
+    // let placeholderImg = data.image.replace('ipfs://', '')
+    let modelViewer = `
+      <model-viewer style="background: ${data.background_color}" id="glb" bounds="tight" src="${animationURL}" enable-pan ar ar-modes="webxr scene-viewer quick-look" camera-controls environment-image="neutral" poster="${offchainImg}" shadow-intensity="1" exposure="0.9" shadow-softness="0" camera-orbit="-45deg 75deg auto">
+      <div class="progress-bar hide" slot="progress-bar">
+          <div class="update-bar"></div>
+      </div>
+      <button slot="ar-button" id="ar-button">
+          View in your space
+      </button>
+      <div id="ar-prompt">
+          <img src="/static/img/ar_hand_prompt.png">
+      </div>
+    </model-viewer>
+    <button id="fullscreen_glb" style="width: 40px">
+    <svg version="1.1" viewBox="0 0 36 36">
+    <path d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"></path>
+    <path d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"></path>
+    <path d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"></path>
+    <path d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"></path>
+    </svg>
+    </button>`;
+    document.getElementById('tokenImage').remove();
+    document.getElementById('tokenImageHolder').innerHTML = modelViewer;
+    // Handles loading the events for <model-viewer>'s slotted progress bar
+    const onProgress = (event) => {
+      const progressBar = event.target.querySelector('.progress-bar');
+      const updatingBar = event.target.querySelector('.update-bar');
+      updatingBar.style.width = `${event.detail.totalProgress * 100}%`;
+      if (event.detail.totalProgress === 1) {
+        progressBar.classList.add('hide');
+      } else {
+        progressBar.classList.remove('hide');
+        if (event.detail.totalProgress === 0) {
+          event.target.querySelector('.center-pre-prompt').classList.add('hide');
+        }
+      }
+    };
+    document.querySelector('#fullscreen_glb').addEventListener('click', () => {
+      if (document.fullscreen) {
+          for (let name of ['exitFullscreen','mozExitFullscreen','webkitExitFullscreen']) {
+              let fn = document[name];
+              if (fn) return fn.call(document);
+          }
+      } else {
+          let bg = document.querySelector('#glb');
+          for (let name of ['requestFullscreen','mozRequestFullscreen','webkitRequestFullscreen']) {
+              let fn = bg[name];
+              if (typeof fn === 'function') return fn.call(bg);
+          }
+      }
+    });
+    document.querySelector('model-viewer').addEventListener('progress', onProgress);
+  }
   document.getElementById('tokenOnchainURI').innerHTML = `</br><strong>On-chain Metadata:</strong></br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
   document.getElementById('tokenOffchainURI').innerHTML = `</br><strong>Off-chain Metadata:</strong></br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
   document.getElementById('tokenOnchainImage').innerHTML = `</br><strong>On-chain Image:</strong></br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
@@ -758,7 +814,7 @@ async function updateTokenInfo(contractAddress, tokenId) {
   }
 }
 
-function fullscreenZine() {
+function fullscreenZine(divId) {
   document.querySelector('#fullscreen_btn').addEventListener('click', () => {
     if (document.fullscreen) {
         for (let name of ['exitFullscreen','mozExitFullscreen','webkitExitFullscreen']) {

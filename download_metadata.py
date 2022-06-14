@@ -2,7 +2,7 @@
 
 import requests, json
 from os.path import exists
-from os import stat
+from os import stat, mkdir
 from time import sleep
 
 from gallery.collections import all_collections, Collection
@@ -14,13 +14,14 @@ collections = [Collection(k) for k in all_collections]
 for c in collections:
     print(f'[+] Fetching metadata for {c.title} - {c.contract_address}')
     _p = f'{config.DATA_PATH}/{c.contract_address}'
-    for token_id in range(c.data['start_token_id'], c.data['total_supply'] - 1 + c.data['start_token_id']):
+    if not exists(_p):
+        mkdir(_p)
+    for token_id in range(c.data['start_token_id'], c.data['total_supply'] + c.data['start_token_id']):
         p = f'{_p}/{str(token_id)}.json'
         if not exists(p) or stat(p).st_size == 0:
             print(f'{p} does not exist - fetching')
-            sleep(1)
             token_uri = c.contract.functions.tokenURI(token_id).call()
-            r = requests.get(convert_ipfs_uri(token_uri), timeout=60)
+            r = requests.get(convert_ipfs_uri(token_uri, False), timeout=60)
             r.raise_for_status()
             with open(p, 'w') as f:
                 f.write(json.dumps(r.json()))
