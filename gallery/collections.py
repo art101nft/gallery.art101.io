@@ -73,7 +73,7 @@ all_collections = {
     'rmutt': {
         'title': 'R. Mutt',
         'contract_address': '0x6c61fB2400Bf55624ce15104e00F269102dC2Af4',
-        'description': '',
+        'description': 'R. Mutt is a free-to-mint generative collection of 2,048 unique, meme-able, 3-D, and fully-interactive, NFT parodies of Marcel Duchamp\'s famous work, Fountain.<br/><br/> In a prank gone awry, Marcel Duchamp took the Society of Independent Artists\' up on an offer to display any work, so long as a fee was paid, at their first \'unjuried\' 1917 exhibition in Midtown Manhattan. He submitted Fountain. An upturned urinal, he bought down the street, and signed \'R. Mutt\'. The board, of which Duchamp was a member, refused to display the piece citing vulgarity and plagiarism. He resigned in protest, denouncing Parisian gatekeepers, while exclaiming, "Art is anything the artist says it is!" Duchamp\'s Fountain subsequently became one of the most influential works of the 21st century.<br/><br/>Like NFTs, Marcel Duchamp\'s Fountain forever changed the publics perception of art. A proto-meme, it\'s popularity upended traditionalism, subverted censorship, and birthed conceptual art. Without it, there would be no Warhol, no Hirst, no Goblintown.wtf. So, while collections like rektguy take the piss out of NFTs, let\'s memorialize the pisser that started it all.',
         'website': 'https://rmutt.io',
         'total_supply': 2048,
         'start_token_id': 0,
