@@ -62,7 +62,7 @@
           <div class="column" id="tokenImageHolder">
             <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% elif collection.url_slug == 'rmutt' %}glbLink{% else %}tokenZoom{% endif %}" />
           </div>
-          <div class="column" style="overflow:scroll;">
+          <div class="column" style="overflow-y:scroll;">
             <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
             <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
