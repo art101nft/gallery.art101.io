@@ -20,11 +20,12 @@ for contract_dir in data/0x*; do
   for i in *.json; do
     IMG="$(cat $i | jq -r .image | sed s_ipfs://__)";
     NAME="$(cat $i | jq -r .name)";
-    FULLPATH="https://gateway.pinata.cloud/ipfs/${IMG}";
+    FULLPATH="http://127.0.0.1:8080/ipfs/${IMG}";
+    echo -e "[+] Fetching assets for ${CONTRACT} token metadata ${i}"
     if [[ $CONTRACT -eq $NFZ ]]; then
       ANIMATION="$(cat $i | jq -r .animation_url)";
       ANIMATIONINDEX="${ANIMATION}/index.html";
-      ANIMATIONPATH="https://gateway.pinata.cloud/ipfs/${ANIMATION}";
+      ANIMATIONPATH="http://127.0.0.1:8080/ipfs/${ANIMATION}";
       if [[ -f "${ANIMATION}" ]]; then
         rm "${ANIMATION}";
       fi
@@ -36,7 +37,7 @@ for contract_dir in data/0x*; do
     fi
     if [[ $CONTRACT -eq $RMUTT ]]; then
       ANIMATION="$(cat $i | jq -r .animation_url | sed s_ipfs://__)";
-      ANIMATIONPATH="https://gateway.pinata.cloud/ipfs/${ANIMATION}";
+      ANIMATIONPATH="http://127.0.0.1:8080/ipfs/${ANIMATION}";
       mkdir -p $(dirname $ANIMATION)
       if [[ ! -f "${ANIMATION}" ]]; then
         wget -c -t 3 "${ANIMATIONPATH}" -O "${ANIMATION}";

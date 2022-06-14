@@ -20,9 +20,8 @@ for c in collections:
         p = f'{_p}/{str(token_id)}.json'
         if not exists(p) or stat(p).st_size == 0:
             print(f'{p} does not exist - fetching')
-            sleep(1)
             token_uri = c.contract.functions.tokenURI(token_id).call()
-            r = requests.get(convert_ipfs_uri(token_uri), timeout=60)
+            r = requests.get(convert_ipfs_uri(token_uri, False), timeout=60)
             r.raise_for_status()
             with open(p, 'w') as f:
                 f.write(json.dumps(r.json()))

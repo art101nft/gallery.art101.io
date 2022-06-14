@@ -31,11 +31,13 @@ def get_eth_contract(_contract_address):
         abi=contract_abi
     )
 
-def convert_ipfs_uri(u):
+def convert_ipfs_uri(u, external=True):
     if u.startswith('ipfs://'):
         ipfs = u.split('ipfs://')[1]
-        # return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
-        return f'https://gateway.pinata.cloud/ipfs/{ipfs}'
+        if external:
+            return f'https://gateway.pinata.cloud/ipfs/{ipfs}'
+        else:
+            return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
     else:
         return u
 
