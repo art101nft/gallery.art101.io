@@ -16,7 +16,7 @@ for c in collections:
     _p = f'{config.DATA_PATH}/{c.contract_address}'
     if not exists(_p):
         mkdir(_p)
-    for token_id in range(c.data['start_token_id'], c.data['total_supply'] - 1 + c.data['start_token_id']):
+    for token_id in range(c.data['start_token_id'], c.data['total_supply'] + c.data['start_token_id']):
         p = f'{_p}/{str(token_id)}.json'
         if not exists(p) or stat(p).st_size == 0:
             print(f'{p} does not exist - fetching')
