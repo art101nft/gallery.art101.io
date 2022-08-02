@@ -50,15 +50,20 @@ for contract_dir in data/0x*; do
     else
       echo "${NAME} - ${IMG} does exist, skipping";
     fi
-    grep -q "<?xml" ${IMG}
-    if [[ $? -eq 0 ]]; then
-      if [[ ! -f "${IMG}.fullsize.png" ]]; then
-        echo "[!] Full-sized PNG of ${NAME} does not exist, converting"
+    if [[ ! -f "${IMG}.fullsize.png" ]]; then
+      echo "[!] Full-sized PNG of ${NAME} does not exist, converting"
+      if [[ "${CONTRACT}" -eq "${NFS}" ]] || [[ "${CONTRACT}" -eq "${MND}" ]] || [[ "${CONTRACT}" -eq "${SXM}" ]]; then
         cat ${IMG} | inkscape -p -C --export-dpi=30 --export-type=png | convert - ${IMG}.fullsize.png;
+      else
+        convert ${IMG} ${IMG}.fullsize.png;
       fi
-      if [[ ! -f "${IMG}.thumbnail.png" ]]; then
-        echo "[!] Thumbnail PNG of ${NAME} does not exist, converting"
+    fi
+    if [[ ! -f "${IMG}.thumbnail.png" ]]; then
+      echo "[!] Thumbnail PNG of ${NAME} does not exist, converting"
+      if [[ "${CONTRACT}" -eq "${NFS}" ]] || [[ "${CONTRACT}" -eq "${MND}" ]] || [[ "${CONTRACT}" -eq "${SXM}" ]]; then
         cat ${IMG} | inkscape -p -C --export-dpi=30 --export-type=png | convert - -resize 50% ${IMG}.thumbnail.png;
+      else
+        convert -resize 50% ${IMG} ${IMG}.thumbnail.png;
       fi
     fi
   done
@@ -70,13 +75,16 @@ sleep 10
 # sync metadata and images
 echo "[+] Syncing NFS assets to S3"; sleep 3;
 aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "application/json" --exclude "*" --include "*.json"
-aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
+aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "image/png" --exclude "*" --include "*.png"
+aws s3 sync data/${NFS}/ s3://art101-assets/${NFS}/ --content-type "image/svg+xml" --exclude "*.json" --exclude "*.png" --include "*"
 echo "[+] Syncing MND assets to S3"; sleep 3;
 aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "application/json" --exclude "*" --include "*.json"
-aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
+aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "image/png" --exclude "*" --include "*.png"
+aws s3 sync data/${MND}/ s3://art101-assets/${MND}/ --content-type "image/svg+xml" --exclude "*.json" --exclude "*.png" --include "*"
 echo "[+] Syncing SXM assets to S3"; sleep 3;
 aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "application/json" --exclude "*" --include "*.json"
-aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "image/svg+xml" --exclude "*.json" --include "*"
+aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "image/png" --exclude "*" --include "*.png"
+aws s3 sync data/${SXM}/ s3://art101-assets/${SXM}/ --content-type "image/svg+xml" --exclude "*.json" --exclude "*.png" --include "*"
 echo "[+] Syncing BB assets to S3"; sleep 3;
 aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${BB}/ s3://art101-assets/${BB}/ --content-type "image/png" --exclude "*.json" --include "*"
@@ -96,11 +104,12 @@ aws s3 sync data/${RMUTT}/ s3://art101-assets/${RMUTT}/ --content-type "model/gl
 
 # Recurse saved image files and update their metadata on S3 to be an image
 # use this if you already synced and need to update metadata/content-type
-# for i in Qm*; do
-# aws s3api copy-object \
-#   --bucket art101-assets \
-#   --content-type "image/svg+xml" \
-#   --copy-source "art101-assets/0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB/${i}" \
-#   --metadata-directive "REPLACE" \
-#   --key "0xdc8bEd466ee117Ebff8Ee84896d6aCd42170d4bB/${i}"
+# for i in Qm*.png; do
+#   echo -e "[+] Updating metadata for ${i}";
+#   aws s3api copy-object \
+#     --bucket art101-assets \
+#     --content-type "image/png" \
+#     --copy-source "art101-assets/0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919/${i}" \
+#     --metadata-directive "REPLACE" \
+#     --key "0x7f81858ea3b43513adfaf0a20dc7b4c6ebe72919/${i}"
 # done
