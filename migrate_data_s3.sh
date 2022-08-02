@@ -50,6 +50,17 @@ for contract_dir in data/0x*; do
     else
       echo "${NAME} - ${IMG} does exist, skipping";
     fi
+    grep -q "<?xml" ${IMG}
+    if [[ $? -eq 0 ]]; then
+      if [[ ! -f "${IMG}.fullsize.png" ]]; then
+        echo "[!] Full-sized PNG of ${NAME} does not exist, converting"
+        cat ${IMG} | inkscape -p -C --export-dpi=30 --export-type=png | convert - ${IMG}.fullsize.png;
+      fi
+      if [[ ! -f "${IMG}.thumbnail.png" ]]; then
+        echo "[!] Thumbnail PNG of ${NAME} does not exist, converting"
+        cat ${IMG} | inkscape -p -C --export-dpi=30 --export-type=png | convert - -resize 50% ${IMG}.thumbnail.png;
+      fi
+    fi
   done
   popd
 done
