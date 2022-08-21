@@ -79,6 +79,16 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [164, 574, 554, 2010, 966, 1, 1233, 10]
+    },
+    'nftisse': {
+        'title': 'NFT-isse',
+        'contract_address': '0x343b68141129ec115c1fc523c5ae90586fe95b77',
+        'description': 'After decades of trailblazing, Henri Matisse found himself bed-ridden, elderly, and unable to paint. Matisse turned almost exclusively to cutting painted paper as his primary medium. Initially kept secret, Henri cut organic and vegetal shapes and began collaging. An entirely novel idea at the time, Henri called the works \'cut-outs.\' They would become his best-known works of art. And early ancestor of generative art. NFT-isse is a derivative mashup of Henri Matisse\'s quintessential works, the cut-outs, and the NFTs we love.',
+        'website': 'https://nftisse.io',
+        'total_supply': 3072,
+        'start_token_id': 0,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [170, 809, 1400, 3050, 45, 89, 2059, 1998]
     }
 }
 
