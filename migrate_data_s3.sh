@@ -8,6 +8,7 @@ export BB=0x62C1e9f6830098DFF647Ef78E1F39244258F7bF5
 export NFZ=0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b
 export BV=0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c
 export RMUTT=0x6c61fB2400Bf55624ce15104e00F269102dC2Af4
+export NFTISSE=0x343b68141129ec115c1fc523c5ae90586fe95b77
 
 # Ensure we have all metadata
 .venv/bin/python3 download_metadata.py
@@ -63,7 +64,7 @@ for contract_dir in data/0x*; do
       if [[ "${CONTRACT}" -eq "${NFS}" ]] || [[ "${CONTRACT}" -eq "${MND}" ]] || [[ "${CONTRACT}" -eq "${SXM}" ]]; then
         cat ${IMG} | inkscape -p -C --export-dpi=30 --export-type=png | convert - -resize 50% ${IMG}.thumbnail.png;
       else
-        convert -resize 50% ${IMG} ${IMG}.thumbnail.png;
+        convert -resize 25% ${IMG} ${IMG}.thumbnail.png;
       fi
     fi
   done
@@ -99,7 +100,9 @@ echo "[+] Syncing RMUTT assets to S3"; sleep 3;
 aws s3 sync data/${RMUTT}/ s3://art101-assets/${RMUTT}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${RMUTT}/ s3://art101-assets/${RMUTT}/ --content-type "image/png" --exclude "*" --include "*.png"
 aws s3 sync data/${RMUTT}/ s3://art101-assets/${RMUTT}/ --content-type "model/gltf-binary" --exclude "*" --include "*.glb"
-
+echo "[+] Syncing NFTISSE assets to S3"; sleep 3;
+aws s3 sync data/${NFTISSE}/ s3://art101-assets/${NFTISSE}/ --content-type "application/json" --exclude "*" --include "*.json"
+aws s3 sync data/${NFTISSE}/ s3://art101-assets/${NFTISSE}/ --content-type "image/png" --exclude "*.json" --include "*"
 
 
 # Recurse saved image files and update their metadata on S3 to be an image
