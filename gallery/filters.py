@@ -36,9 +36,14 @@ def humanize(d):
         return 'never'
     return arrow_get(d).humanize()
 
-@bp.app_template_filter('from_ts')
-def from_ts(s):
+
+@bp.app_template_filter('as_datetime')
+def as_datetime(s):
     return arrow_get(int(s)).datetime
+
+@bp.app_template_filter('as_formatted')
+def as_formatted(s):
+    return arrow_get(int(s)).format('YYYY-MM-DD HH:mm:ss UTC')
 
 @bp.app_template_filter('convert_ipfs_uri')
 def convert_ipfs_uri(u):
