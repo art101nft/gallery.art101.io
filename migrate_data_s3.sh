@@ -9,6 +9,7 @@ export NFZ=0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b
 export BV=0xea2dc6f116a4c3d6a15f06b4e8ad582a07c3dd9c
 export RMUTT=0x6c61fB2400Bf55624ce15104e00F269102dC2Af4
 export NFTISSE=0x343b68141129ec115c1fc523c5ae90586fe95b77
+export RENASCENCE=0x501a31185927136E87cDfC97dDd4553D8eC1bb4A
 
 # Ensure we have all metadata
 .venv/bin/python3 download_metadata.py
@@ -103,6 +104,9 @@ aws s3 sync data/${RMUTT}/ s3://art101-assets/${RMUTT}/ --content-type "model/gl
 echo "[+] Syncing NFTISSE assets to S3"; sleep 3;
 aws s3 sync data/${NFTISSE}/ s3://art101-assets/${NFTISSE}/ --content-type "application/json" --exclude "*" --include "*.json"
 aws s3 sync data/${NFTISSE}/ s3://art101-assets/${NFTISSE}/ --content-type "image/png" --exclude "*.json" --include "*"
+echo "[+] Syncing RENASCENCE assets to S3"; sleep 3;
+aws s3 sync data/${RENASCENCE}/ s3://art101-assets/${RENASCENCE}/ --content-type "application/json" --exclude "*" --include "*.json"
+aws s3 sync data/${RENASCENCE}/ s3://art101-assets/${RENASCENCE}/ --content-type "image/png" --exclude "*.json" --include "*"
 
 
 # Recurse saved image files and update their metadata on S3 to be an image
