@@ -89,6 +89,16 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [170, 809, 1400, 3050, 45, 89, 2059, 1998]
+    },
+    'renascencenft': {
+        'title': 'RenascenceNFT',
+        'contract_address': '0x501a31185927136E87cDfC97dDd4553D8eC1bb4A',
+        'description': 'Benozzo Gozzoli\'s Journey of the Magi is the preeminent illustration of Medici Florence. A painting more famous than the painter himself, the fresco depicts a young Lorenzo the Magnificent, supreme financier of the Renaissance, leading a procession of wise men. Commissioned in the 1450s by Cosimo de Medici for the family\'s private chapel, it encapsulates the relationship between creator and patron.',
+        'website': 'https://renascencenft.xyz/',
+        'total_supply': 4096,
+        'start_token_id': 0,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [0, 1, 2, 3]
     }
 }
 
@@ -270,7 +280,10 @@ class Collection(object):
                             i = hex(int(token_id)).lstrip('0x').zfill(64)
                             tokenURI = _tokenURI.replace('{id}', i)
                         else:
-                            owner = self.contract.functions.ownerOf(int(token_id)).call()
+                            try:
+                                owner = self.contract.functions.ownerOf(int(token_id)).call()
+                            except:
+                                owner = '0x0000000000000000000000000000000000000000'
                             tokenURI = self.contract.functions.tokenURI(int(token_id)).call()
                         _d['tokenURI'] = tokenURI
                         _d['tokenOffchainURI'] = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
