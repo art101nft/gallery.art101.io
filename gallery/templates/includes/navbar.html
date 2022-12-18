@@ -1,88 +1,18 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="/" up-target=".container" up-transition="cross-fade">
-      <img src="/static/img/Art101_Logo.svg" height="120">
-    </a>
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu" id="navbarMain">
-    <div class="navbar-start">
-      <a class="navbar-item" href="{{ url_for('meta.about') }}" up-target=".container" up-transition="cross-fade">About</a>
-    </div>
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-            <!-- <button class="button hidden is-warning" id="connectButton">Connect</button> -->
-            <!-- <button class="button hidden is-success" id="withdrawFunds">Withdraw</button> -->
-            <!-- <button class="button hidden js-modal-trigger" id="yourProfile" data-target="profileModal">Your Profile</button> -->
-            <!-- <a class="button" href="/activity" up-target=".container" up-transition="cross-fade">Activity</a> -->
-            <a class="button is-info" target="_blank" href="https://sales.art101.io">Sales</a>
-            <a class="button is-black" target="_blank" href="https://art101.io">Main Site</a>
-        </div>
-      </div>
-    </div>
+<nav class="navbar">
+  <div class="container">
+    <ul class="navbar-list">
+      <li class="navbar-item">
+        <a class="navbar-link" href="{{ url_for('collection.index') }}" up-transition="cross-fade" up-follow>Home</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" href="{{ url_for('meta.about') }}" up-transition="cross-fade" up-follow>About</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" target="_blank" href="https://sales.art101.io">Sales</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" target="_blank" href="https://art101.io">Main Site</a>
+      </li>
+    </ul>
   </div>
 </nav>
-
-<div class="modal" id="profileModal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Update Your Profile</p>
-      <button class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      <div class="content">
-        <p>Use your web3 login to save some of your social media info in our local database in case you want to be notified of events pertaining to your address.</p>
-        <p>For security purposes we will not show this information after it is saved (to prevent leaks of personal information).</p>
-        <div class="profileSocial">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fa-brands fa-twitter pt-2"></i>
-            </span>
-            <span>
-              Twitter
-            </span>
-            <span>
-              <input class="input" type="text" id="twitterHandle" placeholder="@handle"></input>
-            </span>
-          </span>
-        </div>
-        <div class="profileSocial">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fa-brands fa-discord pt-2"></i>
-            </span>
-            <span>
-              Discord
-            </span>
-            <span>
-              <input class="input" type="text" id="discordHandle" placeholder="@handle"></input>
-            </span>
-          </span>
-        </div>
-        <div class="profileSocial">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fa-solid fa-envelope pt-2"></i>
-            </span>
-            <span>
-              Email
-            </span>
-            <span>
-              <input class="input" type="text" id="emailAddress" placeholder="user@domain.tld"></input>
-            </span>
-          </span>
-        </div>
-      </div>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-success" id="saveProfile">Save</button>
-      <button class="button closeModal">Cancel</button>
-    </footer>
-  </div>
-</div>

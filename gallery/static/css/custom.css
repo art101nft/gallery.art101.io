@@ -1,5 +1,56 @@
-html, body, table, .navbar {
-  background-color: #F6F6F6 !important;
+.navbar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  height: 5rem;
+  margin-bottom: 2em;
+  z-index: 99;
+}
+
+#navbar {
+  margin: 0 auto;
+}
+
+a {
+  color: #F56EB3;
+}
+
+.navbar-list {
+  list-style: none;
+  margin-bottom: 0; 
+}
+
+.navbar-item {
+  position: relative;
+  float: left;
+  margin-bottom: 0; 
+}
+
+.navbar-link {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2rem;
+  margin-right: 35px;
+  text-decoration: none;
+  line-height: 6.5rem;
+  color: #fff;
+  transition: all .2s ease;
+}
+
+.navbar-link:hover {
+  color: #CB1C8D;
+  transition: all .2s ease;
+}
+
+.navbar-link.active {
+  color: #33C3F0; 
+}
+
+* {
+  background-color: black;
+  color: white;
+  font-family: 'Monospace';
 }
 
 .collectionDescription {
@@ -83,6 +134,7 @@ html, body, table, .navbar {
   vertical-align: middle;
   margin: 4px;
 }
+
 
 model-viewer {
   width: 100%;
