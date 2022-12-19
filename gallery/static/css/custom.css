@@ -27,6 +27,10 @@ a {
   color: #F56EB3;
 }
 
+li {
+  margin: 0;
+}
+
 .navbar-list {
   list-style: none;
   margin-bottom: 0; 
@@ -172,7 +176,7 @@ h5 {
 
 .previewPreload {
   /* width: 30% !important; */
-  width: 65px;
+  width: 65px !important;
   aspect-ratio: 1;
   border: 10px solid #0000;
   background: 
@@ -193,8 +197,12 @@ h5 {
   max-width: 12em;
 }
 
+#tokenImage {
+  width: 100%;
+}
+
 .marketplaceLogo {
-  max-width: 16em;
+  max-width: 8em;
   border-radius: 50%;
 }
 
@@ -224,7 +232,13 @@ h5 {
     max-width: 6em;
   }
   .marketplaceLogo {
-    max-width: 8em;
+    max-width: 5em;
+  }
+}
+
+@media (max-width: 600px) {
+  .marketplaceLogo {
+    max-width: 3em;
   }
 }
 

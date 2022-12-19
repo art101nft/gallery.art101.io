@@ -1,158 +1,122 @@
+{% extends 'base.html' %}
+
 {% set rarity = collection.retrieve_token_by_id(token_id) %}
-<!DOCTYPE html>
-<html>
-  {% include 'includes/head.html' %}
-  <body>
-  {% include 'includes/navbar.html' %}
-  <section class="section">
-    <div class="container has-text-centered">
-      <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
-        <ul>
-          <li><a href="{{ url_for('collection.index') }}" up-follow up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
-          <li><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-target=".container" up-preload up-transition="cross-fade">{{ collection.title }}</a></li>
-          <li class="is-active"><a aria-current="page">#{{ token_id }}</a></li>
-        </ul>
-      </nav>
-      <div class="">
-        <nav class="level is-mobile">
-          {% if token_id > collection.data.start_token_id %}
-          <div class="level-item has-text-centered">
-            <div>
-              <p class="heading">Previous <br/>Token</p>
-              <p class="title">
-                <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ token_id - 1 }}</a>
-              </p>
-            </div>
-          </div>
-          {% endif %}
-          {% if rarity['rank'] > 1 %}
-          <div class="level-item has-text-centered">
-            <div>
-              <p class="heading">Previous <br/>Rarity</p>
-              <p class="title">
-                <a class="button is-light is-danger" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] - 1)) }}" up-follow up-target=".container" up-preload up-transition="move-right"><- #{{ rarity['rank'] - 1 }}</a>
-              </p>
-            </div>
-          </div>
-          {% endif %}
-          {% if rarity['rank'] < collection.token_end %}
-          <div class="level-item has-text-centered">
-            <div>
-              <p class="heading">Next <br/>Rarity</p>
-              <p class="title">
-                <a class="button is-light is-danger" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-target=".container" up-preload up-transition="move-left">#{{ rarity['rank'] + 1 }} -></a>
-              </p>
-            </div>
-          </div>
-          {% endif %}
-          {% if rarity['rank'] < collection.token_end %}
-          <div class="level-item has-text-centered">
-            <div>
-              <p class="heading">Next <br/>Token</p>
-              <p class="title">
-                <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-target=".container" up-preload up-transition="move-left">
-                  #{{ token_id + 1 }} ->
-                </a>
-              </p>
-            </div>
-          </div>
-          {% endif %}
-        </nav>
-        <div class="columns" style="max-height:800px;">
-          <div class="column" id="tokenImageHolder">
-            <img src="/static/img/loading2.gif" id="tokenImage" class="{% if collection.url_slug == 'nftzine' %}zineLink{% elif collection.url_slug == 'rmutt' %}glbLink{% else %}tokenZoom{% endif %}" />
-          </div>
-          <div class="column" style="overflow-y:scroll;">
-            <h1 class="title" id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'><img src="/static/img/loading2.gif" width=50></h1>
-            <p class="block" id="tokenDescription"></p>
-            <div class="block"></div>
-            <ul id="tokenTraits"></ul>
-            {% if 'rank' in rarity %}
-              <div>
-                <br/>
-                <p class="title"><strong>Rarity:</strong> #{{ rarity['rank'] }}/{{ collection.data.total_supply }}</p>
-              </div>
-            {% endif %}
-            <p><strong>Stat Rarity</strong>: {{ rarity['stat_rarity'] }}</p>
-            <p><strong>Rarity Score</strong>: {{ rarity['rarity_score'] }}</p>
-            <p><strong>Rarity Score (normed)</strong>: {{ rarity['rarity_score_normed'] }}</p>
-            <p><strong>Ranked By</strong>: {{ rarity['ranked_by'] }}</p>
-          </div>
-        </div>
-        <div id="tokenSales" class="has-text-centered pt-4 mt-4">
-          <div id="tokenHistory" class="pt-4"></div>
-        </div>
-        <div class="has-text-centered pt-4 mt-4">
-          <p class="subtitle" id="tokenOwner" style="margin-top: 1em;"></p>
-          <div class="columns pr-2">
-            <div class="column">
-              <p class="subtitle" id="tokenOnchainURI" style="margin-top: 1em;"></p>
-            </div>
-            <div class="column">
-              <p class="subtitle" id="tokenOnchainImage" style="margin-top: 1em;"></p>
-            </div>
-          </div>
-          <div class="columns pl-2">
-            <div class="column">
-              <p class="subtitle" id="tokenOffchainURI" style="margin-top: 1em;"></p>
-            </div>
-            <div class="column">
-              <p class="subtitle" id="tokenOffchainImage" style="margin-top: 1em;"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tokenPreviews has-text-centered pt-4 mt-4">
-        <div class="columns">
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://looksrare.org/collections/{{ collection.contract_address }}/{{ token_id }}" target="_blank"><img src="/static/img/looksrare.png"> LooksRare</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://www.gem.xyz/asset/{{ collection.contract_address }}/{{ token_id }}" target="_blank"><img src="/static/img/gem.png"> Gem</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://www.genie.xyz/collection/{{ collection.contract_address }}" target="_blank"><img src="/static/img/genie.png"> Genie</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://opensea.io/assets/{{ collection.contract_address }}/{{ token_id }}" target="_blank"><img src="/static/img/opensea.png"> Opensea</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://rarible.com/token/{{ collection.contract_address }}:{{ token_id }}" target="_blank"><img src="/static/img/rarible.jpg"> Rarible</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://x2y2.io/eth/{{ collection.contract_address }}/{{ token_id }}" target="_blank"><img src="/static/img/x2y2.png"> X2Y2</a>
-              </figure>
-            </div>
-          </div>
-        </div>
+
+{% block content %}
+<div class="container">
+  <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+    <a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-preload up-transition="cross-fade">
+      <h4>{{ collection.title }}</h4>
+    </a>
+  </nav>
+  <div class="row is-centered">
+    {% if token_id > collection.data.start_token_id %}
+    <div class="three columns">
+        <p>Previous <br/>Token</p>
+        <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-preload up-transition="move-right">
+          <- #{{ token_id - 1 }}
+        </a>
+    </div>
+    {% endif %}
+    {% if rarity['rank'] > 1 %}
+    <div class="three columns">
+        <p>Previous <br/>Rarity</p>
+        <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] - 1)) }}" up-follow up-preload up-transition="move-right">
+          <- #{{ rarity['rank'] - 1 }}
+        </a>
+    </div>
+    {% endif %}
+    {% if rarity['rank'] < collection.token_end %}
+    <div class="three columns">
+        <p>Next <br/>Rarity</p>
+        <a class="button is-light is-danger" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-preload up-transition="move-left">
+          #{{ rarity['rank'] + 1 }} ->
+        </a>
+    </div>
+    {% endif %}
+    {% if rarity['rank'] < collection.token_end %}
+    <div class="three columns">
+      <div>
+        <p>Next <br/>Token</p>
+        <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-preload up-transition="move-left">
+          #{{ token_id + 1 }} ->
+        </a>
       </div>
     </div>
-  </section>
-  {% include 'includes/footer.html' %}
-  {% if collection.url_slug == 'rmutt' %}
+    {% endif %}
+  </div>
+  <div class="">
+    <div class="row" style="margin-top: 2em;">
+      <div class="six columns" id="tokenImageHolder">
+        <img id="tokenImage" class="previewPreload {% if collection.url_slug == 'nftzine' %}zineLink{% elif collection.url_slug == 'rmutt' %}glbLink{% else %}tokenZoom{% endif %}" />
+      </div>
+      <div class="six columns">
+        <h4 id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'>
+          <img class="previewPreload" width=50>
+        </h4>
+        <p id="tokenOwner" style="margin-top: 1em;"></p>
+        <div class="block"></div>
+        <ul id="tokenTraits">
+          {% if 'rank' in rarity %}
+            <li>
+              <strong>Rarity:</strong> #{{ rarity['rank'] }}/{{ collection.data.total_supply }}
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <table class="u-full-width">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Platform</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="tokenHistory" ></tbody>
+      </table>
+    </div>
+    <div class="">
+      <p id="tokenOnchainURI"></p>
+      <p id="tokenOnchainImage"></p>
+      <p id="tokenOffchainURI"></p>
+      <p id="tokenOffchainImage"></p>
+    </div>
+    <div class="row is-centered" style="margin-top: 2em; margin-left: 4em;">
+      <div class="two columns">
+          <a href="https://looksrare.org/collections/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/looksrare.png">
+          </a>
+      </div>
+      <div class="two columns">
+          <a href="https://app.uniswap.org/#/nfts/asset/{{ collection.contract_address | lower }}/{{ token_id }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/uniswap.png">
+          </a>
+      </div>
+      <div class="two columns">
+          <a href="https://opensea.io/assets/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/opensea.png">
+          </a>
+      </div>
+      <div class="two columns">
+          <a href="https://rarible.com/token/{{ collection.contract_address }}:{{ token_id }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/rarible.jpg">
+          </a>
+      </div>
+      <div class="two columns">
+          <a href="https://x2y2.io/eth/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/x2y2.png">
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% if collection.url_slug == 'rmutt' %}
   <script type="module" src="/static/js/vendor/model-viewer.min.js"></script>
-  {% endif %}
-  </body>
-</html>
+{% endif %}

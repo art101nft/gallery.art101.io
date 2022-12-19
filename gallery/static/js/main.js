@@ -51,33 +51,31 @@ async function updateTokenHistory(contractAddress, tokenId) {
   const tokenSales = await getTokenSales(contractAddress, tokenId);
   if (tokenSales.length > 0) {
     tokenSales.forEach(function(sale) {
-      let msgColor;
-      let msgText;
-      const msInDay = 24 * 60 * 60 * 1000;
-      const now = new Date();
-      const txDate = new Date(sale.tx_date);
-      let diff = ((now - txDate) / msInDay).toFixed(2);
-      if (sale.event_type == 'sale') {
-        msgColor = 'is-success';
-        msgText = `Sold for <strong>${w3.utils.fromWei(sale.amount.toString())} Ξ</strong> by <a href="https://etherscan.io/address/${sale.from_wallet}" target="_blank">${shortenAddress(sale.from_wallet)}</a> to <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a> via ${sale.platform.toUpperCase()}`;
-      } else if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
-        msgColor = 'is-info';
-        msgText = `Minted by <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
-      } else if (sale.event_type == 'transfer') {
-        msgColor = 'is-dark';
-        msgText = `Transferred from <a href="https://etherscan.io/address/${sale.from_wallet}" target="_blank">${shortenAddress(sale.from_wallet)}</a> to <a href="https://etherscan.io/address/${sale.to_wallet}" target="_blank">${shortenAddress(sale.to_wallet)}</a> <strong>${diff} days ago</strong> in tx <a href="https://etherscan.io/tx/${sale.tx}" target="_blank">${shortenAddress(sale.tx)}</a>`;
+      let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
+      let event, amount;
+
+      if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
+        event = 'mint';
       } else {
-        console.log(`Unreferenced sale:`);
-        console.log(sale);
-        return
+        event = sale.event_type;
       }
-      const article = document.createElement('article');
-      const msgBody = document.createElement('div');
-      article.classList.add('message', msgColor)
-      msgBody.classList.add('message-body');
-      msgBody.innerHTML = msgText;
-      article.appendChild(msgBody);
-      tokenHistory.appendChild(article);
+
+      if (sale.event_type == 'sale') {
+        amount = `${w3.utils.fromWei(sale.amount.toString())} Ξ`;
+      } else {
+        amount = '-';
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${event}</td>
+        <td>${shortenAddress(sale.from_wallet)}</td>
+        <td>${shortenAddress(sale.to_wallet)}</td>
+        <td>${sale.platform}</td>
+        <td>${amount}</td>
+        <td>${diff} days ago</td>
+      `;
+      tokenHistory.appendChild(tr);
     })
   } else {
     const article = document.createElement('article');
@@ -111,7 +109,7 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
     newItem.classList.add('three');
     newItem.classList.add('columns');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<a href="/collection/${urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
+    newItem.innerHTML = `<a href="/collection/${urlSlug}/${tokenIndex}" up-transition="cross-fade" up-preload>
       <img width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>
     </a>`;
     updateTokenPreview(contractAddress, tokenIndex);
@@ -180,7 +178,6 @@ async function updateTokenInfo(contractAddress, tokenId) {
   let data = await getTokenMetadata(contractAddress, tokenId);
   if (!data) {
     document.getElementById('tokenTitle').innerHTML = 'Error';
-    document.getElementById('tokenDescription').innerHTML = 'Malformed JSON payload';
     document.getElementById('tokenImage').src = '';
     return false
   }
@@ -195,8 +192,8 @@ async function updateTokenInfo(contractAddress, tokenId) {
       document.getElementById('tokenOwner').innerHTML = `<strong>Owner:</br><a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${data.ownerOf}</a></strong>`;
     }
   }
-  document.getElementById('tokenDescription').innerHTML = data.description;
   document.getElementById('tokenImage').src = offchainImg;
+  document.getElementById('tokenImage').classList.remove('previewPreload');
   // If nftzine, load iframe for clickable zine
   if (document.getElementById('tokenImage').classList.contains('zineLink')) {
     let animationURL = loadAssets(contractAddress) + `/${data.animation_url}/index.html`;
@@ -264,10 +261,10 @@ async function updateTokenInfo(contractAddress, tokenId) {
     });
     document.querySelector('model-viewer').addEventListener('progress', onProgress);
   }
-  document.getElementById('tokenOnchainURI').innerHTML = `</br><strong>On-chain Metadata:</strong></br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
-  document.getElementById('tokenOffchainURI').innerHTML = `</br><strong>Off-chain Metadata:</strong></br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
-  document.getElementById('tokenOnchainImage').innerHTML = `</br><strong>On-chain Image:</strong></br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
-  document.getElementById('tokenOffchainImage').innerHTML = `</br><strong>Off-chain Image:</strong></br><a href="${offchainImg}" target=_blank>${offchainImg}</a>`;
+  document.getElementById('tokenOnchainURI').innerHTML = `<strong>On-chain Metadata</strong>:</br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
+  document.getElementById('tokenOffchainURI').innerHTML = `<strong>Off-chain Metadata</strong>:</br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
+  document.getElementById('tokenOnchainImage').innerHTML = `<strong>On-chain Image</strong>:</br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
+  document.getElementById('tokenOffchainImage').innerHTML = `<strong>Off-chain Image</strong>:</br><a href="${offchainImg}" target=_blank>${offchainImg}</a>`;
   data.attributes.forEach(function(i){
     let newChild = document.createElement('li');
     newChild.innerHTML = `<span class="tag is-white is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;
