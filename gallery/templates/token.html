@@ -46,11 +46,11 @@
     {% endif %}
   </div>
   <div class="">
-    <div class="row" style="margin-top: 2em;">
+    <div class="row" style="margin-top: 2em; height: 60vh; ">
       <div class="six columns" id="tokenImageHolder">
         <img id="tokenImage" class="previewPreload {% if collection.url_slug == 'nftzine' %}zineLink{% elif collection.url_slug == 'rmutt' %}glbLink{% else %}tokenZoom{% endif %}" />
       </div>
-      <div class="six columns">
+      <div class="six columns" id="tokenDetails" style="overflow-y: auto; height: 100%;">
         <h4 id="tokenTitle" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token_id }}", "erc1155": "{{ collection.erc1155 | tojson }}", "testnetAddress": "{{ collection.testnet_address }}"  }'>
           <img class="previewPreload" width=50>
         </h4>
