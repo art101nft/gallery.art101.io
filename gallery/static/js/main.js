@@ -94,7 +94,6 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
   let newColumn;
   let parent = document.getElementById('ownerTokens');
   const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-  const walletShort = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
   const contract = new w3.eth.Contract(erc721Abi, contractAddress);
   const balance = await contract.methods.balanceOf(walletAddress).call();
   if (balance == 0) {
@@ -104,22 +103,17 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
   for (i=0; i<balance; i++) {
     if (i % 4 == 0) {
       newColumn = document.createElement('div');
-      newColumn.classList.add('columns');
+      newColumn.classList.add('row');
       parent.appendChild(newColumn);
-      console.log(`Creating new child for index ${i}`)
     }
     let tokenIndex = await contract.methods.tokenOfOwnerByIndex(walletAddress, i).call();
-    console.log(`Found token #${tokenIndex} for wallet ${walletAddress} in contract ${contractAddress}`)
     let newItem = document.createElement('div');
-    newItem.classList.add('column');
+    newItem.classList.add('three');
+    newItem.classList.add('columns');
     newColumn.appendChild(newItem);
-    newItem.innerHTML = `<div class="card-image" style="max-width: 200px; margin: auto;">
-              <figure class="image">
-                <a href="/collection/${urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
-                  <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>
-                </a>
-              </figure>
-            </div>`;
+    newItem.innerHTML = `<a href="/collection/${urlSlug}/${tokenIndex}" up-target=".container" up-transition="cross-fade" up-preload>
+      <img width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>
+    </a>`;
     updateTokenPreview(contractAddress, tokenIndex);
   };
 

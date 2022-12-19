@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap');
+
+
 .navbar {
   display: block;
   width: 100%;
@@ -9,6 +13,14 @@
 
 #navbar {
   margin: 0 auto;
+}
+
+.button {
+  color: white;
+}
+
+input {
+  color: #231f20;
 }
 
 a {
@@ -47,10 +59,62 @@ a {
   color: #33C3F0; 
 }
 
+.is-centered {
+  margin: 0 auto;
+  text-align: center;
+}
+
 * {
-  background-color: black;
-  color: white;
-  font-family: 'Monospace';
+  background-color: #231f20;
+  color: #f9f9f9;
+}
+
+p {
+  size: 1.25em;
+  margin-top: 1em;
+  font-weight: 400;
+  font-family: 'Roboto Mono', sans-serif;
+}
+
+h1 {
+  font-weight: 900;
+  font-size: 4em;
+  text-transform: uppercase;
+  margin: 8px 0px 8px 0px;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+h2 {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 2.125em;
+  font-family: 'Roboto', sans-serif;
+
+}
+
+h3 {
+  font-family: 'Roboto Mono', sans-serif;
+  text-transform: uppercase;
+  font-weight: 00;
+  font-size: 1.5em;
+  font-family: 'Roboto', sans-serif;
+}
+
+h4 {
+  font-family: 'Roboto Mono', sans-serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 2em;
+  font-family: 'Roboto Mono', sans-serif;
+
+}
+
+h5 {
+  font-family: 'Roboto Mono', sans-serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: .975em;
 }
 
 .collectionDescription {
@@ -107,13 +171,61 @@ a {
 }
 
 .previewPreload {
-  width: 30% !important;
-  margin: 0 auto;
+  /* width: 30% !important; */
+  width: 65px;
+  aspect-ratio: 1;
+  border: 10px solid #0000;
+  background: 
+    radial-gradient(farthest-side,#f9f9f9 98%,#231f20 ) 0    0/20px 20px,
+    radial-gradient(farthest-side,#f9f9f9 98%,#231f20 ) 100% 0/20px 20px,
+    radial-gradient(farthest-side,#f9f9f9 98%,#231f20 ) 100% 100%/20px 20px,
+    radial-gradient(farthest-side,#f9f9f9 98%,#231f20 ) 0 100%/20px 20px,
+    linear-gradient(#f9f9f9 0 0) center/40px 40px,
+    #231f20;
+  background-repeat:no-repeat;
+  filter: blur(4px) contrast(10);
+  animation: blob 0.8s infinite;
 }
 
 .tokenPreview {
-  border: 0px solid black;
   border-radius: 4px;
+  margin-bottom: 8px;
+  max-width: 12em;
+}
+
+.marketplaceLogo {
+  max-width: 16em;
+  border-radius: 50%;
+}
+
+.marketplaceLogos {
+  margin: 2em 0;
+}
+
+.button {
+  transition: .25s ease all;
+}
+
+.input {
+  width: 100%;
+}
+
+.button:hover {
+  transition: .25s ease all;
+  background-color: white;
+}
+
+@keyframes blob {
+  100% {background-position: 100% 0, 100% 100%, 0 100%, 0 0, center}
+}
+
+@media (max-width: 950px) {
+  .tokenPreview {
+    max-width: 6em;
+  }
+  .marketplaceLogo {
+    max-width: 8em;
+  }
 }
 
 .approvedCard {

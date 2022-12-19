@@ -43,7 +43,7 @@ def as_datetime(s):
 
 @bp.app_template_filter('as_formatted')
 def as_formatted(s):
-    return arrow_get(int(s)).format('YYYY-MM-DD HH:mm:ss UTC')
+    return arrow_get(int(s)).format('YYYY-MM-DD')
 
 @bp.app_template_filter('convert_ipfs_uri')
 def convert_ipfs_uri(u):

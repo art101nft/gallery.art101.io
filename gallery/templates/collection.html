@@ -1,222 +1,141 @@
-<!DOCTYPE html>
-<html>
-  {% include 'includes/head.html' %}
-  <body>
-  {% include 'includes/navbar.html' %}
-  <section class="section">
-    <div class="container has-text-centered">
-      <h1 class="title">{{ collection.title }}</h1>
-      <p class="subtitle pt-2 collectionDescription">{{ collection.data.description | safe }}</p>
-      <p class="subtitle pt-2 collectionDescription"><a href="{{ collection.data.website }}" target=_blank>{{ collection.data.website }}</a></p>
-      <nav class="level">
-        <div class="level-item">
-          <div>
-            <p class="heading">Token Supply</p>
-            <p class="title">{{ collection.data.total_supply }}</p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div>
-            <p class="heading">Contract Address</p>
-            <p class="title"><a href="{{ collection.contract_address | show_etherscan }}" target=_blank>{{ collection.contract_address | shorten_address }}</a></p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div>
-            <p class="heading">Contract Type</p>
-            <p class="title">{{ collection.data.contract_type }}</p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div>
-            <p class="heading">Launch Date</p>
-            <p class="title">{{ collection.es_data.timeStamp | as_formatted }}</p>
-          </div>
-        </div>
-      </nav>
-      <nav class="level">
-        {% if collection.stats %}
-        <div class="level-item">
-          <div>
-            <p class="heading">Volume</p>
-            <p class="title">{{ collection.stats.total_volume | round(2) }} Ξ</p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div>
-            <p class="heading">Sales</p>
-            <p class="title">{{ collection.stats.total_sales }}</p>
-          </div>
-        </div>
-        {% endif %}
-        <div class="level-item">
-          <div>
-            <p class="heading">Launch Block</p>
-            <p class="title">{{ collection.es_data.blockNumber }}</p>
-          </div>
-        </div>
-      </nav>
-      <nav class="content">
-        {% if owner %}
-        <div class="column has-text-centered m-0 pt-4">
-          <div class="field">
-            <div class="control">
-              <a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
-                <button class="button" up-follow=".container" up-transition="cross-fade" up-preload>x Clear</button>
-              </a>
-            </div>
-          </div>
-        </div>
-        {% else %}
-        <h1 class="title pt-4">Navigate</h1>
-        <div class="columns">
-          <div class="column">
-            <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
-              <div class="field is-grouped">
-                <p class="control is-grouped-right">
-                  <input class="input" type="text" placeholder="Enter token Id" name="tokenId">
-                </p>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <button class="button is-primary" up-follow=".container" up-transition="cross-fade" up-preload>Jump</button>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="column">
-            <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
-              <div class="field is-grouped">
-                <p class="control is-grouped-right">
-                  <input class="input" type="text" placeholder="Enter Rarity Rank" name="rankId">
-                </p>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <button class="button is-primary" up-follow=".container" up-transition="cross-fade" up-preload>Jump</button>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="column">
-            <form method="GET" enctype="multipart/form-data" class="site-form columns" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="padding-top:1.5em;">
-              <div class="field is-grouped is-grouped-centered">
-                <p class="control is-grouped-right">
-                  <input class="input" type="text" placeholder="Enter wallet or ENS address" name="wallet">
-                </p>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <button class="button is-primary" up-follow=".container" up-transition="cross-fade" up-preload>Search</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        {% endif %}
-      </nav>
+{% extends 'base.html' %}
 
-      {% if not owner %}
-      {% if request.args.show == 'notable' %}
-        <h1 class="title">Notable Tokens</h1>
-        <a class="button is-text" href="?show=rarity">Show Rarity</a>
-        <div class="tokenPreviews has-text-centered">
-          {% for _token in collection.data.notable_tokens | batch(4) %}
-          <div class="columns">
-            {% for token in _token %}
-            <div class="cardz column">
-              <div class="card-image">
-                <figure class="image">
-                  <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token) }}" up-target=".container" up-transition="cross-fade" up-preload>
-                    <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ token }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ token }}" }'>
-                  </a>
-                </figure>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <h1 class="title">Top Ranking</h1>
-        <a class="button is-text" href="?show=notable">Show Notable</a>
-        <div class="tokenPreviews has-text-centered">
-          {% if collection.url_slug == 'soupxmondrian' %}
-            {% set max_token = 4 %}
-          {% else %}
-            {% set max_token = 17 %}
-          {% endif %}
-          {% for _token in range(1,max_token) | batch(4) %}
-          <div class="columns">
-            {% for token in _token %}
-            <div class="cardz column">
-              <div class="card-image">
-                <figure class="image">
-                  <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(token)) }}" up-target=".container" up-transition="cross-fade" up-preload>
-                    <img src="/static/img/loading2.gif" width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ collection.retrieve_token_id_by_rank(token) }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ collection.retrieve_token_id_by_rank(token) }}" }'>
-                  </a>
-                </figure>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      {% elif owner %}
-      <h1 class="title">{% if owner.ens %}{{ owner.ens }}{% else %}{{ owner.address | shorten_address }}{% endif %} Tokens</h1>
-      <div id="ownerTokens" up-data='{ "contractAddress": "{{ collection.contract_address }}", "walletAddress": "{{ owner.address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
-      {% endif %}
-
-      <div class="tokenPreviews has-text-centered pt-4 mt-4">
-        <div class="columns">
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://looksrare.org/collections/{{ collection.contract_address }}" target="_blank"><img src="/static/img/looksrare.png"> LooksRare</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://www.gem.xyz/collection/{{ collection.url_slug }}" target="_blank"><img src="/static/img/gem.png"> Gem</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://www.genie.xyz/collection/{{ collection.contract_address }}" target="_blank"><img src="/static/img/genie.png"> Genie</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://opensea.io/collection/{{ collection.url_slug }}" target="_blank"><img src="/static/img/opensea.png"> Opensea</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://rarible.com/{{ collection.url_slug }}" target="_blank"><img src="/static/img/rarible.jpg"> Rarible</a>
-              </figure>
-            </div>
-          </div>
-          <div class="card column">
-            <div class="card-image">
-              <figure class="image">
-                <a href="https://x2y2.io/collection/{{ collection.url_slug }}/items" target="_blank"><img src="/static/img/x2y2.png"> X2Y2</a>
-              </figure>
-            </div>
-          </div>
-        </div>
+{% block content %}
+<div class="container has-text-centered">
+  <h1 style="margin-bottom:0;">{{ collection.title }}</h1>
+  <p style="margin:0 0 1em 0;"><a href="{{ collection.data.website }}" target=_blank>{{ collection.data.website }}</a></p>
+  <p>{{ collection.data.description | safe }}</p>
+  <div class="row is-centered">
+    <div class="three columns">
+      <div>
+        <p><strong>Supply</strong>:<br /> {{ collection.data.total_supply }}</p>
       </div>
     </div>
-  </section>
-  {% include 'includes/footer.html' %}
-  </body>
-</html>
+    <div class="three columns">
+      <div>
+        <p><strong>Contract</strong>:<br /> <a href="{{ collection.contract_address | show_etherscan }}" target=_blank>{{ collection.contract_address | shorten_address }}</a></p>
+      </div>
+    </div>
+    <div class="three columns">
+      <div>
+        <p><strong>Type</strong>:<br /> {{ collection.data.contract_type }}</p>
+      </div>
+    </div>
+    <div class="three columns">
+      <div>
+        <p><strong>Date</strong>:<br /> {{ collection.es_data.timeStamp | as_formatted }}</p>
+      </div>
+    </div>
+  </div>
+  
+  {% if not owner %}
+    <div class="row">
+      <div class="one-half column">
+        <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
+          <div class="row">
+            <div class="eight columns">
+              <label for="tokenId">Lookup Token</label>
+              <input class="input" type="text" placeholder="Enter token ID" name="tokenId">
+            </div>
+            <div class="four columns">
+              <label style="opacity:0;">go</label>
+              <button class="button is-primary" up-transition="cross-fade" up-preload>Go</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="one-half column">
+        <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
+          <div class="row">
+            <div class="eight columns">
+              <label for="tokenId">Lookup Address</label>
+              <input class="input" type="text" placeholder="Enter wallet or ENS" name="wallet">
+            </div>
+            <div class="four columns">
+              <label style="opacity:0;">go</label>
+              <button class="button is-primary" up-transition="cross-fade" up-preload>Go</button>
+            </div>
+          </div>
+          </form>
+      </div>
+    </div>
+  {% endif %}
+
+{% if owner %}
+    <h3 style="margin-bottom: .25em;">{% if owner.ens %}{{ owner.ens }}{% else %}{{ owner.address | shorten_address }}{% endif %} wallet</h3>
+    <a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
+      <button class="button" up-transition="cross-fade" up-preload>Clear</button>
+    </a>
+    <div id="ownerTokens" up-data='{ "contractAddress": "{{ collection.contract_address }}", "walletAddress": "{{ owner.address }}", "urlSlug": "{{ collection.url_slug }}" }'></div>
+{% else %}
+  {% if request.args.show == 'notable' %}
+    {% set title = 'Notable Tokens' %}
+    {% set buttontext = 'Show Rarity' %}
+    {% set tokens = collection.data.notable_tokens %}
+    {% set newurl = 'rarity' %}
+  {% else %}
+    {% set title = 'Top Ranking' %}
+    {% set buttontext = 'Show Notable' %}
+    {% if collection.url_slug == 'soupxmondrian' %}
+      {% set max_token = 4 %}
+    {% else %}
+      {% set max_token = 17 %}
+    {% endif %}
+    {% set tokens = range(1,max_token) %}
+    {% set newurl = 'notable' %}
+  {% endif %}
+  <h2 style="margin-bottom: .25em;">{{ title }}</h2>
+  <a class="button" href="?show={{ newurl }}">{{ buttontext }}</a>
+  <div class="tokenPreviews">
+    {% for _token in tokens | batch(4) %}
+    <div class="row">
+      {% for token in _token %}
+      <div class="three columns">
+        <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(token)) }}" up-target=".container" up-transition="cross-fade" up-preload>
+          <img width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ collection.retrieve_token_id_by_rank(token) }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ collection.retrieve_token_id_by_rank(token) }}" }'>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <div class="is-centered marketplaceLogos">
+    <div class="row marketplaceLogos">
+      <div class="one-third column">
+          <a href="https://looksrare.org/collections/{{ collection.contract_address }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/looksrare.png">
+          </a>
+      </div>
+      <div class="one-third column">
+          <a href="https://app.uniswap.org/#/nfts/collection/{{ collection.url_slug }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/uniswap.png">
+          </a>
+      </div>
+      <div class="one-third column">
+          <a href="https://www.genie.xyz/collection/{{ collection.contract_address }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/genie.png">
+          </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="one-third column">
+          <a href="https://opensea.io/collection/{{ collection.url_slug }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/opensea.png">
+          </a>
+      </div>
+      <div class="one-third column">
+          <a href="https://rarible.com/{{ collection.url_slug }}" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/rarible.jpg">
+          </a>
+      </div>
+      <div class="one-third column">
+          <a href="https://x2y2.io/collection/{{ collection.url_slug }}/items" target="_blank">
+            <img class="marketplaceLogo" src="/static/img/x2y2.png">
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
