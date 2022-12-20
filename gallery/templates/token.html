@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="container">
-  <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+  <h1>
     <a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-follow up-preload up-transition="cross-fade">
-      <h4>{{ collection.title }}</h4>
+      {{ collection.title }}
     </a>
-  </nav>
+  </h1>
   <div class="row is-centered">
     {% if token_id > collection.data.start_token_id %}
     <div class="three columns">

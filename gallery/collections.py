@@ -282,7 +282,8 @@ class Collection(object):
                         else:
                             try:
                                 owner = self.contract.functions.ownerOf(int(token_id)).call()
-                            except:
+                            except Exception as e:
+                                print('PROBLEM', e)
                                 owner = '0x0000000000000000000000000000000000000000'
                             tokenURI = self.contract.functions.tokenURI(int(token_id)).call()
                         _d['tokenURI'] = tokenURI
@@ -290,7 +291,7 @@ class Collection(object):
                         _d['ownerOf'] = owner
                         _d['ownerENS'] = ns.name(owner)
                     except Exception as e:
-                        print(e)
+                        print('PROBZ2', e)
                         pass
                     cache.store_data(key_name, 604800, dumps(_d))
                     return _d

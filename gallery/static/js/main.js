@@ -187,9 +187,9 @@ async function updateTokenInfo(contractAddress, tokenId) {
   document.getElementById('tokenTitle').innerHTML = data.name;
   if (data.ownerOf) {
     if (data.ownerENS) {
-      document.getElementById('tokenOwner').innerHTML = `<strong>Owner: ${data.ownerENS}</strong></br>(<a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${data.ownerOf}</a>)`;
+      document.getElementById('tokenOwner').innerHTML = `<strong>Owner</strong>: <a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${data.ownerENS}</a>`;
     } else {
-      document.getElementById('tokenOwner').innerHTML = `<strong>Owner:</br><a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${data.ownerOf}</a></strong>`;
+      document.getElementById('tokenOwner').innerHTML = `<strong>Owner</strong>: <a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${shortenAddress(data.ownerOf)}</a>`;
     }
   }
   document.getElementById('tokenImage').src = offchainImg;
@@ -224,13 +224,8 @@ async function updateTokenInfo(contractAddress, tokenId) {
           <img src="/static/img/ar_hand_prompt.png">
       </div>
     </model-viewer>
-    <button id="fullscreen_glb" style="width: 40px">
-    <svg version="1.1" viewBox="0 0 36 36">
-    <path d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"></path>
-    <path d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"></path>
-    <path d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"></path>
-    <path d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"></path>
-    </svg>
+    <button id="fullscreen_glb" class="button">
+      Fullscreen
     </button>`;
     document.getElementById('tokenImage').remove();
     document.getElementById('tokenImageHolder').innerHTML = modelViewer;

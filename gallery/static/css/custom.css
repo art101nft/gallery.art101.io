@@ -180,6 +180,10 @@ h5 {
   display: none;
 }
 
+#fullscreen_glb {
+  width: 100%;
+}
+
 .previewPreload {
   /* width: 30% !important; */
   width: 65px !important;
@@ -201,6 +205,10 @@ h5 {
   border-radius: 4px;
   margin-bottom: 8px;
   max-width: 12em;
+}
+
+.tokenPreviews {
+  text-align: center;
 }
 
 #tokenImage {
