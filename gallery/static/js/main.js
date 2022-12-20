@@ -66,14 +66,16 @@ async function updateTokenHistory(contractAddress, tokenId) {
         amount = '-';
       }
 
+      // <a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a>
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${event}</td>
-        <td>${shortenAddress(sale.from_wallet)}</td>
-        <td>${shortenAddress(sale.to_wallet)}</td>
+        <td><a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a></td>
+        <td><a href="https://etherscan.io/address/${sale.to_wallet}" target=_blank>${shortenAddress(sale.to_wallet)}</a></td>
         <td>${sale.platform}</td>
         <td>${amount}</td>
-        <td>${diff} days ago</td>
+        <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${new Date(sale.tx_date).toLocaleString()}</a></td>
       `;
       tokenHistory.appendChild(tr);
     })
