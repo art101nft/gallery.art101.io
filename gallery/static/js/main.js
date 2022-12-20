@@ -45,50 +45,69 @@ function shortenAddress(a) {
   return a.slice(0, 6) + '...' + a.slice(-4)
 }
 
-async function updateTokenHistory(contractAddress, tokenId) {
+async function getENS(address) {
   const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-  const tokenHistory = document.getElementById('tokenHistory');
+  const namehash = await w3.eth.call({
+    to: '0x084b1c3c81545d370f3634392de611caabff8148', // ENS: Reverse Registrar
+    data: w3.eth.abi.encodeFunctionCall({
+      name: 'node', type: 'function',
+      inputs: [{type: 'address', name: 'addr'}]
+    }, [address])
+  });
+  const res = w3.eth.abi.decodeParameter('string', await w3.eth.call({
+    to: '0xa2c122be93b0074270ebee7f6b7292c7deb45047', // ENS: Default Reverse Resolver
+    data: w3.eth.abi.encodeFunctionCall({
+      name: 'name', type: 'function',
+      inputs: [{type: 'bytes32', name: 'hash'}]
+    }, [namehash])
+  }));
+  if (!res) {
+    return address;
+  } else {
+    return res;
+  }
+}
+
+async function processSale(sale) {
+  let from_wallet = await getENS(sale.from_wallet);
+  let to_wallet = await getENS(sale.to_wallet);
+  if (from_wallet.startsWith('0x')) from_wallet = shortenAddress(from_wallet);
+  if (to_wallet.startsWith('0x')) to_wallet = shortenAddress(to_wallet);
+  // let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
+  let event, amount;
+
+  if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
+    event = 'mint';
+  } else {
+    event = sale.event_type;
+  }
+
+  if (sale.event_type == 'sale') {
+    amount = `${new Web3().utils.fromWei(sale.amount.toString())} Ξ`;
+  } else {
+    amount = '-';
+  }
+
+  const tr = document.createElement('tr');
+  tr.classList.add(`row-${event}`);
+  tr.innerHTML = `
+    <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${event}</a></td>
+    <td><a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${from_wallet}</a></td>
+    <td><a href="https://etherscan.io/address/${sale.to_wallet}" target=_blank>${to_wallet}</a></td>
+    <td>${sale.platform}</td>
+    <td>${amount}</td>
+    <td>${new Date(sale.tx_date).toLocaleDateString()}</td>
+  `;
+  document.getElementById('tokenHistory').appendChild(tr);
+}
+
+async function updateTokenHistory(contractAddress, tokenId) {
   const tokenSales = await getTokenSales(contractAddress, tokenId);
   if (tokenSales.length > 0) {
     document.getElementById('tokenHistoryTable').classList.remove('hidden')
-    tokenSales.forEach(function(sale) {
-      let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
-      let event, amount;
-
-      if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
-        event = 'mint';
-      } else {
-        event = sale.event_type;
-      }
-
-      if (sale.event_type == 'sale') {
-        amount = `${w3.utils.fromWei(sale.amount.toString())} Ξ`;
-      } else {
-        amount = '-';
-      }
-
-      // <a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a>
-
-      const tr = document.createElement('tr');
-      tr.classList.add(`row-${event}`);
-      tr.innerHTML = `
-        <td>${event}</td>
-        <td><a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a></td>
-        <td><a href="https://etherscan.io/address/${sale.to_wallet}" target=_blank>${shortenAddress(sale.to_wallet)}</a></td>
-        <td>${sale.platform}</td>
-        <td>${amount}</td>
-        <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${new Date(sale.tx_date).toLocaleDateString()}</a></td>
-      `;
-      tokenHistory.appendChild(tr);
-    })
-  } else {
-    const article = document.createElement('article');
-    const msgBody = document.createElement('div');
-    article.classList.add('message', 'is-danger')
-    msgBody.classList.add('message-body');
-    msgBody.innerHTML = 'Unable to load token history at this time. Check again later.';
-    article.appendChild(msgBody);
-    tokenHistory.appendChild(article);
+    for(i = 0; i < tokenSales.length; i++) {
+      await processSale(tokenSales[i]);
+    }
   }
 }
 

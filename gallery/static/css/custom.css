@@ -328,6 +328,17 @@ th:last-child, td:last-child {
   margin: 4px;
 }
 
+table a {
+  color: #ebfaff;
+}
+
+table a:hover {
+  color: #70dbff;
+}
+
+a, a:hover {
+  transition: .5s ease all;
+}
 
 model-viewer {
   width: 100%;
