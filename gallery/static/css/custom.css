@@ -71,6 +71,7 @@ li {
 * {
   background-color: #231f20;
   color: #f9f9f9;
+  word-wrap: break-word;
 }
 
 p {
