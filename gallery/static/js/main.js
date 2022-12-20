@@ -212,7 +212,6 @@ async function updateTokenInfo(contractAddress, tokenId) {
     (document.getElementById('tokenImage').classList.contains('glbLink'))
   ) {
     let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '');
-    // let placeholderImg = data.image.replace('ipfs://', '')
     let modelViewer = `
       <model-viewer style="background: ${data.background_color}" id="glb" bounds="tight" src="${animationURL}" enable-pan ar ar-modes="webxr scene-viewer quick-look" camera-controls environment-image="neutral" poster="${offchainImg}" shadow-intensity="1" exposure="0.9" shadow-softness="0" camera-orbit="-45deg 75deg auto">
       <div class="progress-bar hide" slot="progress-bar">
