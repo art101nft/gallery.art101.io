@@ -25,11 +25,14 @@ up.compiler('#ownerTokens', function(element, data) {
 })
 
 up.compiler('.tokenZoom', function(element) {
-  new Viewer(document.getElementById('tokenImage'), {
-    inline: false,
-    navbar: 0,
-    toolbar: 0,
-    transition: 0,
+  let ti = document.getElementById('tokenImage');
+  ti.addEventListener('click', function() {
+    new Viewer(ti, {
+      inline: false,
+      navbar: 0,
+      toolbar: 0,
+      transition: 0
+    }).show();
   });
 })
 
