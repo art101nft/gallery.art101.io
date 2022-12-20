@@ -71,8 +71,8 @@ async function getENS(address) {
 async function processSale(sale) {
   let from_wallet = await getENS(sale.from_wallet);
   let to_wallet = await getENS(sale.to_wallet);
-  if (from_wallet.startsWith('0x')) from_wallet = shortenAddress(from_wallet);
-  if (to_wallet.startsWith('0x')) to_wallet = shortenAddress(to_wallet);
+  if (!from_wallet.endsWith('.eth')) from_wallet = shortenAddress(from_wallet);
+  if (!to_wallet.endsWith('.eth')) to_wallet = shortenAddress(to_wallet);
   // let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
   let event, amount;
 
