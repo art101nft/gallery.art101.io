@@ -9,42 +9,6 @@
       {{ collection.title }}
     </a>
   </h1>
-  <div class="row is-centered">
-    {% if token_id > collection.data.start_token_id %}
-    <div class="three columns">
-        <p>Previous <br/>Token</p>
-        <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-preload up-transition="move-right">
-          <- #{{ token_id - 1 }}
-        </a>
-    </div>
-    {% endif %}
-    {% if rarity['rank'] > 1 %}
-    <div class="three columns">
-        <p>Previous <br/>Rarity</p>
-        <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] - 1)) }}" up-follow up-preload up-transition="move-right">
-          <- #{{ rarity['rank'] - 1 }}
-        </a>
-    </div>
-    {% endif %}
-    {% if rarity['rank'] < collection.token_end %}
-    <div class="three columns">
-        <p>Next <br/>Rarity</p>
-        <a class="button is-light is-danger" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity["rank"] + 1)) }}" up-follow up-preload up-transition="move-left">
-          #{{ rarity['rank'] + 1 }} ->
-        </a>
-    </div>
-    {% endif %}
-    {% if rarity['rank'] < collection.token_end %}
-    <div class="three columns">
-      <div>
-        <p>Next <br/>Token</p>
-        <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-preload up-transition="move-left">
-          #{{ token_id + 1 }} ->
-        </a>
-      </div>
-    </div>
-    {% endif %}
-  </div>
   <div class="">
     <div class="row" style="margin-top: 2em; height: 60vh; ">
       <div class="seven columns" id="tokenImageHolder">
@@ -65,6 +29,22 @@
         </ul>
       </div>
     </div>
+    <div class="row is-centered" style="margin-top: 4em;">
+    {% if token_id > collection.data.start_token_id %}
+    <div class="one-half column">
+        <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-preload up-transition="move-right">
+          <- Prev #{{ token_id - 1 }}
+        </a>
+    </div>
+    {% endif %}
+    {% if rarity['rank'] < collection.token_end %}
+    <div class="one-half column">
+      <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-preload up-transition="move-left">
+        #{{ token_id + 1 }} Next ->
+      </a>
+    </div>
+    {% endif %}
+  </div>
     <div class="row">
       <table class="u-full-width" id="tokenHistoryTable" class="hidden">
         <thead>
