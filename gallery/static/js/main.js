@@ -200,13 +200,17 @@ async function updateTokenInfo(contractAddress, tokenId) {
     let ifrm = document.createElement('iframe');
     ifrm.setAttribute('src', animationURL);
     ifrm.setAttribute('allowfullscreen', true);
-    ifrm.style.width = "640px";
-    ifrm.style.height = "480px";
+    ifrm.style.width = "100%";
+    ifrm.style.height = "50vh";
     document.getElementById('tokenImage').remove();
     document.getElementById('tokenImageHolder').appendChild(ifrm);
   }
   // If rmutt, load model viewer for 3d interactive
-  if (document.getElementById('tokenImage').classList.contains('glbLink')) {
+  if (
+    document.getElementById('tokenImage') 
+    && 
+    (document.getElementById('tokenImage').classList.contains('glbLink'))
+  ) {
     let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '');
     // let placeholderImg = data.image.replace('ipfs://', '')
     let modelViewer = `
