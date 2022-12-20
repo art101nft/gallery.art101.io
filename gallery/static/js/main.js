@@ -50,6 +50,7 @@ async function updateTokenHistory(contractAddress, tokenId) {
   const tokenHistory = document.getElementById('tokenHistory');
   const tokenSales = await getTokenSales(contractAddress, tokenId);
   if (tokenSales.length > 0) {
+    document.getElementById('tokenHistoryTable').classList.remove('hidden')
     tokenSales.forEach(function(sale) {
       let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
       let event, amount;
