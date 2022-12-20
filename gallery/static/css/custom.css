@@ -328,11 +328,11 @@ th:last-child, td:last-child {
   margin: 4px;
 }
 
-table a {
+#tokenHistoryTable a {
   color: #ebfaff;
 }
 
-table a:hover {
+#tokenHistoryTable a:hover {
   color: #70dbff;
 }
 
