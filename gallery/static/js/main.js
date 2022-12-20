@@ -70,13 +70,14 @@ async function updateTokenHistory(contractAddress, tokenId) {
       // <a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a>
 
       const tr = document.createElement('tr');
+      tr.classList.add(`row-${event}`);
       tr.innerHTML = `
         <td>${event}</td>
         <td><a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${shortenAddress(sale.from_wallet)}</a></td>
         <td><a href="https://etherscan.io/address/${sale.to_wallet}" target=_blank>${shortenAddress(sale.to_wallet)}</a></td>
         <td>${sale.platform}</td>
         <td>${amount}</td>
-        <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${new Date(sale.tx_date).toLocaleString()}</a></td>
+        <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${new Date(sale.tx_date).toLocaleDateString()}</a></td>
       `;
       tokenHistory.appendChild(tr);
     })
@@ -111,6 +112,7 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
     let newItem = document.createElement('div');
     newItem.classList.add('three');
     newItem.classList.add('columns');
+    newItem.classList.add('previewTokens');
     newColumn.appendChild(newItem);
     newItem.innerHTML = `<a href="/collection/${urlSlug}/${tokenIndex}" up-transition="cross-fade" up-preload>
       <img width=40 class="tokenPreview previewPreload" id="tokenPreview-${tokenIndex}" up-data='{ "contractAddress": "${contractAddress}", "tokenId": "${tokenIndex}" }'>

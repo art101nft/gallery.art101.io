@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container has-text-centered">
+<div class="container">
   <h1 style="margin-bottom:0;">{{ collection.title }}</h1>
   <p style="margin:0 0 1em 0;"><a href="{{ collection.data.website }}" target=_blank>{{ collection.data.website }}</a></p>
   <p>{{ collection.data.description | safe }}</p>
   <div class="row is-centered">
-    <div class="three columns">
+    <div class="three columns collectionStats">
       <div>
         <p><strong>Supply</strong>:<br /> {{ collection.data.total_supply }}</p>
       </div>
     </div>
-    <div class="three columns">
+    <div class="three columns collectionStats">
       <div>
         <p><strong>Contract</strong>:<br /> <a href="{{ collection.contract_address | show_etherscan }}" target=_blank>{{ collection.contract_address | shorten_address }}</a></p>
       </div>
     </div>
-    <div class="three columns">
+    <div class="three columns collectionStats">
       <div>
         <p><strong>Type</strong>:<br /> {{ collection.data.contract_type }}</p>
       </div>
     </div>
-    <div class="three columns">
+    <div class="three columns collectionStats">
       <div>
         <p><strong>Date</strong>:<br /> {{ collection.es_data.timeStamp | as_formatted }}</p>
       </div>
@@ -32,31 +32,15 @@
     <div class="row">
       <div class="one-half column">
         <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
-          <div class="row">
-            <div class="eight columns">
-              <label for="tokenId">Lookup Token</label>
-              <input class="input" type="text" placeholder="Enter token ID" name="tokenId">
-            </div>
-            <div class="four columns">
-              <label style="opacity:0;">go</label>
-              <button class="button is-primary" up-transition="cross-fade" up-preload>Go</button>
-            </div>
-          </div>
+          <label for="tokenId">Lookup Token</label>
+          <input class="input" type="text" placeholder="Enter token ID" name="tokenId">
         </form>
       </div>
       <div class="one-half column">
         <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
-          <div class="row">
-            <div class="eight columns">
-              <label for="tokenId">Lookup Address</label>
-              <input class="input" type="text" placeholder="Enter wallet or ENS" name="wallet">
-            </div>
-            <div class="four columns">
-              <label style="opacity:0;">go</label>
-              <button class="button is-primary" up-transition="cross-fade" up-preload>Go</button>
-            </div>
-          </div>
-          </form>
+          <label for="tokenId">Lookup Address</label>
+          <input class="input" type="text" placeholder="Enter wallet or ENS" name="wallet">
+        </form>
       </div>
     </div>
   {% endif %}
@@ -85,12 +69,12 @@
     {% set newurl = 'notable' %}
   {% endif %}
   <h2 style="margin-bottom: .25em;">{{ title }}</h2>
-  <a class="button" href="?show={{ newurl }}">{{ buttontext }}</a>
-  <div class="tokenPreviews">
+  <a class="button" href="?show={{ newurl }}#tokenPreviews">{{ buttontext }}</a>
+  <div class="tokenPreviews" id="tokenPreviews">
     {% for _token in tokens | batch(4) %}
     <div class="row">
       {% for token in _token %}
-      <div class="three columns">
+      <div class="three columns previewTokens">
         <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(token)) }}" up-transition="cross-fade" up-preload>
           <img width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ collection.retrieve_token_id_by_rank(token) }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ collection.retrieve_token_id_by_rank(token) }}" }'>
         </a>
@@ -100,7 +84,7 @@
     {% endfor %}
   </div>
 {% endif %}
-  <div class="is-centered marketplaceLogos">
+  <div class="is-centered">
     <div class="row marketplaceLogos">
       <div class="two columns">
           <a href="https://looksrare.org/collections/{{ collection.contract_address }}" target="_blank">

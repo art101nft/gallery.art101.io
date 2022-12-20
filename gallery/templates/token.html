@@ -31,22 +31,22 @@
     </div>
     <div class="row is-centered" style="margin-top: 4em;">
     {% if token_id > collection.data.start_token_id %}
-    <div class="one-half column">
+    <div class="one-half column navButtons">
         <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-preload up-transition="move-right">
           <- Prev #{{ token_id - 1 }}
         </a>
     </div>
     {% endif %}
     {% if rarity['rank'] < collection.token_end %}
-    <div class="one-half column">
+    <div class="one-half column navButtons">
       <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-preload up-transition="move-left">
         #{{ token_id + 1 }} Next ->
       </a>
     </div>
     {% endif %}
   </div>
-    <div class="row">
-      <table class="u-full-width" id="tokenHistoryTable" class="hidden">
+    <div class="row" style="overflow-x: auto;">
+      <table class="u-full-width" id="tokenHistoryTable" class="hidden" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
             <th>Event</th>
@@ -60,13 +60,13 @@
         <tbody id="tokenHistory" ></tbody>
       </table>
     </div>
-    <div class="">
+    <div class="tokenURLs">
       <p id="tokenOnchainURI"></p>
       <p id="tokenOnchainImage"></p>
       <p id="tokenOffchainURI"></p>
       <p id="tokenOffchainImage"></p>
     </div>
-    <div class="row is-centered" style="margin-top: 2em; margin-left: 4em;">
+    <div class="row marketplaceLogos">
       <div class="two columns">
           <a href="https://looksrare.org/collections/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
             <img class="marketplaceLogo" src="/static/img/looksrare.png">

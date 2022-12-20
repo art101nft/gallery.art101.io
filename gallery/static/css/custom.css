@@ -33,7 +33,9 @@ li {
 
 .navbar-list {
   list-style: none;
-  margin-bottom: 0; 
+  margin-bottom: 0;
+  width: 100%;
+  position: absolute;
 }
 
 .navbar-item {
@@ -69,9 +71,12 @@ li {
 }
 
 * {
-  background-color: #231f20;
   color: #f9f9f9;
   word-wrap: break-word;
+}
+
+body {
+  background-color: #231f20;
 }
 
 p {
@@ -167,6 +172,10 @@ h5 {
   display: inline-flex;
 }
 
+.collectionStats {
+  width: 25%;
+}
+
 .tokenStatus img {
   margin-right: .3em;
 }
@@ -238,6 +247,24 @@ h5 {
   background-color: white;
 }
 
+.row-mint {
+  background-color: rgba(50, 203, 255, .5);
+}
+.row-transfer {
+  background-color: rgba(137, 161, 239, .5);
+}
+.row-sale {
+  background-color: rgba(254, 206, 241, .5);
+}
+
+th:first-child, td:first-child {
+  padding-left: 8px;
+}
+
+th:last-child, td:last-child {
+  padding-right: 8px;
+}
+
 @keyframes blob {
   100% {background-position: 100% 0, 100% 100%, 0 100%, 0 0, center}
 }
@@ -251,10 +278,35 @@ h5 {
   }
 }
 
-@media (max-width: 600px) {
-  .marketplaceLogo {
-    max-width: 3em;
+@media (max-width: 750px) {
+  tr, td {
+    padding: 6px 6px;
   }
+  #tokenHistoryTable {
+    font-size: .75em;
+  }
+}
+
+@media (max-width: 550px) {
+  .collectionStats, .tokenURLs {
+    font-size: .8em;
+  }
+  .tokenPreview {
+    max-width: 4em;
+  }
+  .marketplaceLogo {
+    max-width: 4em;
+  }
+  .marketplaceLogos .columns {
+    width: 20%;
+  }
+  .navButtons {
+    width: 50%;
+  }
+}
+
+.previewTokens {
+  width: 25%;
 }
 
 .approvedCard {
