@@ -91,6 +91,15 @@ async def show_collection(collection_slug):
     except Exception as e:
         return jsonify({'error': True, 'reason': e})
 
+@bp.route('/show_tokens_by_rank/<collection_slug>')
+async def show_tokens_by_rank(collection_slug):
+    collection = Collection(collection_slug)
+    data = {}
+    for token_id in range(collection.token_start, collection.token_end + 1):
+        rarity = collection.retrieve_token_by_id(token_id)
+        data[rarity["rank"]] = token_id
+    return jsonify(data)
+
 @bp.route('/check_address_exists')
 async def check_address_exists():
     """
