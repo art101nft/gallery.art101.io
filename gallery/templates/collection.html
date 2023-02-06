@@ -31,7 +31,7 @@
   {% if not owner %}
     <div class="row">
       <div class="one-half column">
-        <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}">
+        <form method="GET" enctype="multipart/form-data" action="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" style="margin-bottom: 0;">
           <label for="tokenId">Lookup Token</label>
           <input class="input" type="text" placeholder="Enter token ID" name="tokenId">
         </form>
@@ -42,6 +42,10 @@
           <input class="input" type="text" placeholder="Enter wallet or ENS" name="wallet">
         </form>
       </div>
+    </div>
+    <div class="row">
+      <h2 style="margin-bottom: .25em;">Events</h2>
+      <div id="contractEvents" up-data='{ "contractAddress": "{{ collection.contract_address }}" }'></div>
     </div>
   {% endif %}
 
@@ -58,7 +62,7 @@
     {% set tokens = collection.data.notable_tokens %}
     {% set newurl = 'rarity' %}
   {% else %}
-    {% set title = 'Top Ranking' %}
+    {% set title = 'Rare Tokens' %}
     {% set buttontext = 'Show Notable' %}
     {% if collection.url_slug == 'soupxmondrian' %}
       {% set max_token = 4 %}
@@ -84,6 +88,7 @@
     {% endfor %}
   </div>
 {% endif %}
+
   <div class="is-centered">
     <div class="row marketplaceLogos">
       <div class="two columns">

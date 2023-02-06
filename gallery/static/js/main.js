@@ -44,6 +44,11 @@ up.compiler('.notyBox', function(element, data) {
   notif(data)
 })
 
+up.compiler('#contractEvents', async function(element, data) {
+  const res = await getCollectionEvents(data.contractAddress);
+  console.log(res);
+})
+
 function shortenAddress(a) {
   return a.slice(0, 6) + '...' + a.slice(-4)
 }
@@ -141,34 +146,6 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
     </a>`;
     updateTokenPreview(contractAddress, tokenIndex);
   };
-
-}
-
-async function getTokenSales(contractAddress, tokenId) {
-  let res = await fetch(`/api/v1/get_token_sales/${contractAddress}/${tokenId}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
-}
-
-async function getCollectionActiveBids(contractAddress) {
-  let res = await fetch(`/api/v1/get_collection_active_bids/${contractAddress}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
-}
-
-async function getCollectionActiveOffers(contractAddress) {
-  let res = await fetch(`/api/v1/get_collection_active_offers/${contractAddress}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
 }
 
 async function getCollectionEvents(contractAddress) {
