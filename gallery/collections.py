@@ -219,11 +219,11 @@ class Collection(object):
             print(e)
             return {}
     
-    def retrieve_collection_attributes(self):
+    def retrieve_collection_traits(self):
         try:
-            with open(f'gallery/library/attributes/{self.url_slug}.json', 'r') as f:
-                attributes = loads(f.read())
-                return attributes
+            with open(f'gallery/library/traits/{self.url_slug}.json', 'r') as f:
+                traits = loads(f.read())
+                return traits
         except:
             return {}
 

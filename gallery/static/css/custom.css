@@ -60,6 +60,67 @@ li {
   transition: all .2s ease;
 }
 
+select {
+  color: black;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0 0 2em 0;
+}
+
+.flex-item {
+  flex-shrink: 2;
+  max-width: 33%;
+  padding: 0 12px;
+}
+
+.trait-panel {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  width: 30%;
+  height: 250px;
+  overflow: scroll;
+  margin: 0 auto;
+}
+
+.trait-value-panel {
+  float: right;
+}
+
+.trait-panel button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 0 0 0 10px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 70%;
+  border-left: none;
+  height: 300px;
+}
+
 .navbar-link:hover {
   color: #CB1C8D;
   transition: all .2s ease;

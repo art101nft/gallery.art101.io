@@ -43,20 +43,19 @@
         </form>
       </div>
     </div>
-    <h2>Attributes</h2>
-    <div class="row">
-      <span>
-        {% set attributes = collection.retrieve_collection_attributes() %}
-        {% for attribute in attributes %}
-          <label for="chainSelect">{{ attribute }}:</label>
-          <select name="chain" id="chainSelect">
-            {% for value in attributes[attribute] %}
-              <option value="monero">{{ value }}</option>
-              <option value="wownero">{{ value }}</option>
+    <h2>Explore Traits</h2>
+    {% set traits = collection.retrieve_collection_traits() %}
+    <div style="height: 275px">
+      <div class="trait-panel">
+        {% for trait in traits %}
+          <button>{{ trait }}</button>
+          <div class="trait-value-panel">
+            {% for value in traits[trait] %}
+              <button>{{ value }}</button>
             {% endfor %}
-          </select>
+          </div>
         {% endfor %}
-      </span>
+      </div>
     </div>
   {% endif %}
 

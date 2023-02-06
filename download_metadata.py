@@ -12,12 +12,12 @@ from gallery import config
 collections = [Collection(k) for k in all_collections]
 for c in collections:
     print(f'[+] Fetching metadata for {c.title} - {c.contract_address}')
-    attributes = {}
+    traits = {}
     _p = f'{config.DATA_PATH}/{c.contract_address}'
-    attributes_folder = f'gallery/library/attributes'
-    attributes_data = f'{attributes_folder}/{c.url_slug}.json'
-    if not exists(attributes_folder):
-        mkdir(attributes_folder)
+    traits_folder = f'gallery/library/traits'
+    trait_data = f'{traits_folder}/{c.url_slug}.json'
+    if not exists(traits_folder):
+        mkdir(traits_folder)
     if not exists(_p):
         mkdir(_p)
     for token_id in range(c.data['start_token_id'], c.data['total_supply'] + c.data['start_token_id']):
@@ -33,14 +33,14 @@ for c in collections:
         with open(p, 'r') as f:
             metadata = json.loads(f.read())
             for attribute in metadata['attributes']:
-                attribute_key = attribute['trait_type']
+                trait_key = attribute['trait_type']
                 attribute_value = attribute['value']
-                if attribute_key == 'Generation':
+                if trait_key == 'Generation':
                     continue
-                if attribute_key not in attributes:
-                    attributes[attribute_key] = []
-                if attribute_value not in attributes[attribute_key]:
-                    attributes[attribute_key].append(attribute_value)
-    with open(attributes_data, 'w') as f:
-        f.write(json.dumps(attributes))
+                if trait_key not in traits:
+                    traits[trait_key] = []
+                if attribute_value not in traits[trait_key]:
+                    traits[trait_key].append(attribute_value)
+    with open(trait_data, 'w') as f:
+        f.write(json.dumps(traits))
 
