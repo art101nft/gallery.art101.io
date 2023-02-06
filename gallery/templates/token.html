@@ -30,18 +30,32 @@
       </div>
     </div>
     <div class="row is-centered" style="margin-top: 4em;">
+    {% if rarity['rank'] > 1 %}
+    <div class="three columns navButtons">
+        <a class="button button-secondary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity['rank'] - 1)) }}" up-follow up-preload up-transition="move-right">
+          <- Rank #{{ rarity['rank'] - 1 }}
+        </a>
+    </div>
+    {% endif %}
     {% if token_id > collection.data.start_token_id %}
-    <div class="one-half column navButtons">
+    <div class="three columns navButtons">
         <a class="button" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id - 1) }}" up-follow up-preload up-transition="move-right">
-          <- Prev #{{ token_id - 1 }}
+          <- ID #{{ token_id - 1 }}
         </a>
     </div>
     {% endif %}
     {% if rarity['rank'] < collection.token_end %}
-    <div class="one-half column navButtons">
+    <div class="three columns navButtons">
       <a class="button is-dark" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=token_id + 1) }}" up-follow up-preload up-transition="move-left">
-        #{{ token_id + 1 }} Next ->
+        ID #{{ token_id + 1 }} ->
       </a>
+    </div>
+    {% endif %}
+    {% if rarity['rank'] < collection.token_end %}
+    <div class="three columns navButtons">
+        <a class="button button-secondary" href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(rarity['rank'] + 1)) }}" up-follow up-preload up-transition="move-right">
+          Rank #{{ rarity['rank'] + 1 }} ->
+        </a>
     </div>
     {% endif %}
   </div>

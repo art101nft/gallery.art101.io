@@ -19,6 +19,10 @@
   color: white;
 }
 
+.button-secondary {
+  background-color: rgba(50, 203, 255, .25);
+}
+
 input {
   color: #231f20;
 }
