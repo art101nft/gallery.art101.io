@@ -43,6 +43,21 @@
         </form>
       </div>
     </div>
+    <h2>Attributes</h2>
+    <div class="row">
+      <span>
+        {% set attributes = collection.retrieve_collection_attributes() %}
+        {% for attribute in attributes %}
+          <label for="chainSelect">{{ attribute }}:</label>
+          <select name="chain" id="chainSelect">
+            {% for value in attributes[attribute] %}
+              <option value="monero">{{ value }}</option>
+              <option value="wownero">{{ value }}</option>
+            {% endfor %}
+          </select>
+        {% endfor %}
+      </span>
+    </div>
   {% endif %}
 
 {% if owner %}

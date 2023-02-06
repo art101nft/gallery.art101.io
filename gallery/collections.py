@@ -218,6 +218,14 @@ class Collection(object):
         except Exception as e:
             print(e)
             return {}
+    
+    def retrieve_collection_attributes(self):
+        try:
+            with open(f'gallery/library/attributes/{self.url_slug}.json', 'r') as f:
+                attributes = loads(f.read())
+                return attributes
+        except:
+            return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
         try:
