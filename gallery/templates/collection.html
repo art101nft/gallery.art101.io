@@ -45,17 +45,22 @@
     </div>
     <h2>Explore Traits</h2>
     {% set traits = collection.retrieve_collection_traits() %}
-    <div style="height: 275px">
-      <div class="trait-panel">
+    <div>
+      <form>
+        <select name="traitKey" id="traitKey">
+          {% for trait in traits %}
+            <option value="{{ trait | fix_trait }}" up-data='{ "trait": "{{ trait | fix_trait }}" }'>{{ trait }}</option>
+          {% endfor %}
+        </select>
         {% for trait in traits %}
-          <button>{{ trait }}</button>
-          <div class="trait-value-panel">
-            {% for value in traits[trait] %}
-              <button>{{ value }}</button>
-            {% endfor %}
-          </div>
+          <select name="traitValue-{{ trait | fix_trait }}" id="traitValue-{{ trait | fix_trait }}" class="hidden traitValue">
+              {% for _trait in traits[trait] %}
+                <option value="{{ _trait }}">{{ _trait }}</option>
+              {% endfor %}
+          </select>
         {% endfor %}
-      </div>
+        <input type="submit" value="Filter">
+      </form>
     </div>
   {% endif %}
 

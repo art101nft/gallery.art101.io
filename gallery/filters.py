@@ -36,6 +36,9 @@ def humanize(d):
         return 'never'
     return arrow_get(d).humanize()
 
+@bp.app_template_filter('fix_trait')
+def fix_trait(s):
+    return "".join(s.split()).lower().replace(',', '-')
 
 @bp.app_template_filter('as_datetime')
 def as_datetime(s):

@@ -15,6 +15,17 @@ up.compiler('#fullscreen_btn', async function(element) {
   fullscreenZine();
 })
 
+up.compiler('#traitKey', async function(element) {
+  document.getElementById(`traitValue-${element.value}`).classList.remove('hidden');
+  element.addEventListener('change', function() {
+    let traitValues = document.getElementsByClassName('traitValue');
+    for(const el of traitValues) {
+      el.classList.add('hidden');
+    }
+    document.getElementById(`traitValue-${this.value}`).classList.remove('hidden');
+  });
+})
+
 up.compiler('#tokenTitle', async function(element, data) {
   await updateTokenInfo(data.contractAddress, data.tokenId);
   await updateTokenHistory(data.contractAddress, data.tokenId);
