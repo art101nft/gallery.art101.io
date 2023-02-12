@@ -47,19 +47,15 @@
     {% set traits = collection.retrieve_collection_traits() %}
     <div>
       <form>
-        <select name="traitKey" id="traitKey">
-          {% for trait in traits %}
-            <option value="{{ trait | fix_trait }}" up-data='{ "trait": "{{ trait | fix_trait }}" }'>{{ trait }}</option>
+        {% for trait_key in traits['all'] %}
+        <select name="{{ trait_key }}" id="{{ trait_key }}" class="traitFilter" up-data='{ "contractAddress": "{{ collection.contract_address }}" }'>
+          <option value="" disabled selected>{{ trait_key }}</option>
+          {% for trait_value in traits['all'][trait_key] %}
+            <option value="{{ trait_value }}" class="traitValue">{{ trait_value }}</option>
           {% endfor %}
         </select>
-        {% for trait in traits %}
-          <select name="traitValue-{{ trait | fix_trait }}" id="traitValue-{{ trait | fix_trait }}" class="hidden traitValue">
-              {% for _trait in traits[trait] %}
-                <option value="{{ _trait }}">{{ _trait }}</option>
-              {% endfor %}
-          </select>
         {% endfor %}
-        <input type="submit" value="Filter">
+        <input type="submit" value="Filter" class="button">
       </form>
     </div>
   {% endif %}

@@ -226,6 +226,12 @@ class Collection(object):
                 return traits
         except:
             return {}
+    
+    def retrieve_traits_by_token(self, token_id):
+        return self.retrieve_collection_traits()['by_token'][str(token_id)]
+    
+    def retrieve_tokens_by_trait(self, trait_key, trait_value):
+        return self.retrieve_collection_traits()['by_trait'][trait_key][trait_value]
 
     def retrieve_token_id_by_rank(self, rank_number):
         try:

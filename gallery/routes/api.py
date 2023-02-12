@@ -1,5 +1,4 @@
 import re
-import requests
 from quart import Blueprint, jsonify, request
 
 from gallery import config
@@ -64,6 +63,20 @@ async def get_token_sales(contract_address, token_id):
         return jsonify({'error': True, 'reason': 'Collection does not exist'})
     try:
         return jsonify(collection.retrieve_token_sales(token_id))
+    except Exception as e:
+        return jsonify({'error': True, 'reason': e})
+
+@bp.route('/get_tokens_by_trait/<contract_address>/<trait_key>/<trait_value>')
+async def get_tokens_by_trait(contract_address, trait_key, trait_value):
+    collection_slug = None
+    for slug in all_collections:
+        if contract_address == all_collections[slug]['contract_address']:
+            collection_slug = slug
+    collection = Collection(collection_slug)
+    if not collection:
+        return jsonify({'error': True, 'reason': 'Collection does not exist'})
+    try:
+        return jsonify(collection.retrieve_tokens_by_trait(trait_key, trait_value))
     except Exception as e:
         return jsonify({'error': True, 'reason': e})
 

@@ -15,14 +15,23 @@ up.compiler('#fullscreen_btn', async function(element) {
   fullscreenZine();
 })
 
-up.compiler('#traitKey', async function(element) {
-  document.getElementById(`traitValue-${element.value}`).classList.remove('hidden');
-  element.addEventListener('change', function() {
-    let traitValues = document.getElementsByClassName('traitValue');
-    for(const el of traitValues) {
-      el.classList.add('hidden');
-    }
-    document.getElementById(`traitValue-${this.value}`).classList.remove('hidden');
+up.compiler('.traitFilter', async function(element, data) {
+  // console.log(element)
+  // /get_tokens_by_trait/<contract_address>/<trait_key>/<trait_value>
+  // document.getElementsByClassName(`traitValue-${element.value}`).classList.remove('hidden');
+  element.addEventListener('change', async function() {
+    // let traitValues = document.getElementsByClassName('traitValue');
+    // for(const el of traitValues) {
+    //   el.classList.add('hidden');
+    // }
+    // document.getElementById(`traitValue-${this.value}`).classList.remove('hidden');
+    let res = await fetch(`/api/v1/get_tokens_by_trait/${data.contractAddress}/${element.name}/${element.value}`)
+      .then((resp) => resp.json())
+      .then(function(data) {
+        console.log(data);
+        return data;
+      })
+    return res
   });
 })
 
