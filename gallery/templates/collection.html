@@ -48,7 +48,7 @@
     <div>
       <form>
         {% for trait_key in traits['all'] %}
-        <select name="{{ trait_key }}" id="{{ trait_key }}" class="traitFilter" up-data='{ "contractAddress": "{{ collection.contract_address }}" }'>
+        <select name="{{ trait_key }}" id="{{ trait_key }}" class="traitFilter" up-data='{ "contractAddress": "{{ collection.contract_address }}", "collectionSlug": "{{ collection.url_slug }}" }'>
           <option value="" disabled selected>{{ trait_key }}</option>
           {% for trait_value in traits['all'][trait_key] %}
             <option value="{{ trait_value }}" class="traitValue">{{ trait_value }}</option>
@@ -57,6 +57,7 @@
         {% endfor %}
         <input type="submit" value="Filter" class="button">
       </form>
+      <div id="previewFilteredTokens"></div>
     </div>
   {% endif %}
 
