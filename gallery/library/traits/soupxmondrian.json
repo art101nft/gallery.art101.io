@@ -1,1 +1,191 @@
-{"Background": ["Yale Blue", "Light Gray", "Jonquil Yellow"], "Base": ["Mondrian"], "Top and Bottom": ["Jonquil Yellow", "Maximum Red"], "Unbounded Colors": ["N"], "Color Count": [4, 3], "Blue Block Count": [1, 0], "Gray Block Count": [1, 0, 26], "Red Block Count": [3, 0], "Yellow Block Count": [1, 0], "Total Block Count": [15, 4, 32], "Variant": ["Lozenge Format", "New York Phase"]}
+{
+  "all": {
+    "Background": [
+      "Yale Blue",
+      "Light Gray",
+      "Jonquil Yellow"
+    ],
+    "Base": [
+      "Mondrian"
+    ],
+    "Top and Bottom": [
+      "Jonquil Yellow",
+      "Maximum Red"
+    ],
+    "Unbounded Colors": [
+      "N"
+    ],
+    "Color Count": [
+      4,
+      3
+    ],
+    "Blue Block Count": [
+      1,
+      0
+    ],
+    "Gray Block Count": [
+      1,
+      0,
+      26
+    ],
+    "Red Block Count": [
+      3,
+      0
+    ],
+    "Yellow Block Count": [
+      1,
+      0
+    ],
+    "Total Block Count": [
+      15,
+      4,
+      32
+    ],
+    "Variant": [
+      "Lozenge Format",
+      "New York Phase"
+    ]
+  },
+  "by_token": {
+    "1": {
+      "Background": "Yale Blue",
+      "Base": "Mondrian",
+      "Top and Bottom": "Jonquil Yellow",
+      "Unbounded Colors": "N",
+      "Color Count": 4,
+      "Blue Block Count": 1,
+      "Gray Block Count": 1,
+      "Red Block Count": 3,
+      "Yellow Block Count": 1,
+      "Total Block Count": 15
+    },
+    "2": {
+      "Background": "Light Gray",
+      "Base": "Mondrian",
+      "Top and Bottom": "Maximum Red",
+      "Variant": "Lozenge Format",
+      "Unbounded Colors": "N",
+      "Color Count": 3,
+      "Blue Block Count": 0,
+      "Gray Block Count": 0,
+      "Red Block Count": 0,
+      "Yellow Block Count": 1,
+      "Total Block Count": 4
+    },
+    "3": {
+      "Background": "Jonquil Yellow",
+      "Base": "Mondrian",
+      "Top and Bottom": "Maximum Red",
+      "Variant": "New York Phase",
+      "Unbounded Colors": "N",
+      "Color Count": 4,
+      "Blue Block Count": 0,
+      "Gray Block Count": 26,
+      "Red Block Count": 0,
+      "Yellow Block Count": 0,
+      "Total Block Count": 32
+    }
+  },
+  "by_trait": {
+    "Background": {
+      "Yale Blue": [
+        1
+      ],
+      "Light Gray": [
+        2
+      ],
+      "Jonquil Yellow": [
+        3
+      ]
+    },
+    "Base": {
+      "Mondrian": [
+        1,
+        2,
+        3
+      ]
+    },
+    "Top and Bottom": {
+      "Jonquil Yellow": [
+        1
+      ],
+      "Maximum Red": [
+        2,
+        3
+      ]
+    },
+    "Unbounded Colors": {
+      "N": [
+        1,
+        2,
+        3
+      ]
+    },
+    "Color Count": {
+      "3": [
+        2
+      ],
+      "4": [
+        1,
+        3
+      ]
+    },
+    "Blue Block Count": {
+      "0": [
+        2,
+        3
+      ],
+      "1": [
+        1
+      ]
+    },
+    "Gray Block Count": {
+      "0": [
+        2
+      ],
+      "1": [
+        1
+      ],
+      "26": [
+        3
+      ]
+    },
+    "Red Block Count": {
+      "0": [
+        2,
+        3
+      ],
+      "3": [
+        1
+      ]
+    },
+    "Yellow Block Count": {
+      "0": [
+        3
+      ],
+      "1": [
+        1,
+        2
+      ]
+    },
+    "Total Block Count": {
+      "4": [
+        2
+      ],
+      "15": [
+        1
+      ],
+      "32": [
+        3
+      ]
+    },
+    "Variant": {
+      "Lozenge Format": [
+        2
+      ],
+      "New York Phase": [
+        3
+      ]
+    }
+  }
+}
