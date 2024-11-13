@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-import requests, json
+import json
 from os.path import exists
 from os import stat
-from time import sleep
 
 from gallery.collections import all_collections
 from gallery.collections import Collection as LocalCollection
@@ -30,7 +29,7 @@ for collection in [LocalCollection(k) for k in all_collections]:
         with open(p, 'r') as f:
             try:
                 data = json.loads(f.read())
-            except:
+            except Exception:
                 print(f'[!] Unable to load JSON data from {p}. Rarity rankings will be incomplete. Skipping collection.')
                 exit(1)
 

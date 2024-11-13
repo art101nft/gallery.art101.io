@@ -1,6 +1,4 @@
-import json
 from statistics import median
-from statistics import median_grouped
 from statistics import geometric_mean
 from statistics import harmonic_mean
 

@@ -1,14 +1,6 @@
 window.addEventListener('DOMContentLoaded', async () => {
   // unpoly config adjustments
   up.fragment.config.mainTargets.push('.container');
-
-  // Reload page if Metamask account changes
-  if (ethereum) {
-    ethereum.on('accountsChanged', function () {
-      window.location.reload();
-    });
-  }
-
 });
 
 up.compiler('#fullscreen_btn', async function(element) {
@@ -153,33 +145,6 @@ async function getTokenSales(contractAddress, tokenId) {
   return res
 }
 
-async function getCollectionActiveBids(contractAddress) {
-  let res = await fetch(`/api/v1/get_collection_active_bids/${contractAddress}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
-}
-
-async function getCollectionActiveOffers(contractAddress) {
-  let res = await fetch(`/api/v1/get_collection_active_offers/${contractAddress}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
-}
-
-async function getCollectionEvents(contractAddress) {
-  let res = await fetch(`/api/v1/get_collection_events/${contractAddress}`)
-    .then((resp) => resp.json())
-    .then(function(data) {
-      return data
-    })
-  return res
-}
-
 async function getTokenMetadata(contractAddress, tokenId) {
   let res = await fetch(`/api/v1/get_token_metadata/${contractAddress}/${tokenId}`)
     .then((resp) => resp.json())
@@ -234,8 +199,8 @@ async function updateTokenInfo(contractAddress, tokenId) {
   }
   // If rmutt, load model viewer for 3d interactive
   if (
-    document.getElementById('tokenImage') 
-    && 
+    document.getElementById('tokenImage')
+    &&
     (document.getElementById('tokenImage').classList.contains('glbLink'))
   ) {
     let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '');

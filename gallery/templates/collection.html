@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  
+
   {% if not owner %}
     <div class="row">
       <div class="one-half column">
@@ -75,7 +75,7 @@
     <div class="row">
       {% for token in _token %}
       <div class="three columns previewTokens">
-        <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(token)) }}" up-transition="cross-fade" up-preload>
+        <a href="{{ url_for('collection.show_token', collection_slug=collection.url_slug, token_id=collection.retrieve_token_id_by_rank(token)) }}">
           <img width=40 class="tokenPreview previewPreload" id="tokenPreview-{{ collection.retrieve_token_id_by_rank(token) }}" up-data='{ "contractAddress": "{{ collection.contract_address }}", "tokenId": "{{ collection.retrieve_token_id_by_rank(token) }}" }'>
         </a>
       </div>

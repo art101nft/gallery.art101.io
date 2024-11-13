@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import requests, json
+import requests
+import json
 from os.path import exists
 from os import stat, mkdir
-from time import sleep
 
 from gallery.collections import all_collections, Collection
 from gallery.helpers import convert_ipfs_uri

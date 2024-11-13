@@ -2,7 +2,6 @@ import click
 from quart import Blueprint
 
 from gallery.collections import all_collections, Collection
-from gallery import config
 
 
 bp = Blueprint('cli', 'cli', cli_group=None)

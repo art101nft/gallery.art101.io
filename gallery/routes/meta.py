@@ -1,4 +1,4 @@
-from quart import Blueprint, render_template
+from quart import Blueprint, redirect
 
 
 bp = Blueprint('meta', 'meta')
@@ -6,4 +6,4 @@ bp = Blueprint('meta', 'meta')
 
 @bp.route('/about')
 async def about():
-    return await render_template('about.html')
+    return redirect('https://art101.io')

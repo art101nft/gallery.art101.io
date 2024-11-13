@@ -1,12 +1,8 @@
-from json import dumps, loads
 from urllib.parse import urlencode
 from random import sample
 
 from quart import Blueprint
 from arrow import get as arrow_get
-
-from gallery.helpers import get_eth_contract
-from gallery import config
 
 
 bp = Blueprint('filters', 'filters')

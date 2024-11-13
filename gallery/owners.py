@@ -14,11 +14,11 @@ class Owner(object):
                 if _d:
                     self.address = _d.decode()
                 else:
-                    _d = w3.toChecksumAddress(ns.address(self.ens))
+                    _d = w3.to_checksum_address(ns.address(self.ens))
                     cache.store_data(key_name, 604800, _d)
                     self.address = _d
             else:
-                self.address = w3.toChecksumAddress(address)
+                self.address = w3.to_checksum_address(address)
                 if _d:
                     self.ens = _d.decode()
                 else:
