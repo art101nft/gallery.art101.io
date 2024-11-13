@@ -25,7 +25,7 @@ def get_eth_contract(_contract_address):
     token given the contract address.
     """
     contract_abi = erc721_abi
-    contract_address = w3.toChecksumAddress(_contract_address)
+    contract_address = w3.to_checksum_address(_contract_address)
     return w3.eth.contract(
         address=contract_address,
         abi=contract_abi
