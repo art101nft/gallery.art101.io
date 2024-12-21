@@ -12,13 +12,11 @@ class Cache(object):
     def get_data(self, key_name):
         data = self.redis.get(key_name)
         if data:
-            print(f'GET - {key_name}')
             return data
         else:
             return None
 
     def store_data(self, key_name, expiration_minutes, data):
-        print(f'SET - {key_name} - expires in {expiration_minutes} minutes')
         self.redis.setex(
             key_name,
             timedelta(minutes=expiration_minutes),

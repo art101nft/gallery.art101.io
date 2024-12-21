@@ -16,7 +16,8 @@ async def get_token_sales(contract_address, token_id):
     if not collection:
         return jsonify({'error': True, 'reason': 'Collection does not exist'})
     try:
-        return jsonify(collection.retrieve_token_sales(token_id))
+        res = await collection.retrieve_token_sales(token_id)
+        return jsonify(res)
     except Exception as e:
         return jsonify({'error': True, 'reason': e})
 
@@ -30,6 +31,7 @@ async def get_token_metadata(contract_address, token_id):
     if not collection:
         return jsonify({'error': True, 'reason': 'Collection does not exist'})
     try:
-        return jsonify(collection.retrieve_token_metadata(token_id))
+        res = await collection.retrieve_token_metadata(token_id)
+        return jsonify(res)
     except Exception as e:
         return jsonify({'error': True, 'reason': e})

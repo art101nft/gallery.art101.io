@@ -134,7 +134,7 @@ class Collection(object):
         self.contract = get_eth_contract(self.contract_address)
         es = Etherscan(self.contract_address)
         self.es_data = es.data
-        self.stats = self.retrieve_collection_stats()
+        # self.stats = self.retrieve_collection_stats()
         self.token_start = self.data['start_token_id']
         self.token_end = self.data['total_supply'] - 1 + self.token_start
         self.testnet_address = self.data.get('testnet_address', None)
@@ -223,7 +223,7 @@ class Collection(object):
                 "ranked_by": "none"
             }
 
-    def retrieve_token_sales(self, token_id):
+    async def retrieve_token_sales(self, token_id):
         url = f'{config.SCRAPER_API_URL}/api/token/{self.contract_address}/{token_id}/history'
         try:
             key_name = f'{self.contract_address}-sales-{token_id}-v1.1'
@@ -240,10 +240,10 @@ class Collection(object):
                 else:
                     return {}
         except Exception as e:
-            print(e)
+            print(f'[!] Unable to fetch {token_id} sales stats from nft-sales-scraper')
             return {}
 
-    def retrieve_token_metadata(self, token_id):
+    async def retrieve_token_metadata(self, token_id):
         url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
         try:
             key_name = f'{self.contract_address}-metadata-{token_id}-v1.6'
@@ -251,7 +251,7 @@ class Collection(object):
             if _d:
                 return loads(_d)
             else:
-                r = requests.get(url, timeout=30, headers={'Content-Type': 'application/json'})
+                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
                 r.raise_for_status()
                 if 'name' in r.json():
                     _d = r.json()
