@@ -31,6 +31,5 @@ try:
                 req.raise_for_status()
                 with open(token_metadata, 'w') as f:
                     f.write(json.dumps(req.json()))
-
 except KeyboardInterrupt:
     exit()
