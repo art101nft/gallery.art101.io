@@ -198,7 +198,7 @@ class Collection(object):
                 else:
                     return {}
         except Exception as e:
-            print(e)
+            print(f'[!] Unable to fetch {self.title} sales stats from nft-sales-scraper')
             return {}
 
     def retrieve_token_id_by_rank(self, rank_number):
