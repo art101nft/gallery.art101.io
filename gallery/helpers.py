@@ -41,14 +41,6 @@ def convert_ipfs_uri(u, external=True):
     else:
         return u
 
-def store_json(contract_address: str, token_id: int, data: dict):
-    _p = f'{config.DATA_PATH}/{contract_address}'
-    p = f'{_p}/{str(token_id)}.json'
-    makedirs(_p, exist_ok=True)
-    if not exists(p):
-        with open(p, 'w') as f:
-            f.write(dumps(data))
-
 class Etherscan:
     def __init__(self, contract_address):
         self.api_key = config.ETHERSCAN_API
