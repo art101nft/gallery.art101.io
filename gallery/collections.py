@@ -99,6 +99,26 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [0, 1, 2, 3]
+    },
+    'gasguzzlers': {
+        'title': 'Gas Guzzlers',
+        'contract_address': '0x87739a10f06c08468206008f6cf1abab8e6e9a0d',
+        'description': 'A 512 NFT Web3 Parody of Ed Ruscha\'s Standard Station by ART101.',
+        'website': 'https://gasguzzlers.art/',
+        'total_supply': 512,
+        'start_token_id': 1,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [7, 15, 5]
+    },
+    'enzos': {
+        'title': 'Enzos',
+        'contract_address': '0x621b92370fe1a27f95e7109daf0423714b73e9b5',
+        'description': 'Enzos is a FREE 5,555 PFP NFT homage to Lorenzo de Medici created by ART101.',
+        'website': 'https://enzos.cash/',
+        'total_supply': 5555,
+        'start_token_id': 0,
+        'contract_type': 'ERC-721A',
+        'notable_tokens': [1, 5, 15]
     }
 }
 
