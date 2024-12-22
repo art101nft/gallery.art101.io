@@ -17,7 +17,8 @@ all_collections = {
         'start_token_id': 1,
         'contract_type': 'ERC-721',
         'notable_tokens': [43, 770, 1952, 1617, 1876, 1162, 454, 2033],
-        'testnet_address': '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09'
+        'testnet_address': '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09',
+        'base_uri': 'QmSSperMye5DrJbC2w9dxFXv9GWWLdfqDs9VtiG64FQDkq'
     },
     'mondriannft': {
         'title': 'MondrianNFT',
@@ -28,7 +29,8 @@ all_collections = {
         'start_token_id': 1,
         'contract_type': 'ERC-721',
         'notable_tokens': [400, 1226, 1089, 3363, 846, 3855, 2592, 3369],
-        'testnet_address': '0xBFC0a6468b8F462a6F6AE619Ff49bA05C99029f5'
+        'testnet_address': '0xBFC0a6468b8F462a6F6AE619Ff49bA05C99029f5',
+        'base_uri': 'QmeAF1JMPcwqqF8kBp7euYpdcWQHNc3VXLv7yWLMgZs1Qi'
     },
     'soupxmondrian': {
         'title': 'soupXmondrian',
@@ -38,7 +40,8 @@ all_collections = {
         'total_supply': 3,
         'start_token_id': 1,
         'contract_type': 'ERC-1155',
-        'testnet_address': '0xc2ccb2fd465c6c008b18ae1c26960dfd30bf2378'
+        'testnet_address': '0xc2ccb2fd465c6c008b18ae1c26960dfd30bf2378',
+        'base_uri': 'QmRTqBFtst7j1Yj63xDXDEmg43rethZ8dAAy4WDvwieqKo'
     },
     'bauhausblocks': {
         'title': 'Bauhaus Blocks',
@@ -49,7 +52,8 @@ all_collections = {
         'start_token_id': 1,
         'contract_type': 'ERC-721',
         'notable_tokens': [6851, 404, 5618, 7172, 117, 1959, 2648, 1023],
-        'testnet_address': '0xC6597f7609b3dDF95a86e4B1291eFC9E03C786A4'
+        'testnet_address': '0xC6597f7609b3dDF95a86e4B1291eFC9E03C786A4',
+        'base_uri': 'QmPggfboD39JAxTdFwK6oN8L1yKnntuhT2ECv51jjq453A'
     },
     'nftzine': {
         'title': 'NFTZine',
@@ -58,7 +62,8 @@ all_collections = {
         'website': 'https://nftzine.io',
         'total_supply': 1000,
         'start_token_id': 1,
-        'contract_type': 'ERC-721'
+        'contract_type': 'ERC-721',
+        'base_uri': 'QmVQFrLx2o2bnP21EnbN696BssYUzR7MCmUKC15VVbshWy'
     },
     'basedvitalik': {
         'title': 'BASΞD VITALIK',
@@ -68,7 +73,8 @@ all_collections = {
         'total_supply': 4962,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262]
+        'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262],
+        'base_uri': 'QmYT7fDqx9u98AhFRiXUyrhgEurhrNcRgC2pGhpFLfETaA'
     },
     'rmutt': {
         'title': 'R. Mutt',
@@ -78,7 +84,8 @@ all_collections = {
         'total_supply': 2048,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [164, 574, 554, 2010, 966, 1, 1233, 10]
+        'notable_tokens': [164, 574, 554, 2010, 966, 1, 1233, 10],
+        'base_uri': 'QmPgJ1F973uB5b1quoho2TS8sgTV8wReej33gX3f6GffHY'
     },
     'nftisse': {
         'title': 'NFT-isse',
@@ -88,7 +95,8 @@ all_collections = {
         'total_supply': 3072,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [170, 809, 1400, 3050, 45, 89, 2059, 1998]
+        'notable_tokens': [170, 809, 1400, 3050, 45, 89, 2059, 1998],
+        'base_uri': 'QmYtHUizZsz64nf5aCp5CggcuPHfRKG98FF6oTRoch6QEP'
     },
     'renascencenft': {
         'title': 'RenascenceNFT',
@@ -98,7 +106,8 @@ all_collections = {
         'total_supply': 4096,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [0, 1, 2, 3]
+        'notable_tokens': [0, 1, 2, 3],
+        'base_uri': 'QmP9XRepUVQSTWdv1Tkd5nbpGEzvaF6ihAWUp2PuaCio1D'
     },
     'gasguzzlers': {
         'title': 'Gas Guzzlers',
@@ -108,7 +117,8 @@ all_collections = {
         'total_supply': 512,
         'start_token_id': 1,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [7, 15, 5]
+        'notable_tokens': [7, 15, 5],
+        'base_uri': 'QmXJ7gUZb8Do3WvJtFGBffcgGBF19Sr8cJphB9qg1wRRf7'
     },
     'enzos': {
         'title': 'Enzos',
@@ -118,7 +128,8 @@ all_collections = {
         'total_supply': 5555,
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
-        'notable_tokens': [1, 5, 15]
+        'notable_tokens': [1, 5, 15],
+        'base_uri': 'QmRDokbRBqepzAygcfBjYCYGDXVrjhNba7n6M9UzpjgsMJ'
     }
 }
 
@@ -244,7 +255,7 @@ class Collection(object):
             return {}
 
     async def retrieve_token_metadata(self, token_id):
-        url = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
+        url = f'{config.ASSETS_URL}/{self.contract_address}/{self.data["base_uri"]}/{token_id}.json'
         try:
             key_name = f'{self.contract_address}-metadata-{token_id}-v1.6'
             _d = cache.get_data(key_name)
@@ -258,22 +269,24 @@ class Collection(object):
                     try:
                         if self.erc1155:
                             owner = None
-                            _tokenURI = self.contract.functions.uri(int(token_id)).call()
+                            token_base = f'ipfs://{self.data["base_uri"]}'
                             i = hex(int(token_id)).lstrip('0x').zfill(64)
-                            tokenURI = _tokenURI.replace('{id}', i)
+                            tokenURI = f'{token_base}/{i}'
                         else:
                             try:
                                 owner = self.contract.functions.ownerOf(int(token_id)).call()
                             except Exception as e:
                                 print('PROBLEM', e)
-                                owner = '0x0000000000000000000000000000000000000000'
-                            tokenURI = self.contract.functions.tokenURI(int(token_id)).call()
+                                owner = None
+                            # tokenURI = self.contract.functions.tokenURI(int(token_id)).call()
+                            tokenURI = f'ipfs://{self.data["base_uri"]}/{token_id}'
                         _d['tokenURI'] = tokenURI
-                        _d['tokenOffchainURI'] = f'{config.ASSETS_URL}/{self.contract_address}/{token_id}.json'
+                        _d['tokenOffchainURI'] = f'{config.ASSETS_URL}/{self.contract_address}/{self.data["base_uri"]}/{token_id}.json'
                         _d['ownerOf'] = owner
-                        _d['ownerENS'] = ns.name(owner)
+                        if owner:
+                            _d['ownerENS'] = ns.name(owner)
                     except Exception as e:
-                        print('PROBZ2', e)
+                        print('PROBLEM', e)
                         pass
                     cache.store_data(key_name, 604800, dumps(_d))
                     return _d

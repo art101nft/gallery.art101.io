@@ -251,9 +251,9 @@ async function updateTokenInfo(contractAddress, tokenId) {
     });
     document.querySelector('model-viewer').addEventListener('progress', onProgress);
   }
-  document.getElementById('tokenOnchainURI').innerHTML = `<strong>On-chain Metadata</strong>:</br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
+  document.getElementById('tokenOnchainURI').innerHTML = `<strong>IPFS Metadata</strong>:</br><a href="${onchainMeta}" target=_blank>${data.tokenURI}</a>`;
   document.getElementById('tokenOffchainURI').innerHTML = `<strong>Off-chain Metadata</strong>:</br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
-  document.getElementById('tokenOnchainImage').innerHTML = `<strong>On-chain Image</strong>:</br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
+  document.getElementById('tokenOnchainImage').innerHTML = `<strong>IPFS Image</strong>:</br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
   document.getElementById('tokenOffchainImage').innerHTML = `<strong>Off-chain Image</strong>:</br><a href="${offchainImg}" target=_blank>${offchainImg}</a>`;
   data.attributes.forEach(function(i){
     let newChild = document.createElement('li');
