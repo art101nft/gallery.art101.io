@@ -64,34 +64,20 @@ async function getENS(address) {
 }
 
 async function processSale(sale) {
-  let from_wallet = await getENS(sale.from_wallet);
-  let to_wallet = await getENS(sale.to_wallet);
+  let from_wallet = await getENS(sale.seller);
+  let to_wallet = await getENS(sale.buyer);
   if (!from_wallet.endsWith('.eth')) from_wallet = shortenAddress(from_wallet);
   if (!to_wallet.endsWith('.eth')) to_wallet = shortenAddress(to_wallet);
-  // let diff = Number((new Date() - new Date(sale.tx_date)) / (24 * 60 * 60 * 1000)).toFixed(2);
-  let event, amount;
-
-  if (sale.event_type == 'transfer' && sale.from_wallet == '0x0000000000000000000000000000000000000000') {
-    event = 'mint';
-  } else {
-    event = sale.event_type;
-  }
-
-  if (sale.event_type == 'sale') {
-    amount = `${new Web3().utils.fromWei(sale.amount.toString())} Ξ`;
-  } else {
-    amount = '-';
-  }
+  amount = `${new Web3().utils.fromWei(sale.sale_price.toString())} Ξ`;
 
   const tr = document.createElement('tr');
   tr.classList.add(`row-${event}`);
   tr.innerHTML = `
-    <td><a href="https://etherscan.io/tx/${sale.tx}" target=_blank>${event}</a></td>
-    <td><a href="https://etherscan.io/address/${sale.from_wallet}" target=_blank>${from_wallet}</a></td>
-    <td><a href="https://etherscan.io/address/${sale.to_wallet}" target=_blank>${to_wallet}</a></td>
-    <td>${sale.platform}</td>
+    <td><a href="https://etherscan.io/address/${sale.seller}" target=_blank>${from_wallet}</a></td>
+    <td><a href="https://etherscan.io/address/${sale.buyer}" target=_blank>${to_wallet}</a></td>
+    <td>${sale.marketplace}</td>
     <td>${amount}</td>
-    <td>${new Date(sale.tx_date).toLocaleDateString()}</td>
+    <td><a href="https://etherscan.io/tx/${sale.tx_hash}" target=_blank>${sale.block_number}</a></td>
   `;
   document.getElementById('tokenHistory').appendChild(tr);
 }

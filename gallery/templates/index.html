@@ -12,7 +12,7 @@
           <th>Contract Type</th>
           <th>Launch Date</th>
           <th>Token Supply</th>
-          <!-- <th>Volume</th> -->
+          <th>Volume</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +23,7 @@
           <td>{{ collection.data.contract_type }}</td>
           <td>{{ collection.data["launch_date"] }}</td>
           <td>{{ collection.data.total_supply }}</td>
+          <td>{{ collection.stats['total_volume'] | round(3) }} Ξ</td>
         </tr>
         {% endfor %}
       </tbody>

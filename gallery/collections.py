@@ -157,6 +157,7 @@ class Collection(object):
         self.token_start = self.data['start_token_id']
         self.token_end = self.data['total_supply'] - 1 + self.token_start
         self.testnet_address = self.data.get('testnet_address', None)
+        self.stats = self.retrieve_collection_stats()
         if 'contract_type' in self.data:
             if self.data['contract_type'] == 'ERC-1155':
                 self.erc1155 = True
@@ -172,25 +173,6 @@ class Collection(object):
         if _token_id < self.token_start or _token_id > (self.token_end):
             return False
         return True
-
-    def retrieve_collection_events(self):
-        url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/events'
-        try:
-            key_name = f'{self.contract_address}-collection-events-data-v1'
-            _d = cache.get_data(key_name)
-            if _d:
-                return loads(_d)
-            else:
-                r = requests.get(url, timeout=4, headers={'Content-Type': 'application/json'})
-                r.raise_for_status()
-                events = r.json()
-                if not events:
-                    return {}
-                cache.store_data(key_name, 1200, dumps(events))
-                return events
-        except Exception as e:
-            print(e)
-            return {}
 
     def retrieve_collection_stats(self):
         url = f'{config.SCRAPER_API_URL}/api/{self.contract_address}/platforms'
@@ -212,7 +194,7 @@ class Collection(object):
                     for platform in platforms:
                         _d['total_volume'] += float(platform['volume'])
                         _d['total_sales'] += int(platform['sales'])
-                    cache.store_data(key_name, 14400, dumps(_d))
+                    cache.store_data(key_name, 604800, dumps(_d))
                     return _d
                 else:
                     return {}
