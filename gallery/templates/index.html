@@ -21,7 +21,7 @@
           <td><a href="{{ url_for('collection.show', collection_slug=collection.url_slug) }}" up-transition="cross-fade" up-follow>{{ collection.title }}</a></td>
           <td><a href="{{ collection.data.contract_address | show_etherscan }}" target="_blank">{{ collection.data.contract_address | shorten_address }}</a></td>
           <td>{{ collection.data.contract_type }}</td>
-          <td>{{ collection.es_data.timeStamp | as_formatted }}</td>
+          <td>{{ collection.data["launch_date"] }}</td>
           <td>{{ collection.data.total_supply }}</td>
         </tr>
         {% endfor %}

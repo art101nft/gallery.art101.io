@@ -17,7 +17,6 @@ Required software:
 * python3-venv (`sudo apt-get install python3-venv`)
 
 Required tokens:
-* Etherscan (look up contract details)
 * Eth node (Infura, geth, etc)
 
 Install Python dependencies

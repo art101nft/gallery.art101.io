@@ -2,7 +2,7 @@ import requests
 from json import dumps, loads
 from ens.auto import ns
 
-from gallery.helpers import get_eth_contract, Etherscan
+from gallery.helpers import get_eth_contract
 from gallery.library.cache import cache
 from gallery import config
 
@@ -18,7 +18,8 @@ all_collections = {
         'contract_type': 'ERC-721',
         'notable_tokens': [43, 770, 1952, 1617, 1876, 1162, 454, 2033],
         'testnet_address': '0x1Ca311D37D3130C4C8Ff8686745178Ff4Dbdbb09',
-        'base_uri': 'QmSSperMye5DrJbC2w9dxFXv9GWWLdfqDs9VtiG64FQDkq'
+        'base_uri': 'QmSSperMye5DrJbC2w9dxFXv9GWWLdfqDs9VtiG64FQDkq',
+        'launch_date': '2021-08-27'
     },
     'mondriannft': {
         'title': 'MondrianNFT',
@@ -30,7 +31,8 @@ all_collections = {
         'contract_type': 'ERC-721',
         'notable_tokens': [400, 1226, 1089, 3363, 846, 3855, 2592, 3369],
         'testnet_address': '0xBFC0a6468b8F462a6F6AE619Ff49bA05C99029f5',
-        'base_uri': 'QmeAF1JMPcwqqF8kBp7euYpdcWQHNc3VXLv7yWLMgZs1Qi'
+        'base_uri': 'QmeAF1JMPcwqqF8kBp7euYpdcWQHNc3VXLv7yWLMgZs1Qi',
+        'launch_date': '2021-09-16'
     },
     'soupxmondrian': {
         'title': 'soupXmondrian',
@@ -41,7 +43,8 @@ all_collections = {
         'start_token_id': 1,
         'contract_type': 'ERC-1155',
         'testnet_address': '0xc2ccb2fd465c6c008b18ae1c26960dfd30bf2378',
-        'base_uri': 'QmRTqBFtst7j1Yj63xDXDEmg43rethZ8dAAy4WDvwieqKo'
+        'base_uri': 'QmRTqBFtst7j1Yj63xDXDEmg43rethZ8dAAy4WDvwieqKo',
+        'launch_date': '2021-10-03'
     },
     'bauhausblocks': {
         'title': 'Bauhaus Blocks',
@@ -53,7 +56,8 @@ all_collections = {
         'contract_type': 'ERC-721',
         'notable_tokens': [6851, 404, 5618, 7172, 117, 1959, 2648, 1023],
         'testnet_address': '0xC6597f7609b3dDF95a86e4B1291eFC9E03C786A4',
-        'base_uri': 'QmPggfboD39JAxTdFwK6oN8L1yKnntuhT2ECv51jjq453A'
+        'base_uri': 'QmPggfboD39JAxTdFwK6oN8L1yKnntuhT2ECv51jjq453A',
+        'launch_date': '2021-10-18'
     },
     'nftzine': {
         'title': 'NFTZine',
@@ -63,7 +67,8 @@ all_collections = {
         'total_supply': 1000,
         'start_token_id': 1,
         'contract_type': 'ERC-721',
-        'base_uri': 'QmVQFrLx2o2bnP21EnbN696BssYUzR7MCmUKC15VVbshWy'
+        'base_uri': 'QmVQFrLx2o2bnP21EnbN696BssYUzR7MCmUKC15VVbshWy',
+        'launch_date': '2021-11-27'
     },
     'basedvitalik': {
         'title': 'BASΞD VITALIK',
@@ -74,7 +79,8 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [2717, 2113, 2714, 2613, 2017, 3228, 1289, 2262],
-        'base_uri': 'QmYT7fDqx9u98AhFRiXUyrhgEurhrNcRgC2pGhpFLfETaA'
+        'base_uri': 'QmYT7fDqx9u98AhFRiXUyrhgEurhrNcRgC2pGhpFLfETaA',
+        'launch_date': '2022-02-22'
     },
     'rmutt': {
         'title': 'R. Mutt',
@@ -85,7 +91,8 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [164, 574, 554, 2010, 966, 1, 1233, 10],
-        'base_uri': 'QmPgJ1F973uB5b1quoho2TS8sgTV8wReej33gX3f6GffHY'
+        'base_uri': 'QmPgJ1F973uB5b1quoho2TS8sgTV8wReej33gX3f6GffHY',
+        'launch_date': '2022-06-10'
     },
     'nftisse': {
         'title': 'NFT-isse',
@@ -96,7 +103,8 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [170, 809, 1400, 3050, 45, 89, 2059, 1998],
-        'base_uri': 'QmYtHUizZsz64nf5aCp5CggcuPHfRKG98FF6oTRoch6QEP'
+        'base_uri': 'QmYtHUizZsz64nf5aCp5CggcuPHfRKG98FF6oTRoch6QEP',
+        'launch_date': '2022-08-17'
     },
     'renascencenft': {
         'title': 'RenascenceNFT',
@@ -107,7 +115,8 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [0, 1, 2, 3],
-        'base_uri': 'QmP9XRepUVQSTWdv1Tkd5nbpGEzvaF6ihAWUp2PuaCio1D'
+        'base_uri': 'QmP9XRepUVQSTWdv1Tkd5nbpGEzvaF6ihAWUp2PuaCio1D',
+        'launch_date': '2022-11-15'
     },
     'gasguzzlers': {
         'title': 'Gas Guzzlers',
@@ -118,7 +127,8 @@ all_collections = {
         'start_token_id': 1,
         'contract_type': 'ERC-721A',
         'notable_tokens': [7, 15, 5],
-        'base_uri': 'QmXJ7gUZb8Do3WvJtFGBffcgGBF19Sr8cJphB9qg1wRRf7'
+        'base_uri': 'QmXJ7gUZb8Do3WvJtFGBffcgGBF19Sr8cJphB9qg1wRRf7',
+        'launch_date': '2023-12-10'
     },
     'enzos': {
         'title': 'Enzos',
@@ -129,7 +139,8 @@ all_collections = {
         'start_token_id': 0,
         'contract_type': 'ERC-721A',
         'notable_tokens': [1, 5, 15],
-        'base_uri': 'QmRDokbRBqepzAygcfBjYCYGDXVrjhNba7n6M9UzpjgsMJ'
+        'base_uri': 'QmRDokbRBqepzAygcfBjYCYGDXVrjhNba7n6M9UzpjgsMJ',
+        'launch_date': '2023-06-04'
     }
 }
 
@@ -143,9 +154,6 @@ class Collection(object):
         self.contract_address = self.data['contract_address']
         self.url_slug = title
         self.contract = get_eth_contract(self.contract_address)
-        es = Etherscan(self.contract_address)
-        self.es_data = es.data
-        # self.stats = self.retrieve_collection_stats()
         self.token_start = self.data['start_token_id']
         self.token_end = self.data['total_supply'] - 1 + self.token_start
         self.testnet_address = self.data.get('testnet_address', None)

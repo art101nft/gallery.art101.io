@@ -40,24 +40,3 @@ def convert_ipfs_uri(u, external=True):
             return f'{config.IPFS_SERVER}/ipfs/{ipfs}'
     else:
         return u
-
-class Etherscan:
-    def __init__(self, contract_address):
-        self.api_key = config.ETHERSCAN_API
-        self.contract_address = contract_address
-        self.base = f'https://api.etherscan.io/api?apikey={self.api_key}'
-        self.data = self.get_contract_launch_tx()
-
-    def get_contract_launch_tx(self):
-        key_name = self.contract_address
-        _d = cache.get_data(key_name)
-        if _d:
-            return loads(_d)
-        else:
-            url = f'{self.base}&module=account&action=txlist&address={self.contract_address}&page=1&offset=10&sort=asc'
-            r = requests.get(url, timeout=20)
-            r.raise_for_status()
-            if 'result' in r.json():
-                _d = r.json()['result'][0]
-                cache.store_data(key_name, 604800, dumps(_d))
-                return _d
