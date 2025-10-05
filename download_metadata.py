@@ -5,6 +5,7 @@ Iterate over all collections and download all
 IPFS metadata to data/$CONTRACT_ADDRESS/$ID.json
 """
 
+import re
 import json
 import subprocess
 from pathlib import Path
@@ -62,6 +63,21 @@ try:
                         with open(animation_idx, 'r') as f:
                             soup = BeautifulSoup(f.read(), 'html.parser')
                             img_tags = soup.find_all('img')
+                            style_tag = soup.find('style')
+                            if style_tag:
+                                css_content = style_tag.get_text()
+                                match = re.search(r'background-image:.*url\((.*)\)', css_content)
+                                if match:
+                                    background_image = match.group(1)
+                                    bg_image = f'{animation_url}{background_image}'
+                                    bg_path = Path(animation_folder, background_image)
+                                    if not bg_path.exists():
+                                        print(f"Downloading {bg_image}")
+                                        req = requests.get(bg_image, timeout=10)
+                                        req.raise_for_status()
+                                        if req.status_code == 200:
+                                            with open(bg_path, 'wb') as f:
+                                                f.write(req.content)
                             for img in img_tags:
                                 src = img.get('src')
                                 src_path = Path(animation_folder, src)
@@ -181,6 +197,13 @@ try:
                 '--exclude', '*',
                 '--include', '*.html',
                 '--content-type', 'text/html'
+            ])
+
+            print(f'Syncing {c.title} SVG assets')
+            subprocess.run(base_sync + [
+                '--exclude', '*',
+                '--include', '*.svg',
+                '--content-type', 'image/svg+xml'
             ])
 
         if c.title in ['R. Mutt']:
