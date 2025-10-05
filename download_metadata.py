@@ -146,57 +146,50 @@ try:
             except Exception as e:
                 print(f"failure...{e}")
 
-    # for c in collections:
+    for c in collections:
 
-        # base_sync = [
-        #     'aws', 's3', 'sync', Path(config.DATA_PATH, c.contract_address), f's3://{s3_bucket}/{c.contract_address}/'
-        # ]
+        base_sync = [
+            'aws', 's3', 'sync', str(Path(config.DATA_PATH, c.contract_address)), f's3://{s3_bucket}/{c.contract_address}/'
+        ]
 
-        # base_sync = [
-        #     'aws', 's3', 'sync', f's3://{s3_bucket}/{c.contract_address}/', Path(config.DATA_PATH, c.contract_address)
-        # ]
-        # subprocess.run(base_sync + [
-        #     '--dryrun'
-        # ])
+        print(f'Syncing {c.title} JSON assets')
+        subprocess.run(base_sync + [
+            '--exclude', '*',
+            '--include', '*.json',
+            '--content-type', 'application/json'
+        ])
 
-        # print(f'Syncing {c.title} JSON assets')
-        # subprocess.run(base_sync + [
-        #     '--exclude', '*',
-        #     '--include', '*.json',
-        #     '--content-type', 'application/json'
-        # ])
+        print(f'Syncing {c.title} PNG assets')
+        subprocess.run(base_sync + [
+            '--exclude', '*',
+            '--include', '*.png',
+            '--content-type', 'image/png'
+        ])
 
-        # print(f'Syncing {c.title} PNG assets')
-        # subprocess.run(base_sync + [
-        #     '--exclude', '*',
-        #     '--include', '*.png',
-        #     '--content-type', 'image/png'
-        # ])
+        if c.title in ['Non-Fungible Soup', 'MondrianNFT', 'soupXmondrian']:
+            print(f'Syncing {c.title} SVG assets')
+            subprocess.run(base_sync + [
+                '--exclude', '*.json',
+                '--exclude', '*.png',
+                '--include', '*',
+                '--content-type', 'image/svg+xml'
+            ])
 
-        # if c.title in ['Non-Fungible Soup', 'MondrianNFT', 'soupXmondrian']:
-        #     print(f'Syncing {c.title} SVG assets')
-        #     subprocess.run(base_sync + [
-        #         '--exclude', '*.json',
-        #         '--exclude', '*.png',
-        #         '--include', '*',
-        #         '--content-type', 'image/svg+xml'
-        #     ])
+        if c.title in ['NFTZine']:
+            print(f'Syncing {c.title} HTML assets')
+            subprocess.run(base_sync + [
+                '--exclude', '*',
+                '--include', '*.html',
+                '--content-type', 'text/html'
+            ])
 
-        # if c.title in ['NFTZine']:
-        #     print(f'Syncing {c.title} HTML assets')
-        #     subprocess.run(base_sync + [
-        #         '--exclude', '*',
-        #         '--include', '*.html',
-        #         '--content-type', 'text/html'
-        #     ])
-
-        # if c.title in ['R. Mutt']:
-        #     print(f'Syncing {c.title} GLB assets')
-        #     subprocess.run(base_sync + [
-        #         '--exclude', '*',
-        #         '--include', '*.glb',
-        #         '--content-type', 'model/gltf-binary'
-        #     ])
+        if c.title in ['R. Mutt']:
+            print(f'Syncing {c.title} GLB assets')
+            subprocess.run(base_sync + [
+                '--exclude', '*',
+                '--include', '*.glb',
+                '--content-type', 'model/gltf-binary'
+            ])
 
     #     print(f"Creating {c.title} archive")
     #     Path('data/archives').mkdir(parents=True, exist_ok=True)
