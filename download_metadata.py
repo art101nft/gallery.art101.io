@@ -48,12 +48,12 @@ try:
                     # Non-Fungible Zine has animations and HTML files
                     if c.title == 'NFTZine':
                         animation_hash = metadata['animation_url']
-                        animation_url = convert_ipfs_uri(f'ipfs://{animation_hash}', False)
-                        animation_folder = Path(contract_folder, animation_hash)
+                        animation_url = convert_ipfs_uri(animation_hash, False)
+                        animation_folder = Path(contract_folder, animation_hash.replace('ipfs://', ''))
                         animation_folder.mkdir(parents=True, exist_ok=True)
                         animation_idx = Path(animation_folder, "index.html")
                         if not animation_idx.exists():
-                            print(f"Downloading NFTZine {animation_url}/index.html")
+                            print(f"Downloading NFTZine {animation_url}index.html")
                             req = requests.get(animation_url, timeout=10)
                             req.raise_for_status()
                             if req.status_code == 200:
@@ -66,7 +66,7 @@ try:
                                 src = img.get('src')
                                 src_path = Path(animation_folder, src)
                                 if not src_path.exists():
-                                    src_url = convert_ipfs_uri(f'ipfs://{animation_hash}/{src}', False)
+                                    src_url = convert_ipfs_uri(f'{animation_hash}{src}', False)
                                     print(f'Downloading {src_url}')
                                     req = requests.get(src_url, timeout=10)
                                     req.raise_for_status()
