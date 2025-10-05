@@ -297,8 +297,7 @@ class Collection(object):
                 except Exception as e:
                     print('Error getting owner ENS address', e)
                     pass
-            # cache.store_data(key_name, 604800, dumps(data))
-            print(data)
+            cache.store_data(key_name, 604800, dumps(data))
             return data
         else:
             return {}
