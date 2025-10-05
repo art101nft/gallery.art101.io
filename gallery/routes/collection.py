@@ -3,6 +3,7 @@ from quart import request, redirect, url_for
 
 from gallery.collections import Collection, all_collections
 from gallery.owners import Owner
+from gallery import config
 
 
 bp = Blueprint('collection', 'collection')
@@ -61,3 +62,18 @@ async def show_token(collection_slug, token_id):
         collection=collection,
         token_id=token_id
     )
+
+@bp.route('/collection/<collection_slug>/<int:token_id>/<size>')
+async def show_image(collection_slug, token_id, size):
+    if size not in ['fullsize', 'thumbnail']:
+        size = 'fullsize'
+    collection = Collection(collection_slug)
+    if not collection:
+        await flash('That collection does not exist.', 'warning')
+        return redirect('/')
+    if token_id > collection.data['total_supply'] + collection.data['start_token_id'] - 1:
+        await flash('That token does not exist for that collection!', 'warning')
+        return redirect(url_for('collection.show', collection_slug=collection_slug))
+    meta = await collection.retrieve_token_metadata(token_id)
+    image = meta['image'].replace('ipfs://', '')
+    return redirect(f'{config.ASSETS_URL}/{collection.contract_address}/{image}.{size}.png')
