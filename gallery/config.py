@@ -11,9 +11,10 @@ load_dotenv()
 SECRET_KEY = getenv('SECRET_KEY', 'yyyyyyyyyyyyy')
 SERVER_NAME = getenv('SERVER_NAME', '127.0.0.1:5000')
 IPFS_SERVER = getenv('IPFS_SERVER', 'http://127.0.0.1:8080')
-DATA_PATH = getenv('DATA_PATH', '/opt/gallery.art101.io/data')
+DATA_PATH = getenv('DATA_PATH', './data')
 ASSETS_URL = getenv('ASSETS_URL', 'https://art101-assets.s3.us-west-2.amazonaws.com')
-SCRAPER_API_URL = getenv('SCRAPER_API_URL', 'http://127.0.0.1:3000')
+SCRAPER_API_URL = getenv('SCRAPER_API_URL', 'https://gallery.art101.io/sales')
+LOCAL_MODE = getenv('LOCAL_MODE', False)
 ERC721_ABI = erc721_abi
 ERC1155_ABI = erc1155_abi
 MARKETPLACE_ABI = marketplace_abi
