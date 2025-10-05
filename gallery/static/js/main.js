@@ -174,7 +174,7 @@ async function updateTokenInfo(contractAddress, tokenId) {
   document.getElementById('tokenImage').classList.remove('previewPreload');
   // If nftzine, load iframe for clickable zine
   if (document.getElementById('tokenImage').classList.contains('zineLink')) {
-    let animationURL = loadAssets(contractAddress) + `/${data.animation_url}/index.html`;
+    let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '') + 'index.html';
     let ifrm = document.createElement('iframe');
     ifrm.setAttribute('src', animationURL);
     ifrm.setAttribute('allowfullscreen', true);
