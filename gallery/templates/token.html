@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 
+{%- block title -%}{{ collection.title }} #{{ token_id }}{% endblock %}
+
+{%- block og -%}
+{%- set img_url = url_for('collection.show_image', collection_slug=collection.url_slug, token_id=token_id, size='fullsize', _external=True) -%}
+    <meta property="og:description" content="Art101 {{ collection.title }} #{{ token_id }}.">
+    <meta property="og:image" content="{{ img_url }}">
+    <meta property="og:title" content="{{ collection.title }} #{{ token_id }}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@art101nft">
+    <meta name="twitter:title" content="{{ collection.title }} #{{ token_id }}">
+    <meta name="twitter:description" content="Art101 {{ collection.title }} #{{ token_id }}.">
+    <meta name="twitter:creator" content="@art101nft">
+    <meta name="twitter:image" content="{{ img_url }}">
+    <meta name="twitter:domain" content="https://gallery.art101.io">
+{%- endblock -%}
+
 {% set rarity = collection.retrieve_token_by_id(token_id) %}
 
 {% block content %}

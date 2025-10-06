@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html>
-  {% include 'includes/head.html' %}
+  <head>
+    <title>{% block title %}Art101 Gallery{% endblock %}</title>
+    {% block og %}
+    <meta property="og:description" content="The official gallery site for the art-centric NFT projects of Art101. Exploring Art History with Generative NFTs.">
+    <meta property="og:image" content="https://gallery.art101.io/static/img/art101_logo.png">
+    <meta property="og:title" content="Art101 Gallery">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@art101nft">
+    <meta name="twitter:title" content="Art101 Gallery">
+    <meta name="twitter:description" content="The official gallery site for the art-centric NFT projects of Art101. Exploring Art History with Generative NFTs.">
+    <meta name="twitter:creator" content="@art101nft">
+    <meta name="twitter:image" content="https://gallery.art101.io/static/img/art101_logo.png">
+    <meta name="twitter:domain" content="https://gallery.art101.io">
+    {% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/vendor/unpoly-2.5.0.min.css">
+    <link rel="stylesheet" href="/static/css/skeleton.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+    <link rel="stylesheet" href="/static/css/vendor/noty-relax.css" />
+    <link rel="stylesheet" href="/static/css/vendor/noty.css" />
+    <link rel="stylesheet" href="/static/css/vendor/viewer.min.css">
+    <link rel="stylesheet" href="/static/css/vendor/fontawesome-6.1.1/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/static/img/Art101_Splash.svg">
+  </head>
   <body>
   {% include 'includes/navbar.html' %}
   {% block content %}
