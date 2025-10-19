@@ -42,25 +42,12 @@ function shortenAddress(a) {
 
 async function getENS(address) {
   try {
-    const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
-    const namehash = await w3.eth.call({
-      to: '0x084b1c3c81545d370f3634392de611caabff8148', // ENS: Reverse Registrar
-      data: w3.eth.abi.encodeFunctionCall({
-        name: 'node', type: 'function',
-        inputs: [{type: 'address', name: 'addr'}]
-      }, [address])
-    });
-    const res = w3.eth.abi.decodeParameter('string', await w3.eth.call({
-      to: '0xa2c122be93b0074270ebee7f6b7292c7deb45047', // ENS: Default Reverse Resolver
-      data: w3.eth.abi.encodeFunctionCall({
-        name: 'name', type: 'function',
-        inputs: [{type: 'bytes32', name: 'hash'}]
-      }, [namehash])
-    }));
-    if (!res) {
-      return address;
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const ensName = await provider.lookupAddress(address);
+    if (ensName.endsWith('.eth')) {
+      return ensName;
     } else {
-      return res;
+      return address
     }
   } catch {
     return address
@@ -75,7 +62,7 @@ async function processSale(sale) {
   amount = `${new Web3().utils.fromWei(sale.sale_price.toString())} Ξ`;
 
   const tr = document.createElement('tr');
-  tr.classList.add(`row-${event}`);
+  tr.classList.add(`row-${sale.block_number}1`);
   tr.innerHTML = `
     <td><a href="https://etherscan.io/address/${sale.seller}" target=_blank>${from_wallet}</a></td>
     <td><a href="https://etherscan.io/address/${sale.buyer}" target=_blank>${to_wallet}</a></td>
