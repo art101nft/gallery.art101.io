@@ -146,6 +146,19 @@ all_collections = {
     }
 }
 
+# 'treacheryoffrogs': {
+#     'title': 'The Treachery of Frogs',
+#     'contract_address': '0x0b3df82c78b6099c9346006eb19404f0e0a8888c',
+#     'description': 'An unoriginal spin on surrealist René Magritte\'s renowned "The Treachery of Images." It delves into the age-old dilemma of art representation where what we see is merely an interpretation of an object, and not the object itself.',
+#     'website': 'https://app.manifold.xyz/c/thetreacheryoffrogs/',
+#     'total_supply': 203,
+#     'start_token_id': 0,
+#     'contract_type': 'ERC-721',
+#     'notable_tokens': [1],
+#     'base_uri': 'bafybeihsihtyvuswacjctzuifw5e32pr2isourvbpymk2ar7qth4j3tnza/enzos',
+#     'launch_date': '2023-06-04'
+# }
+
 class Collection(object):
     def __init__(self, title):
         if title not in all_collections:
