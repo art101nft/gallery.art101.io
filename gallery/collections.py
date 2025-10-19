@@ -2,7 +2,6 @@ from json import dumps, loads
 from pathlib import Path
 
 import requests
-from ens.auto import ns
 
 from gallery.helpers import get_eth_contract
 from gallery.library.cache import cache
@@ -289,27 +288,13 @@ class Collection(object):
                 return {}
 
         if 'name' in data:
-            owner = None
             if self.erc1155:
                 token_base = f'ipfs://{self.data["base_uri"]}'
                 i = hex(int(token_id)).lstrip('0x').zfill(64)
                 tokenURI = f'{token_base}/{i}'
-            else:
-                try:
-                    owner = self.contract.functions.ownerOf(int(token_id)).call()
-                except Exception as e:
-                    print('Error getting token owner address', e)
-                    owner = None
             tokenURI = f'ipfs://{self.data["base_uri"]}/{token_id}'
             data['tokenURI'] = tokenURI
             data['tokenOffchainURI'] = f'{config.ASSETS_URL}/{self.contract_address}/{self.data["base_uri"]}/{token_id}.json'
-            data['ownerOf'] = owner
-            if owner:
-                try:
-                    data['ownerENS'] = ns.name(owner)
-                except Exception as e:
-                    print('Error getting owner ENS address', e)
-                    pass
             cache.store_data(key_name, 604800, dumps(data))
             return data
         else:

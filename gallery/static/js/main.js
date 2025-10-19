@@ -126,6 +126,18 @@ async function fetchOwnerTokens(contractAddress, walletAddress, urlSlug) {
 
 }
 
+async function getTokenOwner(contractAddress, tokenId) {
+  try {
+    const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+    const contract = new w3.eth.Contract(erc721Abi, contractAddress);
+    const address = await contract.methods.ownerOf(tokenId).call();
+    const ownerOf = await getENS(address);
+    return ownerOf;
+  } catch {
+    return null;
+  }
+};
+
 async function getTokenSales(contractAddress, tokenId) {
   let res = await fetch(`/api/v1/get_token_sales/${contractAddress}/${tokenId}`)
     .then((resp) => resp.json())
@@ -167,12 +179,9 @@ async function updateTokenInfo(contractAddress, tokenId) {
   let onchainImg = loadImg(data.image, contractAddress, true);
   let onchainMeta = loadImg(data.tokenURI, contractAddress, true);
   document.getElementById('tokenTitle').innerHTML = data.name;
-  if (data.ownerOf) {
-    if (data.ownerENS) {
-      document.getElementById('tokenOwner').innerHTML = `<strong>Owner</strong>: <a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${data.ownerENS}</a>`;
-    } else {
-      document.getElementById('tokenOwner').innerHTML = `<strong>Owner</strong>: <a href="https://etherscan.io/address/${data.ownerOf}" target=_blank>${shortenAddress(data.ownerOf)}</a>`;
-    }
+  let ownerOf = await getTokenOwner(contractAddress, tokenId)
+  if (ownerOf) {
+    document.getElementById('tokenOwner').innerHTML = `<strong>Owner</strong>: <a href="https://etherscan.io/address/${ownerOf}" target=_blank>${ownerOf}</a>`;
   }
   document.getElementById('tokenImage').src = offchainImg;
   document.getElementById('tokenImage').classList.remove('previewPreload');
