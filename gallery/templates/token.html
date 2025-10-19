@@ -96,31 +96,9 @@
       <p id="tokenOffchainImage"></p>
     </div>
     <div class="row marketplaceLogos">
-      <div class="two columns">
-          <a href="https://looksrare.org/collections/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
-            <img class="marketplaceLogo" src="/static/img/looksrare.png">
-          </a>
-      </div>
-      <div class="two columns">
-          <a href="https://app.uniswap.org/#/nfts/asset/{{ collection.contract_address | lower }}/{{ token_id }}" target="_blank">
-            <img class="marketplaceLogo" src="/static/img/uniswap.png">
-          </a>
-      </div>
-      <div class="two columns">
-          <a href="https://opensea.io/assets/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
-            <img class="marketplaceLogo" src="/static/img/opensea.png">
-          </a>
-      </div>
-      <div class="two columns">
-          <a href="https://rarible.com/token/{{ collection.contract_address }}:{{ token_id }}" target="_blank">
-            <img class="marketplaceLogo" src="/static/img/rarible.jpg">
-          </a>
-      </div>
-      <div class="two columns">
-          <a href="https://x2y2.io/eth/{{ collection.contract_address }}/{{ token_id }}" target="_blank">
-            <img class="marketplaceLogo" src="/static/img/x2y2.png">
-          </a>
-      </div>
+      <p><strong>View on Opensea:</strong>
+        <a href="https://opensea.io/item/ethereum/{{ collection.contract_address }}/{{ token_id }}" target="_blank">https://opensea.io/item/ethereum/{{ collection.contract_address }}/{{ token_id }}</a>
+      </p>
     </div>
   </div>
 </div>
