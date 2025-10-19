@@ -241,6 +241,10 @@ async function updateTokenInfo(contractAddress, tokenId) {
   document.getElementById('tokenOffchainURI').innerHTML = `<strong>Off-chain Metadata</strong>:</br><a href="${data.tokenOffchainURI}" target=_blank>${data.tokenOffchainURI}</a>`;
   document.getElementById('tokenOnchainImage').innerHTML = `<strong>IPFS Image</strong>:</br><a href="${onchainImg}" target=_blank>${data.image}</a>`;
   document.getElementById('tokenOffchainImage').innerHTML = `<strong>Off-chain Image</strong>:</br><a href="${offchainImg}" target=_blank>${offchainImg}</a>`;
+  if (contractAddress == '0xc918F953E1ef2F1eD6ac6A0d2Bf711A93D20Aa2b') {
+    let animationURL = loadAssets(contractAddress) + '/' + data.animation_url.replace('ipfs://', '') + 'index.html';
+    document.getElementById('tokenOffchainImage').innerHTML = `<strong>Off-chain Zine</strong>:</br><a href="${animationURL}" target=_blank>${animationURL}</a>`;
+  }
   data.attributes.forEach(function(i){
     let newChild = document.createElement('li');
     newChild.innerHTML = `<span class="tag is-white is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;
