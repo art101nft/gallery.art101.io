@@ -229,7 +229,7 @@ class Collection(object):
     async def retrieve_token_sales(self, token_id):
         url = f'{config.SCRAPER_API_URL}/api/token/{self.contract_address}/{token_id}/history'
         try:
-            key_name = f'{self.contract_address}-sales-{token_id}-v1.1'
+            key_name = f'{self.contract_address}-sales-{token_id}-v1.2'
             _d = cache.get_data(key_name)
             if _d:
                 return loads(_d)
